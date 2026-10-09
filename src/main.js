@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import PrimeVue from 'primevue/config'
 import Material from '@primeuix/themes/material'
+import ToastService from 'primevue/toastservice'
+import ConfirmationService from 'primevue/confirmationservice'
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 import './style.css'
@@ -15,4 +17,6 @@ createApp(App)
   .use(router)
   .use(i18n)
   .use(PrimeVue, { ripple: true, theme: { preset: Material } })
+  .use(ToastService)
+  .use(ConfirmationService)
   .mount('#app')
