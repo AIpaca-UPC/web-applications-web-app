@@ -1,3 +1,4 @@
+
 {
   "common": {
     "language": "Language",
@@ -8,13 +9,22 @@
     "back": "Back to dashboard"
   },
   "nav": {
+    "home": "Home",
+    "students": "Students",
+    "routes": "Routes",
+    "vehicles": "Vehicles",
+    "notifications": "Notifications",
+    "billing": "Plan & billing",
+    "helpTitle": "Need help?",
+    "helpText": "Review the guidance and safety information.",
     "navigation": "Main navigation",
     "dashboard": "Dashboard",
     "workspaces": "Bounded Contexts"
   },
   "home": {
+    "title": "Rumbo operations",
+    "content": "Manage the main frontend CRUD modules from this dashboard.",
     "eyebrow": "AIpaca-UPC · Team Project",
-    "title": "Rumbo frontend workspace",
     "description": "This is the shared Vue 3 foundation for the team. Every bounded context has its own folder and will be implemented independently.",
     "ready": "Vue 3, PrimeVue, Vue Router, Pinia and i18n are configured.",
     "sectionsTitle": "Module workspaces",
@@ -26,6 +36,27 @@
     "routes": "Route & Trip Planning",
     "alerting": "Alerting & Incident Management",
     "billing": "Subscriptions & Billing"
+  },
+  "quickActions": {
+    "title": "Quick actions",
+    "reportDelay": "Report delay",
+    "reportIncident": "Report incident",
+    "configureRoute": "Configure route"
+  },
+  "students": {
+    "main": {
+      "title": "Students",
+      "subtitle": "Manage students associated to your account.",
+      "newStudent": "New student",
+      "noStudents": "No students registered."
+    },
+    "data": {
+      "name": "Name",
+      "birthdate": "Birthdate",
+      "school": "School",
+      "state": "State",
+      "actions": "Actions"
+    }
   },
   "placeholder": {
     "title": "Workspace ready for development",

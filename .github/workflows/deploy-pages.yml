@@ -1,4 +1,4 @@
-name: Deploy Rumbo Vue Frontend
+name: Deploy Frontend to GitHub Pages
 
 on:
   push:
@@ -18,34 +18,57 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
+
       - name: Install dependencies
         run: npm ci
-      - name: Build Vue project for Pages
-        run: npm run build
-        env:
-          GITHUB_PAGES: 'true'
-      - name: Prepare history fallback for Vue Router
-        run: cp dist/index.html dist/404.html
-      - name: Configure Pages
+
+      - name: Build Angular application
+        run: npm run build -- --base-href /frontend-web-application/
+
+      - name: Resolve Pages output
+        id: site
+        shell: bash
+        run: |
+          if [ -f "dist/Rumbo-frontend/browser/index.html" ]; then
+            SITE_DIR="dist/Rumbo-frontend/browser"
+          elif [ -f "dist/Rumbo-frontend/index.html" ]; then
+            SITE_DIR="dist/Rumbo-frontend"
+          else
+            echo "Could not locate built index.html"
+            find dist -maxdepth 4 -type f | sort
+            exit 1
+          fi
+          cp "$SITE_DIR/index.html" "$SITE_DIR/404.html"
+          echo "site_dir=$SITE_DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Upload dist
+        with:
+          enablement: true
+
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: dist
+          path: ${{ steps.site.outputs.site_dir }}
+
   deploy:
-    runs-on: ubuntu-latest
-    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    needs: build
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
