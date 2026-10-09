@@ -1,4 +1,5 @@
-import { Vehicle } from '../domain/model/vehicle.entity.js'
+import {Vehicle} from "@/bounded-contexts/vehicle-credential-management/domain/vehicle.entity.js";
+
 
 /**
  * Maps vehicle API resources to domain entities and vice versa.
