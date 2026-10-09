@@ -1,7 +1,12 @@
+
 {
-  "home": {
-    "title": "Rumbo operations",
-    "content": "Manage the main frontend CRUD modules from this dashboard."
+  "common": {
+    "language": "Language",
+    "project": "School transport platform",
+    "workspace": "Team development workspace",
+    "pending": "Awaiting implementation",
+    "open": "Open workspace",
+    "back": "Back to dashboard"
   },
   "nav": {
     "home": "Home",
@@ -11,7 +16,26 @@
     "notifications": "Notifications",
     "billing": "Plan & billing",
     "helpTitle": "Need help?",
-    "helpText": "Review the guidance and safety information."
+    "helpText": "Review the guidance and safety information.",
+    "navigation": "Main navigation",
+    "dashboard": "Dashboard",
+    "workspaces": "Bounded Contexts"
+  },
+  "home": {
+    "title": "Rumbo operations",
+    "content": "Manage the main frontend CRUD modules from this dashboard.",
+    "eyebrow": "AIpaca-UPC · Team Project",
+    "description": "This is the shared Vue 3 foundation for the team. Every bounded context has its own folder and will be implemented independently.",
+    "ready": "Vue 3, PrimeVue, Vue Router, Pinia and i18n are configured.",
+    "sectionsTitle": "Module workspaces",
+    "moduleDescription": "Frontend feature is not implemented yet. This workspace is reserved for its team member."
+  },
+  "modules": {
+    "profiles": "Profiles & Relationship Management",
+    "vehicles": "Vehicle & Credential Management",
+    "routes": "Route & Trip Planning",
+    "alerting": "Alerting & Incident Management",
+    "billing": "Subscriptions & Billing"
   },
   "quickActions": {
     "title": "Quick actions",
@@ -34,9 +58,59 @@
       "actions": "Actions"
     }
   },
+  "placeholder": {
+    "title": "Workspace ready for development",
+    "description": "No CRUD or business logic is included. The responsible team member can add domain models, Pinia stores, REST services and Vue components here.",
+    "hint": "Update the router after adding your first Vue view."
+  },
+  "notFound": {
+    "description": "The requested page does not exist."
+  },
   "footer": {
     "rights": "All rights reserved.",
     "terms": "Terms and Conditions",
     "privacy": "Privacy"
+  },
+  "billing": {
+    "label": "SUBSCRIPTIONS",
+    "plansTitle": "Available plans",
+    "plansDescription": "Choose the plan that best fits your needs.",
+    "viewSubscription": "View my subscription",
+    "available": "Available",
+    "selectPlan": "Select plan",
+    "loading": "Loading plans...",
+    "retry": "Retry",
+    "noPlans": "No plans available.",
+    "confirmTitle": "Confirm subscription",
+    "confirmDescription": "Review the selected plan before confirming.",
+    "planField": "Plan",
+    "selectedPlan": "Selected plan",
+    "driverProfileField": "Driver identifier",
+    "startDateField": "Start date",
+    "registrationNotice": "The information will be saved in Rumbo when you confirm.",
+    "confirmSubscription": "Confirm subscription",
+    "back": "Back",
+    "saving": "Saving...",
+    "createdSuccessfully": "Subscription created successfully!",
+    "savedNotice": "The record was saved in MockAPI.",
+    "myTitle": "My subscription",
+    "myDescription": "View and manage your subscription information in Rumbo.",
+    "plansButton": "View plans",
+    "currentPlan": "CURRENT PLAN",
+    "statusField": "Subscription status",
+    "statusActive": "Active",
+    "statusPaused": "Paused",
+    "amount": "Amount",
+    "manage": "Manage subscription",
+    "remove": "Cancel subscription",
+    "noSubscriptions": "No subscriptions registered.",
+    "unknownPlan": "Plan unavailable",
+    "editTitle": "Manage my subscription",
+    "editDescription": "Update your subscription plan or status.",
+    "saveChanges": "Save changes",
+    "deleteTitle": "Cancel subscription?",
+    "deleteDescription": "This action will delete your subscription record. Are you sure you want to continue?",
+    "keepSubscription": "Keep subscription",
+    "confirmDelete": "Yes, cancel"
   }
 }
