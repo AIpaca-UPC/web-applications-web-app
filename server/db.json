@@ -125,35 +125,52 @@
     "warningEnabled": true,
     "infoEnabled": true
   },
-
   "vehicles": [
     {
-      "id": 1,
-      "brand": "Toyota",
-      "model": "HiAce",
-      "licensePlate": "ABC-123",
-      "capacity": 15,
-      "year": 2022,
-      "status": "ACTIVE"
-    },
-    {
-      "id": 2,
+      "id": "1",
       "brand": "Mercedes-Benz",
       "model": "Sprinter",
       "licensePlate": "XYZ-789",
       "capacity": 20,
       "year": 2021,
       "status": "ACTIVE"
+    },
+    {
+      "id": "2",
+      "brand": "Toyota",
+      "model": "HiAce Commuter",
+      "licensePlate": "AFH-412",
+      "capacity": 15,
+      "year": 2022,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "3",
+      "brand": "Hyundai",
+      "model": "H350 Escolar",
+      "licensePlate": "BCF-893",
+      "capacity": 18,
+      "year": 2023,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "4",
+      "brand": "Renault",
+      "model": "Master Minibus",
+      "licensePlate": "DEX-554",
+      "capacity": 16,
+      "year": 2020,
+      "status": "MAINTENANCE"
+    },
+    {
+      "id": "5",
+      "brand": "Ford",
+      "model": "Transit Minibus",
+      "licensePlate": "FGT-102",
+      "capacity": 19,
+      "year": 2024,
+      "status": "ACTIVE"
     }
   ],
-  "credentials": [
-    {
-      "id": 1,
-      "vehicleId": 1,
-      "documentType": "SOAT",
-      "documentNumber": "SOAT-998822",
-      "expirationDate": "2027-05-10",
-      "status": "VALID"
-    }
-  ]
+  "credentials": []
 }
