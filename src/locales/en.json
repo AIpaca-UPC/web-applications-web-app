@@ -1,3 +1,4 @@
+
 {
   "common": {
     "language": "Language",
@@ -8,13 +9,22 @@
     "back": "Back to dashboard"
   },
   "nav": {
+    "home": "Home",
+    "students": "Students",
+    "routes": "Routes",
+    "vehicles": "Vehicles",
+    "notifications": "Notifications",
+    "billing": "Plan & billing",
+    "helpTitle": "Need help?",
+    "helpText": "Review the guidance and safety information.",
     "navigation": "Main navigation",
     "dashboard": "Dashboard",
     "workspaces": "Bounded Contexts"
   },
   "home": {
+    "title": "Rumbo operations",
+    "content": "Manage the main frontend CRUD modules from this dashboard.",
     "eyebrow": "AIpaca-UPC · Team Project",
-    "title": "Rumbo frontend workspace",
     "description": "This is the shared Vue 3 foundation for the team. Every bounded context has its own folder and will be implemented independently.",
     "ready": "Vue 3, PrimeVue, Vue Router, Pinia and i18n are configured.",
     "sectionsTitle": "Module workspaces",
@@ -27,6 +37,27 @@
     "alerting": "Alerting & Incident Management",
     "billing": "Subscriptions & Billing"
   },
+  "quickActions": {
+    "title": "Quick actions",
+    "reportDelay": "Report delay",
+    "reportIncident": "Report incident",
+    "configureRoute": "Configure route"
+  },
+  "students": {
+    "main": {
+      "title": "Students",
+      "subtitle": "Manage students associated to your account.",
+      "newStudent": "New student",
+      "noStudents": "No students registered."
+    },
+    "data": {
+      "name": "Name",
+      "birthdate": "Birthdate",
+      "school": "School",
+      "state": "State",
+      "actions": "Actions"
+    }
+  },
   "placeholder": {
     "title": "Workspace ready for development",
     "description": "No CRUD or business logic is included. The responsible team member can add domain models, Pinia stores, REST services and Vue components here.",
@@ -34,5 +65,70 @@
   },
   "notFound": {
     "description": "The requested page does not exist."
+  },
+  "vehicles": {
+    "list": {
+      "title": "Vehicle & Credential Management",
+      "subtitle": "Rumbo displays and centralizes the registered fleet information.",
+      "seats": "{count} seats",
+      "empty": "No vehicles registered yet.",
+      "loadError": "Vehicles could not be loaded."
+    },
+    "card": {
+      "plate": "Plate",
+      "capacity": "Capacity",
+      "year": "Year"
+    },
+    "fields": {
+      "licensePlate": "License Plate",
+      "brand": "Brand",
+      "model": "Model",
+      "capacity": "Capacity",
+      "capacitySeats": "Capacity (Seats)",
+      "year": "Year",
+      "status": "Status"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "MAINTENANCE": "Maintenance"
+    },
+    "actions": {
+      "new": "New Vehicle",
+      "create": "Create Vehicle",
+      "save": "Save Changes",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "retry": "Retry"
+    },
+    "form": {
+      "newTitle": "New Vehicle",
+      "editTitle": "Edit Vehicle",
+      "newSubtitle": "Fill in the vehicle details to add it to the fleet.",
+      "editSubtitle": "Update the vehicle details to keep the fleet record current."
+    },
+    "delete": {
+      "header": "Delete vehicle",
+      "message": "Are you sure you want to delete {name} ({plate})? This action cannot be undone."
+    },
+    "toast": {
+      "created": "Vehicle created successfully",
+      "updated": "Vehicle updated successfully",
+      "deleted": "Vehicle deleted",
+      "notFound": "The vehicle was not found",
+      "error": "Something went wrong. Please try again."
+    },
+    "validation": {
+      "required": "This field is required.",
+      "plateFormat": "Use the format ABC-123.",
+      "plateDuplicated": "This plate is already registered.",
+      "capacityRange": "Capacity must be between {min} and {max} seats.",
+      "yearRange": "Year must be between {min} and {max}."
+    },
+    "notice": {
+      "title": "Important",
+      "text": "These records and capacities are declared by the provider in this prototype. Rumbo centralizes operational management without simulating an external government validation."
+    }
   }
 }
