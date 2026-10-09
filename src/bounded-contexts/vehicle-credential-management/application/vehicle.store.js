@@ -9,7 +9,7 @@ const vehiclesApi = new VehiclesApi()
  * Application service store for the Vehicle & Credential Management bounded context.
  * Coordinates vehicle use cases and exposes UI-facing state.
  */
-const useVehiclesStore = defineStore('vehicles', () => {
+const vehiclesStore = defineStore('vehicles', () => {
     /** @type {import('vue').Ref<import('../domain/model/vehicle.entity.js').Vehicle[]>} */
     const vehicles = ref([])
     const loading = ref(false)
@@ -127,4 +127,4 @@ const useVehiclesStore = defineStore('vehicles', () => {
     }
 })
 
-export default useVehiclesStore
+export default vehiclesStore
