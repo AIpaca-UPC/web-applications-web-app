@@ -1,6 +1,10 @@
 import { createApp } from 'vue'
-import App from './App.vue'
-
+import PrimeVue from 'primevue/config'
+import Material from '@primeuix/themes/material'
+import ToastService from 'primevue/toastservice'
+import ConfirmationService from 'primevue/confirmationservice'
+import 'primeicons/primeicons.css'
+import 'primeflex/primeflex.css'
 import './style.css'
 import i18n from "./i18n.js";
 import PrimeVue from 'primevue/config';
@@ -23,6 +27,13 @@ import router from "./router.js";
 
 
 createApp(App)
+  .use(pinia)
+  .use(router)
+  .use(i18n)
+  .use(PrimeVue, { ripple: true, theme: { preset: Material } })
+  .use(ToastService)
+  .use(ConfirmationService)
+  .mount('#app')
     .use(i18n)
     .use(PrimeVue, { ripple: true, theme: { preset: Material }})
     .use(ConfirmationService)

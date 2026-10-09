@@ -64,53 +64,71 @@
     "hint": "Update the router after adding your first Vue view."
   },
   "notFound": {
-    "description": "The requested page does not exist."
+    "description": "La página solicitada no existe."
   },
-  "footer": {
-    "rights": "All rights reserved.",
-    "terms": "Terms and Conditions",
-    "privacy": "Privacy"
-  },
-  "billing": {
-    "label": "SUBSCRIPTIONS",
-    "plansTitle": "Available plans",
-    "plansDescription": "Choose the plan that best fits your needs.",
-    "viewSubscription": "View my subscription",
-    "available": "Available",
-    "selectPlan": "Select plan",
-    "loading": "Loading plans...",
-    "retry": "Retry",
-    "noPlans": "No plans available.",
-    "confirmTitle": "Confirm subscription",
-    "confirmDescription": "Review the selected plan before confirming.",
-    "planField": "Plan",
-    "selectedPlan": "Selected plan",
-    "driverProfileField": "Driver identifier",
-    "startDateField": "Start date",
-    "registrationNotice": "The information will be saved in Rumbo when you confirm.",
-    "confirmSubscription": "Confirm subscription",
-    "back": "Back",
-    "saving": "Saving...",
-    "createdSuccessfully": "Subscription created successfully!",
-    "savedNotice": "The record was saved in MockAPI.",
-    "myTitle": "My subscription",
-    "myDescription": "View and manage your subscription information in Rumbo.",
-    "plansButton": "View plans",
-    "currentPlan": "CURRENT PLAN",
-    "statusField": "Subscription status",
-    "statusActive": "Active",
-    "statusPaused": "Paused",
-    "amount": "Amount",
-    "manage": "Manage subscription",
-    "remove": "Cancel subscription",
-    "noSubscriptions": "No subscriptions registered.",
-    "unknownPlan": "Plan unavailable",
-    "editTitle": "Manage my subscription",
-    "editDescription": "Update your subscription plan or status.",
-    "saveChanges": "Save changes",
-    "deleteTitle": "Cancel subscription?",
-    "deleteDescription": "This action will delete your subscription record. Are you sure you want to continue?",
-    "keepSubscription": "Keep subscription",
-    "confirmDelete": "Yes, cancel"
+  "vehicles": {
+    "list": {
+      "title": "Gestión de Vehículos y Credenciales",
+      "subtitle": "Rumbo muestra y centraliza la información registrada de la flota vehicular.",
+      "seats": "{count} asientos",
+      "empty": "Aún no hay vehículos registrados.",
+      "loadError": "No se pudieron cargar los vehículos."
+    },
+    "card": {
+      "plate": "Placa",
+      "capacity": "Capacidad",
+      "year": "Año"
+    },
+    "fields": {
+      "licensePlate": "Placa",
+      "brand": "Marca",
+      "model": "Modelo",
+      "capacity": "Capacidad",
+      "capacitySeats": "Capacidad (asientos)",
+      "year": "Año",
+      "status": "Estado"
+    },
+    "status": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo",
+      "MAINTENANCE": "Mantenimiento"
+    },
+    "actions": {
+      "new": "Nuevo vehículo",
+      "create": "Crear vehículo",
+      "save": "Guardar cambios",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "cancel": "Cancelar",
+      "retry": "Reintentar"
+    },
+    "form": {
+      "newTitle": "Nuevo vehículo",
+      "editTitle": "Editar vehículo",
+      "newSubtitle": "Completa los datos del vehículo para agregarlo a la flota.",
+      "editSubtitle": "Actualiza los datos del vehículo para mantener al día el registro de la flota."
+    },
+    "delete": {
+      "header": "Eliminar vehículo",
+      "message": "¿Seguro que deseas eliminar {name} ({plate})? Esta acción no se puede deshacer."
+    },
+    "toast": {
+      "created": "Vehículo creado correctamente",
+      "updated": "Vehículo actualizado correctamente",
+      "deleted": "Vehículo eliminado",
+      "notFound": "No se encontró el vehículo",
+      "error": "Ocurrió un error. Inténtalo de nuevo."
+    },
+    "validation": {
+      "required": "Este campo es obligatorio.",
+      "plateFormat": "Usa el formato ABC-123.",
+      "plateDuplicated": "Esta placa ya está registrada.",
+      "capacityRange": "La capacidad debe estar entre {min} y {max} asientos.",
+      "yearRange": "El año debe estar entre {min} y {max}."
+    },
+    "notice": {
+      "title": "Importante",
+      "text": "Estos registros y capacidades son declarados por el prestador en este prototipo. Rumbo centraliza la gestión operativa sin simular una validación gubernamental externa."
+    }
   }
 }
