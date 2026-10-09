@@ -1,101 +1,53 @@
 /**
- * Represents the common personal information shared by
- * person-based entities within the
+ * Base person entity within the
  * Profiles & Relationship Management bounded context.
  *
- * @abstract
- * @remarks
- * This class is abstract and is not intended to be instantiated directly.
- * It provides shared identity and name-related behavior for entities such as
- * students, tutors, and drivers.
+ * @class Person
  */
 export class Person {
     /**
-     * The unique identifier of the person.
-     * @type {number}
-     * @readonly
+     * @param {Object} params - Entity attributes.
+     * @param {?string} [params.id=null] - Person identifier.
+     * @param {string} [params.firstName=''] - First name.
+     * @param {string} [params.lastName=''] - Last name.
      */
-    #id;
-
-    /**
-     * The person's first name.
-     * @type {string}
-     */
-    #firstName;
-
-    /**
-     * The person's last name.
-     * @type {string}
-     */
-    #lastName;
-
-    /**
-     * Initializes the common properties of a person.
-     *
-     * @param {Object} props - Properties required to initialize the person.
-     * @param {number} props.id - Unique identifier of the person.
-     * @param {string} props.firstName - Person's first name.
-     * @param {string} props.lastName - Person's last name.
-     *
-     * @remarks
-     * Leading and trailing whitespace is removed from
-     * firstName and lastName during initialization.
-     */
-    constructor({ id, firstName, lastName }) {
-        if (new.target === Person) {
-            throw new TypeError('Person cannot be instantiated directly.');
-        }
-
-        this.#id = id;
-        this.#firstName = firstName.trim();
-        this.#lastName = lastName.trim();
+    constructor({
+                    id = null,
+                    firstName = '',
+                    lastName = '',
+                } = {}) {
+        this._id = id === null ? null : String(id);
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    /**
-     * Gets the unique identifier of the person.
-     * @returns {number} The person's identifier.
-     */
+    /** @returns {?string} Person identifier. */
     get id() {
-        return this.#id;
+        return this._id;
     }
 
-    /**
-     * Gets the person's first name.
-     * @returns {string} The first name.
-     */
+    /** @returns {string} Person's first name. */
     get firstName() {
-        return this.#firstName;
+        return this._firstName;
     }
 
-    /**
-     * Updates the person's first name.
-     * @param {string} value - The new first name.
-     */
+    /** @param {string} value - New first name. */
     set firstName(value) {
-        this.#firstName = value.trim();
+        this._firstName = value.trim();
     }
 
-    /**
-     * Gets the person's last name.
-     * @returns {string} The last name.
-     */
+    /** @returns {string} Person's last name. */
     get lastName() {
-        return this.#lastName;
+        return this._lastName;
     }
 
-    /**
-     * Updates the person's last name.
-     * @param {string} value - The new last name.
-     */
+    /** @param {string} value - New last name. */
     set lastName(value) {
-        this.#lastName = value.trim();
+        this._lastName = value.trim();
     }
 
-    /**
-     * Gets the person's complete name.
-     * @returns {string} The first name and last name separated by a space.
-     */
+    /** @returns {string} Person's complete name. */
     get fullName() {
-        return `${this.firstName} ${this.lastName}`;
+        return `${this.firstName} ${this.lastName}`.trim();
     }
 }
