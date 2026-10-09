@@ -1,3 +1,4 @@
+
 {
   "common": {
     "language": "Idioma",
@@ -34,5 +35,49 @@
   },
   "notFound": {
     "description": "La página solicitada no existe."
+  },
+  "billing": {
+    "label": "SUSCRIPCIONES",
+    "plansTitle": "Planes disponibles",
+    "plansDescription": "Elige el plan que mejor se adapte a tu servicio.",
+    "viewSubscription": "Ver mi suscripción",
+    "available": "Disponible",
+    "selectPlan": "Seleccionar plan",
+    "loading": "Cargando planes...",
+    "retry": "Reintentar",
+    "noPlans": "No hay planes disponibles.",
+    "confirmTitle": "Confirmar suscripción",
+    "confirmDescription": "Revisa el plan seleccionado antes de confirmar.",
+    "planField": "Plan",
+    "selectedPlan": "Plan seleccionado",
+    "driverProfileField": "Identificador del conductor",
+    "startDateField": "Fecha de inicio",
+    "registrationNotice": "Los datos se registrarán en Rumbo al confirmar la operación.",
+    "confirmSubscription": "Confirmar suscripción",
+    "back": "Volver",
+    "saving": "Guardando...",
+    "createdSuccessfully": "¡Suscripción registrada correctamente!",
+    "savedNotice": "El registro se guardó en MockAPI.",
+
+    "myTitle": "Mi suscripción",
+    "myDescription": "Consulta y administra la información de tu suscripción en Rumbo.",
+    "plansButton": "Ver planes",
+    "currentPlan": "PLAN ACTUAL",
+    "statusField": "Estado de la suscripción",
+    "statusActive": "Activa",
+    "statusPaused": "Pausada",
+    "amount": "Monto",
+    "manage": "Gestionar suscripción",
+    "remove": "Cancelar suscripción",
+    "noSubscriptions": "No hay suscripciones registradas.",
+    "unknownPlan": "Plan no disponible",
+    "editTitle": "Gestionar mi suscripción",
+    "editDescription": "Actualiza el plan o estado de tu suscripción.",
+    "saveChanges": "Guardar cambios",
+    "deleteTitle": "¿Cancelar suscripción?",
+    "deleteDescription": "Esta acción eliminará el registro de tu suscripción. ¿Estás seguro de que deseas continuar?",
+    "keepSubscription": "Mantener suscripción",
+    "confirmDelete": "Sí, cancelar"
+
   }
 }

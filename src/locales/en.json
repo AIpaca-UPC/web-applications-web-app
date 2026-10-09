@@ -34,5 +34,53 @@
   },
   "notFound": {
     "description": "The requested page does not exist."
+  },
+
+  "billing": {
+    "label": "SUBSCRIPTIONS",
+    "plansTitle": "Available plans",
+    "plansDescription": "Choose the plan that best fits your needs.",
+    "viewSubscription": "View my subscription",
+    "available": "Available",
+    "selectPlan": "Select plan",
+    "loading": "Loading plans...",
+    "retry": "Retry",
+    "noPlans": "No plans available.",
+
+    "confirmTitle": "Confirm subscription",
+    "confirmDescription": "Review the selected plan before confirming.",
+    "planField": "Plan",
+    "selectedPlan": "Selected plan",
+    "driverProfileField": "Driver identifier",
+    "startDateField": "Start date",
+    "registrationNotice": "The information will be saved in Rumbo when you confirm.",
+    "confirmSubscription": "Confirm subscription",
+    "back": "Back",
+    "saving": "Saving...",
+    "createdSuccessfully": "Subscription created successfully!",
+    "savedNotice": "The record was saved in MockAPI.",
+
+    "myTitle": "My subscription",
+    "myDescription": "View and manage your subscription information in Rumbo.",
+    "plansButton": "View plans",
+    "currentPlan": "CURRENT PLAN",
+    "statusField": "Subscription status",
+    "statusActive": "Active",
+    "statusPaused": "Paused",
+    "amount": "Amount",
+    "manage": "Manage subscription",
+    "remove": "Cancel subscription",
+    "noSubscriptions": "No subscriptions registered.",
+    "unknownPlan": "Plan unavailable",
+    "editTitle": "Manage my subscription",
+    "editDescription": "Update your subscription plan or status.",
+    "saveChanges": "Save changes",
+    "deleteTitle": "Cancel subscription?",
+    "deleteDescription": "This action will delete your subscription record. Are you sure you want to continue?",
+    "keepSubscription": "Keep subscription",
+    "confirmDelete": "Yes, cancel"
+
+
   }
+
 }
