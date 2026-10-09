@@ -1,13 +1,21 @@
-import axios from 'axios'
+import axios from "axios";
+const platformApi = import.meta.env.PLATFORM_PROVIDER_API_BASE_URL;
 
-// Set VITE_API_BASE_URL in .env.local for your own API provider.
-// This contains no feature-specific endpoint or mock data.
 export class BaseApi {
-  constructor(baseURL = import.meta.env.VITE_API_BASE_URL || '') {
-    this.http = axios.create({
-      baseURL,
-      headers: { Accept: 'application/json' },
-      timeout: 15000,
-    })
-  }
+    #http;
+
+    constructor() {
+        this.#http = axios.create({
+            baseURL: platformApi,
+            headers: {
+
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        })
+    }
+
+    get http(){
+        return this.#http;
+    }
 }

@@ -1,3 +1,4 @@
+
 {
   "common": {
     "language": "Language",
@@ -8,13 +9,22 @@
     "back": "Back to dashboard"
   },
   "nav": {
+    "home": "Home",
+    "students": "Students",
+    "routes": "Routes",
+    "vehicles": "Vehicles",
+    "notifications": "Notifications",
+    "billing": "Plan & billing",
+    "helpTitle": "Need help?",
+    "helpText": "Review the guidance and safety information.",
     "navigation": "Main navigation",
     "dashboard": "Dashboard",
     "workspaces": "Bounded Contexts"
   },
   "home": {
+    "title": "Rumbo operations",
+    "content": "Manage the main frontend CRUD modules from this dashboard.",
     "eyebrow": "AIpaca-UPC · Team Project",
-    "title": "Rumbo frontend workspace",
     "description": "This is the shared Vue 3 foundation for the team. Every bounded context has its own folder and will be implemented independently.",
     "ready": "Vue 3, PrimeVue, Vue Router, Pinia and i18n are configured.",
     "sectionsTitle": "Module workspaces",
@@ -27,6 +37,27 @@
     "alerting": "Alerting & Incident Management",
     "billing": "Subscriptions & Billing"
   },
+  "quickActions": {
+    "title": "Quick actions",
+    "reportDelay": "Report delay",
+    "reportIncident": "Report incident",
+    "configureRoute": "Configure route"
+  },
+  "students": {
+    "main": {
+      "title": "Students",
+      "subtitle": "Manage students associated to your account.",
+      "newStudent": "New student",
+      "noStudents": "No students registered."
+    },
+    "data": {
+      "name": "Name",
+      "birthdate": "Birthdate",
+      "school": "School",
+      "state": "State",
+      "actions": "Actions"
+    }
+  },
   "placeholder": {
     "title": "Workspace ready for development",
     "description": "No CRUD or business logic is included. The responsible team member can add domain models, Pinia stores, REST services and Vue components here.",
@@ -35,7 +66,11 @@
   "notFound": {
     "description": "The requested page does not exist."
   },
-
+  "footer": {
+    "rights": "All rights reserved.",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy"
+  },
   "billing": {
     "label": "SUBSCRIPTIONS",
     "plansTitle": "Available plans",
@@ -46,7 +81,6 @@
     "loading": "Loading plans...",
     "retry": "Retry",
     "noPlans": "No plans available.",
-
     "confirmTitle": "Confirm subscription",
     "confirmDescription": "Review the selected plan before confirming.",
     "planField": "Plan",
@@ -59,7 +93,6 @@
     "saving": "Saving...",
     "createdSuccessfully": "Subscription created successfully!",
     "savedNotice": "The record was saved in MockAPI.",
-
     "myTitle": "My subscription",
     "myDescription": "View and manage your subscription information in Rumbo.",
     "plansButton": "View plans",
@@ -79,8 +112,5 @@
     "deleteDescription": "This action will delete your subscription record. Are you sure you want to continue?",
     "keepSubscription": "Keep subscription",
     "confirmDelete": "Yes, cancel"
-
-
   }
-
 }
