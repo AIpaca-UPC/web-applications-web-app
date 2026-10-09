@@ -1,31 +1,37 @@
-import Home from "./shared/presentation/views/home.vue";
-import {createRouter, createWebHistory} from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router'
+import AppLayout from './shared/presentation/components/layout.vue'
+import Home from './shared/presentation/views/home.vue'
+import { moduleCatalog } from './shared/domain/module-catalog.js'
 
-const about = () =>
-    import('./shared/presentation/views/about.vue')
-const pageNotFound = () =>
-    import('./shared/presentation/views/page-not-found.vue')
-
+const ModulePlaceholder = () => import('./shared/presentation/views/module-placeholder.vue')
+const PageNotFound = () => import('./shared/presentation/views/page-not-found.vue')
 
 const routes = [
-    { path: '/home', name: 'home', component: Home, meta: { title: 'Home' } },
-    { path: '/about', name: 'about', component: about, meta: { title: 'About' } },
-    { path: '/:pathMatch(.*)*', name: 'not-found', component: pageNotFound, meta: { title: 'Page Not Found' } },
-    { path: '/', redirect: '/home' },
-
-];
+  {
+    path: '/',
+    component: AppLayout,
+    children: [
+      { path: '', redirect: '/home' },
+      { path: 'home', name: 'home', component: Home, meta: { title: 'Dashboard' } },
+      ...moduleCatalog.map((module) => ({
+        path: module.path.slice(1),
+        name: module.id,
+        component: ModulePlaceholder,
+        props: { titleKey: module.titleKey, folder: module.folder },
+        meta: { title: module.id },
+      })),
+    ],
+  },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: PageNotFound },
+]
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
-    routes: routes,
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
 })
 
-
-router.beforeEach((to, from) => {
-    console.log(`Navigating from ${from.name} to ${to.name}`);
-    let baseTitle = 'Rumbo';
-    document.title = `${baseTitle} - ${to.meta['title']}`;
-    return true;
+router.afterEach((to) => {
+  document.title = `Rumbo | ${to.meta.title || 'Frontend'}`
 })
 
-export default router;
+export default router

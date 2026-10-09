@@ -1,55 +1,15 @@
+# Rumbo Frontend — development guidelines
 
-You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
-
-## TypeScript Best Practices
-
-- Use strict type checking
-- Prefer type inference when the type is obvious
-- Avoid the `any` type; use `unknown` when type is uncertain
-
-## Angular Best Practices
-
-- Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
-- Use signals for state management
-- Implement lazy loading for feature routes
-- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
-- Use `NgOptimizedImage` for all static images.
-  - `NgOptimizedImage` does not work for inline base64 images.
-
-## Accessibility Requirements
-
-- It MUST pass all AXE checks.
-- It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
-
-### Components
-
-- Keep components small and focused on a single responsibility
-- Use `input()` and `output()` functions instead of decorators
-- Use `computed()` for derived state
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
-- Prefer inline templates for small components
-- Prefer Reactive forms instead of Template-driven ones
-- Do NOT use `ngClass`, use `class` bindings instead
-- Do NOT use `ngStyle`, use `style` bindings instead
-- When using external templates/styles, use paths relative to the component TS file.
-
-## State Management
-
-- Use signals for local component state
-- Use `computed()` for derived state
-- Keep state transformations pure and predictable
-- Do NOT use `mutate` on signals, use `update` or `set` instead
-
-## Templates
-
-- Keep templates simple and avoid complex logic
-- Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-- Use the async pipe to handle observables
-- Do not assume globals like (`new Date()`) are available.
-
-## Services
-
-- Design services around a single responsibility
-- Use the `providedIn: 'root'` option for singleton services
-- Use the `inject()` function instead of constructor injection
+- Framework: Vue 3 Composition API with JavaScript, Vite, PrimeVue and PrimeFlex.
+- Styling: Material Design through PrimeVue Material theme. Use responsive and accessible components.
+- Keep each bounded context independent in `src/bounded-contexts/<context>/`.
+- Suggested layers: `domain/`, `application/` (Pinia stores), `infrastructure/` (Axios/REST), `presentation/` (Vue SFCs).
+- Shared UI, routing, locale and API helpers live under `src/shared/` and the root `src/` configuration files.
+- Do not import one bounded context's internal modules directly into another. Use explicitly defined shared contracts.
+- Keep views thin: move API calls to infrastructure and state handling to Pinia stores.
+- Implement complete CRUD operations with error/loading/empty states as features are added.
+- Use Vue Router and dynamic imports for feature routes when implementing a module.
+- Internationalization: English (`en-US`) initially, Latin American Spanish (`es-419`) also supported. Add every user-visible string to both dictionaries.
+- Accessibility: keyboard navigation, semantic landmarks, input labels, visible focus and ARIA where needed.
+- Create a Pull Request into `develop`; never overwrite unrelated teammate changes.
+- Run `npm ci && npm run build` before proposing a merge.
