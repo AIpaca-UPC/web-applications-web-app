@@ -1,38 +1,42 @@
 {
-  "common": {
-    "language": "Idioma",
-    "project": "Plataforma de transporte escolar",
-    "workspace": "Espacio de desarrollo del equipo",
-    "pending": "Pendiente de implementar",
-    "open": "Abrir módulo",
-    "back": "Volver al panel"
+  "home": {
+    "title": "Operaciones de Rumbo",
+    "content": "Gestiona los principales módulos CRUD del frontend desde este panel."
   },
   "nav": {
-    "navigation": "Navegación principal",
-    "dashboard": "Panel",
-    "workspaces": "Bounded Contexts"
+    "home": "Inicio",
+    "students": "Estudiantes",
+    "routes": "Rutas",
+    "vehicles": "Vehículos",
+    "notifications": "Notificaciones",
+    "billing": "Plan y facturación",
+    "helpTitle": "¿Necesitas ayuda?",
+    "helpText": "Revisa la ayuda y las indicaciones de seguridad."
   },
-  "home": {
-    "eyebrow": "AIpaca-UPC · Proyecto grupal",
-    "title": "Base frontend de Rumbo",
-    "description": "Esta es la base compartida de Vue 3 para el equipo. Cada Bounded Context tiene su carpeta independiente para que sus integrantes lo desarrollen.",
-    "ready": "Vue 3, PrimeVue, Vue Router, Pinia e i18n están configurados.",
-    "sectionsTitle": "Módulos del proyecto",
-    "moduleDescription": "La funcionalidad todavía no está implementada. Este espacio está reservado para su responsable."
+  "quickActions": {
+    "title": "Acciones rápidas",
+    "reportDelay": "Reportar retraso",
+    "reportIncident": "Reportar incidencia",
+    "configureRoute": "Configurar ruta"
   },
-  "modules": {
-    "profiles": "Perfiles y relaciones",
-    "vehicles": "Vehículos y credenciales",
-    "routes": "Rutas y planificación de viajes",
-    "alerting": "Alertas e incidencias",
-    "billing": "Suscripciones y facturación"
+  "students": {
+    "main": {
+      "title": "Estudiantes",
+      "subtitle": "Gestiona los estudiantes asociados a tu perfil.",
+      "newStudent": "Nuevo estudiante",
+      "noStudents": "No hay estudiantes registrados."
+    },
+    "data": {
+      "name": "Nombre",
+      "birthdate": "Fecha de nacimiento",
+      "school": "Colegio",
+      "state": "Estado",
+      "actions": "Acciones"
+    }
   },
-  "placeholder": {
-    "title": "Módulo listo para desarrollar",
-    "description": "Todavía no contiene CRUD ni lógica de negocio. Su responsable puede agregar modelos, stores de Pinia, servicios REST y componentes Vue.",
-    "hint": "Actualiza el router cuando agregues la primera vista Vue."
-  },
-  "notFound": {
-    "description": "La página solicitada no existe."
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "terms": "Términos y condiciones",
+    "privacy": "Privacidad"
   }
 }
