@@ -6,7 +6,7 @@ import { DelayAssembler } from "@/bounded-contexts/alerting-and-incident-managem
 import { Incident } from "@/bounded-contexts/alerting-and-incident-management/domain/model/incident.entity.js";
 import { Delay } from "@/bounded-contexts/alerting-and-incident-management/domain/model/delay.entity.js";
 
-const incidentsApi = new IncidentsApi()
+const incidentsApi = new IncidentsApi();
 
 const useIncidentStore = defineStore("incident", () =>{
 

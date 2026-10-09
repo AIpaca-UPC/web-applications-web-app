@@ -34,5 +34,34 @@
   },
   "notFound": {
     "description": "The requested page does not exist."
+  },
+  "quickActions": {
+    "title": "Quick actions",
+    "reportDelay": "Report delay",
+    "reportIncident":"Report incident",
+    "configureRoute": "Configure route"
+  },
+  "delayForm": {
+    "title": "Report delay",
+    "subtitle": "Select the estimated magnitude of the delay:",
+    "cause": "Delay reason",
+    "cancel": "Cancel",
+    "save": "Confirm and save",
+    "5min": "5 minutes",
+    "10min": "10 minutes",
+    "15min": "+15 minutes"
+  },
+  "incidentForm": {
+    "title": "Report incident",
+    "title-placeholder": "Report incident",
+    "description-placeholder": "Select the estimated magnitude of the delay:",
+    "priority": "Delay cause",
+    "cancel": "Cancel",
+    "save": "Confirm and save",
+    "important": "Important",
+    "critical": "Critical",
+    "regular": "Regular",
+    "priority-placeholder": "Choose priority"
   }
+
 }

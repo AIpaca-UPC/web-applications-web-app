@@ -1,9 +1,9 @@
-import {BaseApi} from "../../../shared/infrastructure/base-api.js";
-import {BaseEndpoint} from "../../../shared/infrastructure/base-endpoint.js";
+import {BaseApi} from "@/shared/infrastructure/base-api.js";
+import {BaseEndpoint} from "@/shared/infrastructure/base-endpoint.js";
 
-const delaysAndIncidentsBaseUrl = import.meta.env.PLATFORM_PROVIDER_API_BASE_URL;
-const delaysEndpointPath = import.meta.env.PLATFORM_PROVIDER_DELAYS_ENDPOINT_PATH;
-const incidentsEndpointPath = import.meta.env.PLATFORM_PROVIDER_INCIDENTS_ENDPOINT_PATH;
+const delaysAndIncidentsBaseUrl = import.meta.env.VITE_INCIDENTS_API_BASE_URL;
+const delaysEndpointPath = import.meta.env.VITE_DELAYS_ENDPOINT_PATH;
+const incidentsEndpointPath = import.meta.env.VITE_INCIDENTS_ENDPOINT_PATH;
 
 
 export class IncidentsApi extends BaseApi {
@@ -12,9 +12,9 @@ export class IncidentsApi extends BaseApi {
     #incidentsEndpoint;
 
     constructor() {
-        super();
-        this.#delaysEndpoint = new BaseEndpoint(delaysAndIncidentsBaseUrl, delaysEndpointPath);
-        this.#incidentsEndpoint = new BaseEndpoint(delaysAndIncidentsBaseUrl, incidentsEndpointPath);
+        super(delaysAndIncidentsBaseUrl);
+        this.#delaysEndpoint = new BaseEndpoint(this, delaysEndpointPath);
+        this.#incidentsEndpoint = new BaseEndpoint(this, incidentsEndpointPath);
     }
 
     getIncidents() {

@@ -3,10 +3,12 @@ import { RouterLink } from 'vue-router'
 import Card from 'primevue/card'
 import Tag from 'primevue/tag'
 import { moduleCatalog } from '../../domain/module-catalog.js'
+import QuickActions from "@/bounded-contexts/alerting-and-incident-management/presentation/components/quick-actions.vue";
 </script>
 
 <template>
   <section class="page-content">
+    <QuickActions />
     <p class="eyebrow">{{ $t('home.eyebrow') }}</p>
     <h1>{{ $t('home.title') }}</h1>
     <p class="lead">{{ $t('home.description') }}</p>
