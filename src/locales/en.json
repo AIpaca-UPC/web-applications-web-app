@@ -34,5 +34,70 @@
   },
   "notFound": {
     "description": "The requested page does not exist."
+  },
+  "vehicles": {
+    "list": {
+      "title": "Vehicle & Credential Management",
+      "subtitle": "Rumbo displays and centralizes the registered fleet information.",
+      "seats": "{count} seats",
+      "empty": "No vehicles registered yet.",
+      "loadError": "Vehicles could not be loaded."
+    },
+    "card": {
+      "plate": "Plate",
+      "capacity": "Capacity",
+      "year": "Year"
+    },
+    "fields": {
+      "licensePlate": "License Plate",
+      "brand": "Brand",
+      "model": "Model",
+      "capacity": "Capacity",
+      "capacitySeats": "Capacity (Seats)",
+      "year": "Year",
+      "status": "Status"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "MAINTENANCE": "Maintenance"
+    },
+    "actions": {
+      "new": "New Vehicle",
+      "create": "Create Vehicle",
+      "save": "Save Changes",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "retry": "Retry"
+    },
+    "form": {
+      "newTitle": "New Vehicle",
+      "editTitle": "Edit Vehicle",
+      "newSubtitle": "Fill in the vehicle details to add it to the fleet.",
+      "editSubtitle": "Update the vehicle details to keep the fleet record current."
+    },
+    "delete": {
+      "header": "Delete vehicle",
+      "message": "Are you sure you want to delete {name} ({plate})? This action cannot be undone."
+    },
+    "toast": {
+      "created": "Vehicle created successfully",
+      "updated": "Vehicle updated successfully",
+      "deleted": "Vehicle deleted",
+      "notFound": "The vehicle was not found",
+      "error": "Something went wrong. Please try again."
+    },
+    "validation": {
+      "required": "This field is required.",
+      "plateFormat": "Use the format ABC-123.",
+      "plateDuplicated": "This plate is already registered.",
+      "capacityRange": "Capacity must be between {min} and {max} seats.",
+      "yearRange": "Year must be between {min} and {max}."
+    },
+    "notice": {
+      "title": "Important",
+      "text": "These records and capacities are declared by the provider in this prototype. Rumbo centralizes operational management without simulating an external government validation."
+    }
   }
 }

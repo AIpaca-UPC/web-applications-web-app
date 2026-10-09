@@ -34,5 +34,70 @@
   },
   "notFound": {
     "description": "La página solicitada no existe."
+  },
+  "vehicles": {
+    "list": {
+      "title": "Gestión de Vehículos y Credenciales",
+      "subtitle": "Rumbo muestra y centraliza la información registrada de la flota vehicular.",
+      "seats": "{count} asientos",
+      "empty": "Aún no hay vehículos registrados.",
+      "loadError": "No se pudieron cargar los vehículos."
+    },
+    "card": {
+      "plate": "Placa",
+      "capacity": "Capacidad",
+      "year": "Año"
+    },
+    "fields": {
+      "licensePlate": "Placa",
+      "brand": "Marca",
+      "model": "Modelo",
+      "capacity": "Capacidad",
+      "capacitySeats": "Capacidad (asientos)",
+      "year": "Año",
+      "status": "Estado"
+    },
+    "status": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo",
+      "MAINTENANCE": "Mantenimiento"
+    },
+    "actions": {
+      "new": "Nuevo vehículo",
+      "create": "Crear vehículo",
+      "save": "Guardar cambios",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "cancel": "Cancelar",
+      "retry": "Reintentar"
+    },
+    "form": {
+      "newTitle": "Nuevo vehículo",
+      "editTitle": "Editar vehículo",
+      "newSubtitle": "Completa los datos del vehículo para agregarlo a la flota.",
+      "editSubtitle": "Actualiza los datos del vehículo para mantener al día el registro de la flota."
+    },
+    "delete": {
+      "header": "Eliminar vehículo",
+      "message": "¿Seguro que deseas eliminar {name} ({plate})? Esta acción no se puede deshacer."
+    },
+    "toast": {
+      "created": "Vehículo creado correctamente",
+      "updated": "Vehículo actualizado correctamente",
+      "deleted": "Vehículo eliminado",
+      "notFound": "No se encontró el vehículo",
+      "error": "Ocurrió un error. Inténtalo de nuevo."
+    },
+    "validation": {
+      "required": "Este campo es obligatorio.",
+      "plateFormat": "Usa el formato ABC-123.",
+      "plateDuplicated": "Esta placa ya está registrada.",
+      "capacityRange": "La capacidad debe estar entre {min} y {max} asientos.",
+      "yearRange": "El año debe estar entre {min} y {max}."
+    },
+    "notice": {
+      "title": "Importante",
+      "text": "Estos registros y capacidades son declarados por el prestador en este prototipo. Rumbo centraliza la gestión operativa sin simular una validación gubernamental externa."
+    }
   }
 }
