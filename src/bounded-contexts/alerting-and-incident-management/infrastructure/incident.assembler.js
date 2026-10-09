@@ -1,4 +1,4 @@
-import {Incident} from "@/incidents-and-delay/domain/model/incident.entity.js";
+import {Incident} from "@/bounded-contexts/alerting-and-incident-management/domain/model/incident.entity.js";
 
 export class IncidentAssembler {
 

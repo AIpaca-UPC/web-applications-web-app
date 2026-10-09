@@ -1,5 +1,5 @@
-import {BaseApi} from "../../shared/infrastructure/base-api.js";
-import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
+import {BaseApi} from "../../../shared/infrastructure/base-api.js";
+import {BaseEndpoint} from "../../../shared/infrastructure/base-endpoint.js";
 
 const delaysAndIncidentsBaseUrl = import.meta.env.PLATFORM_PROVIDER_API_BASE_URL;
 const delaysEndpointPath = import.meta.env.PLATFORM_PROVIDER_DELAYS_ENDPOINT_PATH;

@@ -1,4 +1,4 @@
-import {Delay} from "@/incidents-and-delay/domain/model/delay.entity.js";
+import {Delay} from "@/bounded-contexts/alerting-and-incident-management/domain/model/delay.entity.js";
 
 export class DelayAssembler {
 

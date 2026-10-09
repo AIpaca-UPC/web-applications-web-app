@@ -1,10 +1,10 @@
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
-import { IncidentsApi } from "@/incidents-and-delay/infrastructure/incidents-api.js";
-import { IncidentAssembler } from "@/incidents-and-delay/infrastructure/incident.assembler.js";
-import { DelayAssembler } from "@/incidents-and-delay/infrastructure/delay.assembler.js";
-import { Incident } from "@/incidents-and-delay/domain/model/incident.entity.js";
-import { Delay } from "@/incidents-and-delay/domain/model/delay.entity.js";
+import { IncidentsApi } from "@/bounded-contexts/alerting-and-incident-management/infrastructure/incidents-api.js";
+import { IncidentAssembler } from "@/bounded-contexts/alerting-and-incident-management/infrastructure/incident.assembler.js";
+import { DelayAssembler } from "@/bounded-contexts/alerting-and-incident-management/infrastructure/delay.assembler.js";
+import { Incident } from "@/bounded-contexts/alerting-and-incident-management/domain/model/incident.entity.js";
+import { Delay } from "@/bounded-contexts/alerting-and-incident-management/domain/model/delay.entity.js";
 
 const incidentsApi = new IncidentsApi()
 
