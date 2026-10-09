@@ -2,51 +2,51 @@
 import { Person } from './person.js';
 
 /**
- * Representa los posibles estados de un estudiante
- * dentro del Bounded Context de Profiles & Relationship Management.
+ * Represents the possible statuses of a student
+ * within the Profiles & Relationship Management bounded context.
  *
  * @readonly
  * @enum {string}
  */
 export const StudentStatus = Object.freeze({
-    /** Indica que el estudiante está activo. */
+    /** Indicates that the student is currently active. */
     ACTIVE: 'ACTIVE',
 
-    /** Indica que el estudiante está inactivo. */
+    /** Indicates that the student is currently inactive. */
     INACTIVE: 'INACTIVE',
 });
 
 /**
- * Verifica si un estado pertenece a StudentStatus.
+ * Checks whether a value belongs to StudentStatus.
  *
- * @param {string} value - Estado que se desea validar.
- * @returns {boolean} Verdadero si el estado es válido.
+ * @param {string} value - Status to validate.
+ * @returns {boolean} True if the status is valid.
  */
 export const isValidStudentStatus = (value) => {
     return Object.values(StudentStatus).includes(value);
 };
 
 /**
- * Entidad que representa a un estudiante dentro del
- * Bounded Context de Profiles & Relationship Management.
+ * Represents a student within the
+ * Profiles & Relationship Management bounded context.
  *
- * Hereda la información personal de Person y contiene
- * los datos específicos de un estudiante.
+ * Inherits common personal information from Person
+ * and maintains student-specific attributes.
  *
  * @class Student
  * @extends Person
  */
 export class Student extends Person {
     /**
-     * Inicializa una nueva instancia de Student.
+     * Creates a new Student instance.
      *
-     * @param {Object} params - Atributos de la entidad.
-     * @param {?string} [params.id=null] - Identificador del estudiante.
-     * @param {string} [params.firstName=''] - Nombre del estudiante.
-     * @param {string} [params.lastName=''] - Apellido del estudiante.
-     * @param {string} [params.birthDate=''] - Fecha de nacimiento en formato YYYY-MM-DD.
-     * @param {string} [params.schoolName=''] - Nombre del colegio.
-     * @param {string} [params.status=StudentStatus.ACTIVE] - Estado del estudiante.
+     * @param {Object} params - Entity attributes.
+     * @param {?string} [params.id=null] - Student identifier.
+     * @param {string} [params.firstName=''] - Student's first name.
+     * @param {string} [params.lastName=''] - Student's last name.
+     * @param {string} [params.birthDate=''] - Date of birth in YYYY-MM-DD format.
+     * @param {string} [params.schoolName=''] - Student's school name.
+     * @param {string} [params.status=StudentStatus.ACTIVE] - Current student status.
      */
     constructor({
                     id = null,
@@ -56,7 +56,7 @@ export class Student extends Person {
                     schoolName = '',
                     status = StudentStatus.ACTIVE,
                 } = {}) {
-        super({id, firstName, lastName});
+        super({ id, firstName, lastName });
 
         this.birthDate = birthDate;
         this.schoolName = schoolName;
@@ -64,55 +64,55 @@ export class Student extends Person {
     }
 
     /**
-     * Obtiene la fecha de nacimiento del estudiante.
+     * Gets the student's date of birth.
      *
-     * @returns {string} Fecha de nacimiento en formato YYYY-MM-DD.
+     * @returns {string} Date of birth in YYYY-MM-DD format.
      */
     get birthDate() {
         return this._birthDate;
     }
 
     /**
-     * Actualiza la fecha de nacimiento del estudiante.
+     * Updates the student's date of birth.
      *
-     * @param {string} value - Nueva fecha de nacimiento.
+     * @param {string} value - New date of birth.
      */
     set birthDate(value) {
         this._birthDate = value.trim();
     }
 
     /**
-     * Obtiene el nombre del colegio del estudiante.
+     * Gets the student's school name.
      *
-     * @returns {string} Nombre del colegio.
+     * @returns {string} Student's school name.
      */
     get schoolName() {
         return this._schoolName;
     }
 
     /**
-     * Actualiza el nombre del colegio del estudiante.
+     * Updates the student's school name.
      *
-     * @param {string} value - Nuevo nombre del colegio.
+     * @param {string} value - New school name.
      */
     set schoolName(value) {
         this._schoolName = value.trim();
     }
 
     /**
-     * Obtiene el estado actual del estudiante.
+     * Gets the student's current status.
      *
-     * @returns {string} Estado del estudiante.
+     * @returns {string} Current student status.
      */
     get status() {
         return this._status;
     }
 
     /**
-     * Actualiza el estado del estudiante.
+     * Updates the student's current status.
      *
-     * @param {string} value - Nuevo estado del estudiante.
-     * @throws {Error} Si el estado no pertenece a StudentStatus.
+     * @param {string} value - New student status.
+     * @throws {Error} If the status is not supported.
      */
     set status(value) {
         if (!isValidStudentStatus(value)) {
@@ -122,4 +122,3 @@ export class Student extends Person {
         this._status = value;
     }
 }
-
