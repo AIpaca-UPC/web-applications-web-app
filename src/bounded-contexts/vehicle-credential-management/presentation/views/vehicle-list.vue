@@ -12,7 +12,7 @@ import Message from 'primevue/message'
 import Skeleton from 'primevue/skeleton'
 import Toast from 'primevue/toast'
 import ConfirmDialog from 'primevue/confirmdialog'
-import vehicleStore from "@/bounded-contexts/vehicle-credential-management/application/vehicle.store.js";
+import vehicleStore from '@/bounded-contexts/vehicle-credential-management/application/vehicle.store.js'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -46,7 +46,7 @@ const retry = () => {
 
 /**
  * Asks for confirmation and deletes the vehicle if accepted.
- * @param {import('../../domain/model/vehicle.entity.js').Vehicle} vehicle
+ * @param {import('../../domain/vehicle.entity.js').Vehicle} vehicle
  */
 const confirmDelete = (vehicle) => {
   confirm.require({
@@ -68,7 +68,7 @@ const confirmDelete = (vehicle) => {
 </script>
 
 <template>
-  <section class="page-content vehicles-page">
+  <section class="vehicles-page">
     <Toast />
     <ConfirmDialog />
 
@@ -80,7 +80,7 @@ const confirmDelete = (vehicle) => {
       <Button :label="t('vehicles.actions.new')" icon="pi pi-plus" @click="navigateToNew" />
     </header>
 
-    <Message v-if="errors.length" severity="error" class="vehicles-message">
+    <Message v-if="errors.length" severity="error" class="vehicles-error">
       <div class="message-row">
         <span>{{ t('vehicles.list.loadError') }}</span>
         <Button :label="t('vehicles.actions.retry')" icon="pi pi-refresh" size="small" text @click="retry" />
@@ -89,7 +89,7 @@ const confirmDelete = (vehicle) => {
 
     <!-- Loading state -->
     <div v-if="loading && !loaded" class="vehicles-grid">
-      <Skeleton v-for="n in 2" :key="n" height="11rem" border-radius="12px" />
+      <Skeleton v-for="n in 2" :key="n" height="11rem" border-radius="14px" />
     </div>
 
     <!-- Empty state -->
@@ -104,52 +104,42 @@ const confirmDelete = (vehicle) => {
       <Card v-for="vehicle in vehicles" :key="vehicle.id" class="vehicle-card">
         <template #title>
           <div class="vehicle-card-title">
-            <span>{{ vehicle.displayName }}</span>
+            <span class="vehicle-name">{{ vehicle.displayName }}</span>
             <Tag
                 :value="t(`vehicles.status.${vehicle.status}`)"
                 :severity="statusSeverity[vehicle.status] ?? 'secondary'"
+                class="status-tag"
             />
           </div>
         </template>
         <template #content>
           <dl class="vehicle-specs">
             <div>
-              <dt>{{ t('vehicles.fields.licensePlate') }}</dt>
+              <dt>{{ t('vehicles.card.plate') }}</dt>
               <dd><span class="plate">{{ vehicle.licensePlate }}</span></dd>
             </div>
             <div>
-              <dt>{{ t('vehicles.fields.capacity') }}</dt>
+              <dt>{{ t('vehicles.card.capacity') }}</dt>
               <dd>{{ t('vehicles.list.seats', { count: vehicle.capacity }) }}</dd>
             </div>
             <div>
-              <dt>{{ t('vehicles.fields.year') }}</dt>
+              <dt>{{ t('vehicles.card.year') }}</dt>
               <dd>{{ vehicle.year }}</dd>
             </div>
           </dl>
         </template>
         <template #footer>
           <div class="vehicle-card-actions">
-            <Button
-                :label="t('vehicles.actions.edit')"
-                icon="pi pi-pencil"
-                size="small"
-                outlined
-                @click="navigateToEdit(vehicle.id)"
-            />
-            <Button
-                :label="t('vehicles.actions.delete')"
-                icon="pi pi-trash"
-                size="small"
-                severity="danger"
-                outlined
-                @click="confirmDelete(vehicle)"
-            />
+            <Button :label="t('vehicles.actions.edit')" icon="pi pi-pencil" size="small" outlined
+                    @click="navigateToEdit(vehicle.id)" />
+            <Button :label="t('vehicles.actions.delete')" icon="pi pi-trash" size="small" outlined
+                    @click="confirmDelete(vehicle)" />
           </div>
         </template>
       </Card>
     </div>
 
-    <Message severity="info" class="vehicles-message" :closable="false">
+    <Message severity="secondary" icon="pi pi-info-circle" :closable="false" class="vehicles-notice">
       <strong>{{ t('vehicles.notice.title') }}</strong>
       <p class="notice-text">{{ t('vehicles.notice.text') }}</p>
     </Message>
@@ -157,6 +147,10 @@ const confirmDelete = (vehicle) => {
 </template>
 
 <style scoped>
+.vehicles-page {
+  width: 100%;
+  padding: 20px;
+}
 .vehicles-header {
   display: flex;
   justify-content: space-between;
@@ -166,56 +160,109 @@ const confirmDelete = (vehicle) => {
 }
 .vehicles-header h1 {
   margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.2;
 }
 .vehicles-subtitle {
   margin: 0.25rem 0 0;
+  font-size: 0.9rem;
   color: var(--p-text-muted-color);
 }
+
+/* Fixed-width cards aligned to the left, as in the Rumbo mockup */
 .vehicles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(270px, 300px));
   gap: 1.25rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+/* PrimeVue Card customized through its design tokens */
+.vehicle-card {
+  --p-card-border-radius: 14px;
+  --p-card-body-padding: 1.25rem;
+  --p-card-body-gap: 1rem;
+  --p-card-title-font-size: 0.95rem;
+  --p-card-title-font-weight: 700;
+  border: 1px solid var(--p-content-border-color);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.05);
 }
 .vehicle-card-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1rem;
+}
+.vehicle-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.status-tag {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  text-transform: uppercase;
 }
 .vehicle-specs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.5rem;
   margin: 0;
   padding: 0.75rem;
   border-radius: 10px;
   background: var(--p-content-hover-background);
 }
+.vehicle-specs > div {
+  min-width: 0;
+}
 .vehicle-specs dt {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 600;
   text-transform: uppercase;
   color: var(--p-text-muted-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .vehicle-specs dd {
-  margin: 0.25rem 0 0;
-  font-weight: 600;
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 .plate {
   display: inline-block;
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
+  padding: 0.2rem 0.45rem;
+  border-radius: 5px;
   background: var(--p-primary-color);
   color: var(--p-primary-contrast-color);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.04em;
 }
 .vehicle-card-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+}
+
+/* PrimeVue Message used as an informational notice */
+.vehicles-notice strong {
+  font-size: 0.85rem;
+}
+.notice-text {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+}
+
+.vehicles-error {
+  margin-bottom: 1.25rem;
+}
+.message-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
 }
 .vehicles-empty {
   display: flex;
@@ -228,23 +275,12 @@ const confirmDelete = (vehicle) => {
 .vehicles-empty .pi {
   font-size: 2.5rem;
 }
-.vehicles-message {
-  margin-bottom: 1.5rem;
-}
-.message-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  width: 100%;
-}
-.notice-text {
-  margin: 0.25rem 0 0;
-  font-size: 0.85rem;
-}
 @media (max-width: 640px) {
   .vehicles-header {
     flex-direction: column;
+  }
+  .vehicles-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
