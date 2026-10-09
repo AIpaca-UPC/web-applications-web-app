@@ -1,0 +1,55 @@
+{
+  "routes": [
+    {
+      "id": "1",
+      "name": "Ruta de la mañana",
+      "driverProfileId": "2",
+      "vehicleId": "6",
+      "vehicleLabel": "Bus #14",
+      "driverName": "Carlos Estrada",
+      "shift": "MORNING",
+      "direction": "TO_SCHOOL",
+      "status": "PUBLISHED",
+      "publishedAt": "2026-09-15T14:00:00Z",
+      "createdAt": "2026-09-10T15:30:00Z",
+      "stops": [
+        {
+          "id": "1",
+          "sequence_number": 1,
+          "address": "Av. Larco 452",
+          "studentName": "Mateo González",
+          "time": "07:55"
+        },
+        {
+          "id": "2",
+          "sequence_number": 2,
+          "address": "Jr. Los Cedros 118",
+          "studentName": "Lucía Salazar",
+          "time": "08:05"
+        },
+        {
+          "id": "3",
+          "sequence_number": 3,
+          "address": "Av. Primavera 910",
+          "studentName": "Diego Ramos",
+          "time": "08:15"
+        },
+        {
+          "id": "4",
+          "sequence_number": 4,
+          "address": "Calle Las Palmeras 44",
+          "studentName": "Valentina Soto",
+          "time": ""
+        },
+        {
+          "id": "5",
+          "sequence_number": 5,
+          "address": "Colegio San Ignacio",
+          "studentName": "",
+          "time": "08:35",
+          "destination": true
+        }
+      ]
+    }
+  ]
+}
