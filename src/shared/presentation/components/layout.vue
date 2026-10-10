@@ -9,7 +9,7 @@ import { moduleCatalog } from '../../domain/module-catalog.js'
   <div class="app-shell">
     <aside class="sidebar" :aria-label="$t('nav.navigation')">
       <RouterLink to="/home" class="brand" aria-label="Rumbo">
-        <span class="brand-mark">R</span><span>Rumbo</span>
+        <img class="logo" src="../../../../public/assets/rumbo-logo.png" alt="Logo"><span>Rumbo</span>
       </RouterLink>
       <div class="sidebar-note">{{ $t('common.project') }}</div>
       <nav class="sidebar-nav" :aria-label="$t('nav.navigation')">
