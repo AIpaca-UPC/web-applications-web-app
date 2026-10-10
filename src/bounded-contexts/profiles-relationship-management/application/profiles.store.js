@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import { ProfilesApi } from '../infrastructure/profiles.api.js';
+import { ProfilesApi } from '../infrastructure/profiles-api.js';
 import { StudentAssembler } from '../infrastructure/student.assembler.js';
 import { ProfileAssembler } from '../infrastructure/profile.assembler.js';
 
