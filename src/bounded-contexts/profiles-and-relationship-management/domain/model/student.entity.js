@@ -1,3 +1,4 @@
+import {Person} from "@/bounded-contexts/profiles-and-relationship-management/domain/model/person.js";
 
 
 /**
@@ -35,7 +36,7 @@ export const isValidStudentStatus = (value) => {
  * @class Student
  *
  */
-export class Student {
+export class Student extends Person {
     /**
      * Creates a new Student instance.
      *
@@ -56,11 +57,12 @@ export class Student {
                     status = StudentStatus.ACTIVE,
                 } = {}) {
 
-
+        super({ id, firstName, lastName });
         this.birthDate = birthDate;
         this.schoolName = schoolName;
         this.status = status;
     }
+
 
     /**
      * Gets the student's date of birth.
