@@ -1,17 +1,17 @@
 <script setup>
-import { useI18n } from 'vue-i18n';
-const { t } = useI18n();
+import QuickActions from '@/bounded-contexts/alerting-and-incident-management/presentation/components/quick-actions.vue'
 </script>
 
 <template>
-  <section class="pt-6 p-4 md:p-5">
-    <div class="flex flex-column gap-3">
-      <h1 class="text-4x1 font-bold text-color">{{ t('home.title')}}</h1>
-      <p class="m-0 line-height-3 text-color-secondary">{{ t('home.content')}}</p>
+  <section class="page-content">
+    <div class="home-actions">
+      <QuickActions />
     </div>
   </section>
 </template>
 
 <style scoped>
-
+.home-actions {
+  margin-top: 2rem;
+}
 </style>

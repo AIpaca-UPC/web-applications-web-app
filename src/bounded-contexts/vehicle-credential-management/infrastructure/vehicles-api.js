@@ -6,7 +6,8 @@ const vehiclesEndpointPath = import.meta.env.VITE_VEHICLES_ENDPOINT_PATH || '/ve
 
 /**
  * Infrastructure gateway for the Vehicle & Credential Management bounded context.
- * Uses its own base URL so it does not depend on other contexts' API providers.
+ * Uses the shared Axios instance (BaseApi.http) through BaseEndpoint and
+ * unwraps response.data so the application layer receives plain resources.
  *
  * @class VehiclesApi
  * @extends BaseApi
@@ -20,24 +21,27 @@ export class VehiclesApi extends BaseApi {
     }
 
     /** @returns {Promise<Object[]>} Vehicle resources. */
-    getVehicles() {
-        return this.#vehiclesEndpoint.getAll()
+    async getVehicles() {
+        const response = await this.#vehiclesEndpoint.getAll()
+        return response.data
     }
 
     /**
      * @param {string} id - Vehicle identifier.
      * @returns {Promise<Object>} Vehicle resource.
      */
-    getVehicleById(id) {
-        return this.#vehiclesEndpoint.getById(id)
+    async getVehicleById(id) {
+        const response = await this.#vehiclesEndpoint.getById(id)
+        return response.data
     }
 
     /**
      * @param {Object} resource - Vehicle resource without id.
-     * @returns {Promise<Object>} Created vehicle resource (with id assigned by the API).
+     * @returns {Promise<Object>} Created vehicle resource.
      */
-    createVehicle(resource) {
-        return this.#vehiclesEndpoint.create(resource)
+    async createVehicle(resource) {
+        const response = await this.#vehiclesEndpoint.create(resource)
+        return response.data
     }
 
     /**
@@ -45,15 +49,16 @@ export class VehiclesApi extends BaseApi {
      * @param {Object} resource - Vehicle resource with updated data.
      * @returns {Promise<Object>} Updated vehicle resource.
      */
-    updateVehicle(id, resource) {
-        return this.#vehiclesEndpoint.update(id, resource)
+    async updateVehicle(id, resource) {
+        const response = await this.#vehiclesEndpoint.update(id, resource)
+        return response.data
     }
 
     /**
      * @param {string} id - Vehicle identifier.
      * @returns {Promise<void>}
      */
-    deleteVehicle(id) {
-        return this.#vehiclesEndpoint.delete(id)
+    async deleteVehicle(id) {
+        await this.#vehiclesEndpoint.delete(id)
     }
 }

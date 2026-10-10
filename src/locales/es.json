@@ -1,4 +1,3 @@
-
 {
   "common": {
     "language": "Language",
@@ -43,6 +42,28 @@
     "reportIncident": "Report incident",
     "configureRoute": "Configure route"
   },
+  "delayForm": {
+    "title": "Report delay",
+    "subtitle": "Select the estimated magnitude of the delay:",
+    "cause": "Delay reason",
+    "cancel": "Cancel",
+    "save": "Confirm and save",
+    "5min": "5 minutes",
+    "10min": "10 minutes",
+    "15min": "+15 minutes"
+  },
+  "incidentForm": {
+    "title": "Report incident",
+    "title-placeholder": "Report incident",
+    "description-placeholder": "Select the estimated magnitude of the delay:",
+    "priority": "Delay cause",
+    "cancel": "Cancel",
+    "save": "Confirm and save",
+    "important": "Important",
+    "critical": "Critical",
+    "regular": "Regular",
+    "priority-placeholder": "Choose priority"
+  },
   "students": {
     "main": {
       "title": "Students",
@@ -58,77 +79,183 @@
       "actions": "Actions"
     }
   },
+  "routePlanning": {
+    "header": "Configure route",
+    "routeAssigned": "Assigned route",
+    "students": "Students",
+    "routeSetup": "Configure route",
+    "notifications": "Notifications",
+    "billing": "Plan & billing",
+    "settings": "Settings",
+    "driver": "Driver",
+    "helpTitle": "Need help?",
+    "helpMessage": "Review the help and safety guidelines.",
+    "signOut": "Sign out",
+    "headline": "Configure route",
+    "subheading": "Manage the route, stops, student links and delegated access.",
+    "addStop": "Add stop",
+    "stopOrder": "Stop order",
+    "stopOrderHelp": "New trips use the saved sequence until it is changed.",
+    "destination": "Destination",
+    "absentToday": "absent today",
+    "linkStudent": "Link student",
+    "linkDescription": "The guardian must approve the link before access is granted.",
+    "invitationCode": "Invitation code",
+    "requestLink": "Request link",
+    "mobilityAssistant": "Mobility assistant",
+    "noAssistant": "No assistant has access to this route.",
+    "addAssistant": "Add assistant",
+    "moveUp": "Move stop up",
+    "moveDown": "Move stop down",
+    "deleteStop": "Delete stop",
+    "newStop": "New stop",
+    "address": "Address",
+    "person": "Student",
+    "plannedTime": "Planned time",
+    "cancel": "Cancel",
+    "saveLocal": "Add stop",
+    "deleteConfirm": "Remove this stop from the preview?",
+    "demoNote": "CRUD connected to the configured API through Axios.",
+    "noStops": "No stops have been added yet.",
+    "retryApi": "Retry",
+    "loadingApi": "Loading routes...",
+    "stopsMissing": "This route has no stops array. Stop editing is disabled to protect its data.",
+    "otherModule": "Pending functionality: belongs to another module.",
+    "previewOnly": "Screen under construction",
+    "previewInfo": "We will complete the UI before connecting the CRUD.",
+    "close": "Close",
+    "spanish": "Español (Latinoamérica)",
+    "english": "English",
+    "currentRoute": "Current route",
+    "createRoute": "New route",
+    "editRoute": "Edit route",
+    "deleteRoute": "Delete route",
+    "routeName": "Route name",
+    "driverName": "Driver",
+    "vehicleLabel": "Vehicle",
+    "saveRoute": "Save changes",
+    "saveStop": "Save changes",
+    "editStop": "Edit stop",
+    "confirmDeleteTitle": "Confirm deletion",
+    "confirmDeleteRoute": "Are you sure you want to delete this route and its stops from the API?",
+    "confirmDeleteStop": "Are you sure you want to delete this stop from the API?",
+    "confirmDeleteAction": "Delete",
+    "routeHasNoStops": "This route has no stops yet.",
+    "noRoutes": "No routes yet. Create a new route to get started."
+  },
   "placeholder": {
     "title": "Workspace ready for development",
     "description": "No CRUD or business logic is included. The responsible team member can add domain models, Pinia stores, REST services and Vue components here.",
     "hint": "Update the router after adding your first Vue view."
   },
   "notFound": {
-    "description": "La página solicitada no existe."
+    "description": "The requested page does not exist."
   },
   "vehicles": {
     "list": {
-      "title": "Gestión de Vehículos y Credenciales",
-      "subtitle": "Rumbo muestra y centraliza la información registrada de la flota vehicular.",
-      "seats": "{count} asientos",
-      "empty": "Aún no hay vehículos registrados.",
-      "loadError": "No se pudieron cargar los vehículos."
+      "title": "Vehicle & Credential Management",
+      "subtitle": "Rumbo displays and centralizes the registered fleet information.",
+      "seats": "{count} seats",
+      "empty": "No vehicles registered yet.",
+      "loadError": "Vehicles could not be loaded."
     },
     "card": {
-      "plate": "Placa",
-      "capacity": "Capacidad",
-      "year": "Año"
+      "plate": "Plate",
+      "capacity": "Capacity",
+      "year": "Year"
     },
     "fields": {
-      "licensePlate": "Placa",
-      "brand": "Marca",
-      "model": "Modelo",
-      "capacity": "Capacidad",
-      "capacitySeats": "Capacidad (asientos)",
-      "year": "Año",
-      "status": "Estado"
+      "licensePlate": "License Plate",
+      "brand": "Brand",
+      "model": "Model",
+      "capacity": "Capacity",
+      "capacitySeats": "Capacity (Seats)",
+      "year": "Year",
+      "status": "Status"
     },
     "status": {
-      "ACTIVE": "Activo",
-      "INACTIVE": "Inactivo",
-      "MAINTENANCE": "Mantenimiento"
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "MAINTENANCE": "Maintenance"
     },
     "actions": {
-      "new": "Nuevo vehículo",
-      "create": "Crear vehículo",
-      "save": "Guardar cambios",
-      "edit": "Editar",
-      "delete": "Eliminar",
-      "cancel": "Cancelar",
-      "retry": "Reintentar"
+      "new": "New Vehicle",
+      "create": "Create Vehicle",
+      "save": "Save Changes",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "retry": "Retry"
     },
     "form": {
-      "newTitle": "Nuevo vehículo",
-      "editTitle": "Editar vehículo",
-      "newSubtitle": "Completa los datos del vehículo para agregarlo a la flota.",
-      "editSubtitle": "Actualiza los datos del vehículo para mantener al día el registro de la flota."
+      "newTitle": "New Vehicle",
+      "editTitle": "Edit Vehicle",
+      "newSubtitle": "Fill in the vehicle details to add it to the fleet.",
+      "editSubtitle": "Update the vehicle details to keep the fleet record current."
     },
     "delete": {
-      "header": "Eliminar vehículo",
-      "message": "¿Seguro que deseas eliminar {name} ({plate})? Esta acción no se puede deshacer."
+      "header": "Delete vehicle",
+      "message": "Are you sure you want to delete {name} ({plate})? This action cannot be undone."
     },
     "toast": {
-      "created": "Vehículo creado correctamente",
-      "updated": "Vehículo actualizado correctamente",
-      "deleted": "Vehículo eliminado",
-      "notFound": "No se encontró el vehículo",
-      "error": "Ocurrió un error. Inténtalo de nuevo."
+      "created": "Vehicle created successfully",
+      "updated": "Vehicle updated successfully",
+      "deleted": "Vehicle deleted",
+      "notFound": "The vehicle was not found",
+      "error": "Something went wrong. Please try again."
     },
     "validation": {
-      "required": "Este campo es obligatorio.",
-      "plateFormat": "Usa el formato ABC-123.",
-      "plateDuplicated": "Esta placa ya está registrada.",
-      "capacityRange": "La capacidad debe estar entre {min} y {max} asientos.",
-      "yearRange": "El año debe estar entre {min} y {max}."
+      "required": "This field is required.",
+      "plateFormat": "Use the format ABC-123.",
+      "plateDuplicated": "This plate is already registered.",
+      "capacityRange": "Capacity must be between {min} and {max} seats.",
+      "yearRange": "Year must be between {min} and {max}."
     },
     "notice": {
-      "title": "Importante",
-      "text": "Estos registros y capacidades son declarados por el prestador en este prototipo. Rumbo centraliza la gestión operativa sin simular una validación gubernamental externa."
+      "title": "Important",
+      "text": "These records and capacities are declared by the provider in this prototype. Rumbo centralizes operational management without simulating an external government validation."
     }
+  },
+  "billing": {
+    "label": "SUBSCRIPTIONS",
+    "plansTitle": "Available plans",
+    "plansDescription": "Choose the plan that best fits your needs.",
+    "viewSubscription": "View my subscription",
+    "available": "Available",
+    "selectPlan": "Select plan",
+    "loading": "Loading plans...",
+    "retry": "Retry",
+    "noPlans": "No plans available.",
+    "confirmTitle": "Confirm subscription",
+    "confirmDescription": "Review the selected plan before confirming.",
+    "planField": "Plan",
+    "selectedPlan": "Selected plan",
+    "driverProfileField": "Driver identifier",
+    "startDateField": "Start date",
+    "registrationNotice": "The information will be saved in Rumbo when you confirm.",
+    "confirmSubscription": "Confirm subscription",
+    "back": "Back",
+    "saving": "Saving...",
+    "createdSuccessfully": "Subscription created successfully!",
+    "savedNotice": "The record was saved in MockAPI.",
+    "myTitle": "My subscription",
+    "myDescription": "View and manage your subscription information in Rumbo.",
+    "plansButton": "View plans",
+    "currentPlan": "CURRENT PLAN",
+    "statusField": "Subscription status",
+    "statusActive": "Active",
+    "statusPaused": "Paused",
+    "amount": "Amount",
+    "manage": "Manage subscription",
+    "remove": "Cancel subscription",
+    "noSubscriptions": "No subscriptions registered.",
+    "unknownPlan": "Plan unavailable",
+    "editTitle": "Manage my subscription",
+    "editDescription": "Update your subscription plan or status.",
+    "saveChanges": "Save changes",
+    "deleteTitle": "Cancel subscription?",
+    "deleteDescription": "This action will delete your subscription record. Are you sure you want to continue?",
+    "keepSubscription": "Keep subscription",
+    "confirmDelete": "Yes, cancel"
   }
 }

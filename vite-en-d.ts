@@ -1,27 +1,36 @@
+/// <reference types="vite/client" />
+
 interface ImportMetaEnv {
-    readonly PLATFORM_PROVIDER_API_BASE_URL: string;
-    readonly PLATFORM_PROVIDER_DELAYS_ENDPOINT_PATH: string;
-    readonly PLATFORM_PROVIDER_INCIDENTS_ENDPOINT_PATH: string;
-    readonly PLATFORM_PROVIDER_NOTIFICATIONS_ENDPOINT_PATH: string;
-    readonly PLATFORM_PROVIDER_NOTIFICATION_SETTINGS_ENDPOINT_PATH: string;
+    // PrimeUI
+    readonly VITE_PRIME_UI_LICENSE_KEY: string;
 
-    readonly PLATFORM_PROVIDER_VEHICLE_API_BASE_URL: string;
-    readonly PLATFORM_PROVIDER_PLATFORM_PROVIDER_VEHICLES_ENDPOINT_PATH: string;
+    // Alerting & Incident Management
+    readonly VITE_INCIDENTS_API_BASE_URL: string;
+    readonly VITE_INCIDENTS_ENDPOINT_PATH: string;
+    readonly VITE_DELAYS_ENDPOINT_PATH: string;
+    readonly VITE_NOTIFICATIONS_ENDPOINT_PATH: string;
+    readonly VITE_NOTIFICATION_SETTINGS_ENDPOINT_PATH: string;
 
-    readonly PLATFORM_PROVIDER_ROUTE_PLANNING_API_BASE_URL: string;
-    readonly PLATFORM_PROVIDER_ROUTE_PLANNING_ROUTES_ENDPOINT_PATH: string;
+    // Vehicle & Credential Management
+    readonly VITE_VEHICLES_API_URL: string;
+    readonly VITE_VEHICLES_ENDPOINT_PATH: string;
 
-    readonly PLATFORM_PROVIDER_BILLING_BASE_PATH: string;
-    readonly PLATFORM_PROVIDER_BILLING_PLANS_ENDPOINT_PATH: string;
-    readonly PLATFORM_PROVIDER_BILLING_SUBSCRIPTIONS_ENDPOINT_PATH: string;
+    // Route & Trip Planning
+    readonly VITE_ROUTE_API_BASE_URL: string;
+    readonly VITE_ROUTE_ROUTES_ENDPOINT_PATH: string;
 
-    readonly PLATFORM_PROVIDER_PROFILES_API_BASE_URL: string;
-    readonly PLATFORM_PROVIDER_PROFILES_STUDENTS_ENDPOINT_PATH: string;
-    readonly PLATFORM_PROVIDER_PROFILES_PROFILES_ENDPOINT_PATH: string;
+    // Subscriptions & Billing
+    readonly VITE_BILLING_API_BASE_URL: string;
+    readonly VITE_BILLING_PLANS_ENDPOINT_PATH: string;
+    readonly VITE_BILLING_SUBSCRIPTIONS_ENDPOINT_PATH: string;
 
-    readonly PLATFORM_PROVIDER_RELATIONSHIPS_API_BASE_URL: string;
-    readonly PLATFORM_PROVIDER_RELATIONSHIPS_TUTOR_STUDENTS_RELATIONSHIPS_ENDPOINT_PATH: string;
-    readonly PLATFORM_PROVIDER_RELATIONSHIPS_DATA_DELETION_REQUESTS_ENDPOINT_PATH: string;
+    // Profiles & Relationship Management
+    readonly VITE_PROFILES_API_BASE_URL: string;
+    readonly VITE_PROFILES_STUDENTS_ENDPOINT_PATH: string;
+    readonly VITE_PROFILES_PROFILES_ENDPOINT_PATH: string;
+    readonly VITE_RELATIONSHIPS_API_BASE_URL: string;
+    readonly VITE_RELATIONSHIPS_TUTOR_STUDENTS_ENDPOINT_PATH: string;
+    readonly VITE_RELATIONSHIPS_DATA_DELETION_REQUESTS_ENDPOINT_PATH: string;
 }
 
 interface ImportMeta {

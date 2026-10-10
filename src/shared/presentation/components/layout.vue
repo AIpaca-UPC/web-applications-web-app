@@ -1,50 +1,43 @@
 <script setup>
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import LanguageSwitcher from "./language-switcher.vue";
-import FooterContent from "./footer-content.vue";
-const { t } = useI18n();
-const drawer = ref(false);
-const toggleDrawer = () => {
-  drawer.value = !drawer.value;
-}
-
-const items = [
-  { label: 'option.home', to: '/home'},
-  { label: 'option.about', to: '/about'},
-];
-
+import { RouterLink, RouterView } from 'vue-router'
+import LanguageSwitcher from './language-switcher.vue'
+import FooterContent from './footer-content.vue'
+import { moduleCatalog } from '../../domain/module-catalog.js'
 </script>
 
 <template>
-  <pv-toast></pv-toast>
-  <pv-confirm-dialog></pv-confirm-dialog>
-  <header class="absolute top-0 left-0 w-full">
-    <pv-toolbar class="bg-primary">
-      <template #start>
-        <pv-button class="p-button-text" icon="pi pi-bars"
-                   @click="toggleDrawer" />
-        <h3>Acme Learning Center</h3>
-      </template>
-      <template #end>
-        <div>
-          <pv-button v-for="item in items" :key="item.label"
-                     as-child v-slot="slotProps">
-            <router-link :to="item.to" :class="slotProps['class']">
-              {{ t(item.label) }}</router-link>
-          </pv-button>
-        </div>
-        <language-switcher />
-      </template>
-    </pv-toolbar>
-    <pv-drawer v-model:visible="drawer" />
-  </header>
-  <main class="mt-7">
-    <router-view />
-  </main>
-  <footer-content />
+  <div class="app-shell">
+    <aside class="sidebar" :aria-label="$t('nav.navigation')">
+      <RouterLink to="/home" class="brand" aria-label="Rumbo">
+        <span class="brand-mark">R</span><span>Rumbo</span>
+      </RouterLink>
+      <div class="sidebar-note">{{ $t('common.project') }}</div>
+      <nav class="sidebar-nav" :aria-label="$t('nav.navigation')">
+        <RouterLink to="/home" class="nav-item" active-class="active">
+          <i class="pi pi-home" aria-hidden="true"></i>{{ $t('nav.dashboard') }}
+        </RouterLink>
+        <div class="nav-section-title">{{ $t('nav.workspaces') }}</div>
+        <RouterLink
+            v-for="module in moduleCatalog"
+            :key="module.id"
+            :to="module.path"
+            class="nav-item"
+            active-class="active"
+        >
+          <i class="pi" :class="module.icon" aria-hidden="true"></i>
+          {{ $t(module.titleKey) }}
+        </RouterLink>
+      </nav>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <span class="topbar-caption">{{ $t('common.workspace') }}</span>
+        <LanguageSwitcher />
+      </header>
+      <main id="main-content" class="content">
+        <RouterView />
+      </main>
+      <FooterContent />
+    </div>
+  </div>
 </template>
-
-<style scoped>
-
-</style>

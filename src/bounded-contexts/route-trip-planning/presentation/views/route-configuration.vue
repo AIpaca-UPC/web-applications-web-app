@@ -2,18 +2,15 @@
 import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { routeMessages } from '../i18n/route-messages.js'
 import { useRouteCrudStore } from '../../application/route-crud.store.js'
 import '../styles/route-configuration.css'
 
-const { locale: globalLocale } = useI18n({ useScope: 'global' })
-const { t } = useI18n({ useScope: 'local', messages: routeMessages })
+// Texts live in src/locales/{en,es}.json under the "routePlanning" namespace.
+const { t: $t } = useI18n({ useScope: 'global' })
+const t = (key) => $t(`routePlanning.${key}`)
+
 const store = useRouteCrudStore()
 const { routes, selectedRouteId, selectedRoute, stops, canEditStops, loading, saving, error } = storeToRefs(store)
-
-const logoSrc = `${import.meta.env.BASE_URL}assets/rumbo-logo.png`
-const languageOpen = ref(false)
-const languageCode = computed(() => globalLocale.value === 'es-419' ? 'ES' : 'EN')
 
 const stopModalOpen = ref(false)
 const editingStopId = ref(null)
@@ -27,13 +24,7 @@ const firstRouteInput = ref(null)
 
 const deleteTarget = ref(null)
 const deleteDescription = computed(() => deleteTarget.value?.type === 'route'
-  ? t('confirmDeleteRoute') : t('confirmDeleteStop'))
-
-const sidebarDriver = computed(() => selectedRoute.value?.driverName || '—')
-const sidebarVehicle = computed(() => selectedRoute.value?.vehicleLabel || '—')
-const sidebarRouteName = computed(() => selectedRoute.value?.name || '')
-const driverInitials = computed(() => sidebarDriver.value.split(/\s+/).filter(Boolean)
-  .slice(0,2).map(x => x[0]).join('').toUpperCase())
+    ? t('confirmDeleteRoute') : t('confirmDeleteStop'))
 
 onMounted(() => store.load())
 
@@ -41,11 +32,6 @@ function currentDetail(stop) {
   const name = stop.destination ? t('destination') : stop.studentName
   const extra = stop.absent ? t('absentToday') : stop.time
   return [name, extra].filter(Boolean).join(' · ')
-}
-function selectLanguage(language) {
-  globalLocale.value = language
-  localStorage.setItem('rumbo-language', language)
-  languageOpen.value = false
 }
 function changeSelectedRoute(event) { selectedRouteId.value = String(event.target.value) }
 
@@ -121,53 +107,9 @@ function closeOnEscape() {
 </script>
 
 <template>
+  <!-- Sidebar and header are provided by the shared AppLayout -->
   <div class="route-configuration-page" @keydown.esc="closeOnEscape">
-    <aside class="rp-sidebar" aria-label="Rumbo">
-      <div class="rp-sidebar-main">
-        <div class="rp-logo-wrap">
-          <span class="rp-logo-icon" aria-hidden="true">
-            <img :src="logoSrc" alt="" class="rp-logo-source" />
-          </span>
-          <span class="rp-logo-text">Rumbo</span>
-        </div>
-        <div class="rp-user-sidebar">
-          <span class="rp-avatar rp-avatar-green">{{ driverInitials }}</span>
-          <div class="rp-user-copy">
-            <strong>{{ sidebarDriver }}</strong>
-            <span>{{ sidebarVehicle }}<template v-if="sidebarRouteName"> · {{ sidebarRouteName }}</template></span>
-          </div>
-        </div>
-        <nav class="rp-nav" :aria-label="t('routeSetup')">
-          <span class="rp-nav-item rp-nav-disabled" :title="t('otherModule')"><i class="pi pi-home" aria-hidden="true"></i>{{ t('routeAssigned') }}</span>
-          <span class="rp-nav-item rp-nav-disabled" :title="t('otherModule')"><i class="pi pi-users" aria-hidden="true"></i>{{ t('students') }}</span>
-          <span class="rp-nav-item rp-nav-active" aria-current="page"><i class="pi pi-directions" aria-hidden="true"></i>{{ t('routeSetup') }}</span>
-          <span class="rp-nav-item rp-nav-disabled" :title="t('otherModule')"><i class="pi pi-bell" aria-hidden="true"></i>{{ t('notifications') }}</span>
-          <span class="rp-nav-item rp-nav-disabled" :title="t('otherModule')"><i class="pi pi-dollar" aria-hidden="true"></i>{{ t('billing') }}</span>
-          <span class="rp-nav-item rp-nav-disabled" :title="t('otherModule')"><i class="pi pi-cog" aria-hidden="true"></i>{{ t('settings') }}</span>
-        </nav>
-      </div>
-      <div class="rp-sidebar-bottom">
-        <div class="rp-help-box"><div class="rp-help-icon">?</div><div><strong>{{ t('helpTitle') }}</strong><small>{{ t('helpMessage') }}</small></div></div>
-        <span class="rp-logout"><i class="pi pi-reply" aria-hidden="true"></i>{{ t('signOut') }}</span>
-      </div>
-    </aside>
-
     <div class="rp-workspace">
-      <header class="rp-header">
-        <h2>{{ t('header') }}</h2>
-        <div class="rp-top-actions">
-          <div class="rp-language">
-            <button class="rp-language-button" type="button" :aria-expanded="languageOpen" @click="languageOpen = !languageOpen"><i class="pi pi-globe" aria-hidden="true"></i>{{ languageCode }}</button>
-            <div v-if="languageOpen" class="rp-language-menu">
-              <button type="button" @click="selectLanguage('en-US')">{{ t('english') }}</button>
-              <button type="button" @click="selectLanguage('es-419')">{{ t('spanish') }}</button>
-            </div>
-          </div>
-          <span class="rp-notification" :title="t('notifications')" aria-hidden="true"><i class="pi pi-bell"></i></span>
-          <span class="rp-account"><b class="rp-avatar rp-avatar-gold">{{ driverInitials }}</b><span><strong>{{ sidebarDriver }}</strong><small>{{ t('driver') }}</small></span><i class="pi pi-angle-down" aria-hidden="true"></i></span>
-        </div>
-      </header>
-
       <main class="rp-main">
         <div v-if="error" class="rp-api-error" role="alert">
           {{ error }}
@@ -289,3 +231,21 @@ function closeOnEscape() {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* The page now lives inside the shared AppLayout: no own sidebar column or full-height shell. */
+.route-configuration-page {
+  display: block;
+  min-height: 0;
+  height: auto;
+  background: transparent;
+}
+.rp-workspace {
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+}
+.rp-main {
+  padding: 0;
+}
+</style>
