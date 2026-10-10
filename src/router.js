@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from './shared/presentation/components/layout.vue'
 import Home from './shared/presentation/views/home.vue'
-import vehiclesRoutes from '@/bounded-contexts/vehicle-credential-management/presentation/vehicle-routes.js'
+import vehiclesRoutes from '../src/bounded-contexts/vehicle-credential-management/presentation/vehicle-routes.js'
+import profilesRoutes from '../src/bounded-contexts/profiles-and-relationship-management/presentatiton/profiles-routes.js'
 
 // Shared views
 const PageNotFound = () => import('./shared/presentation/views/page-not-found.vue')
@@ -39,8 +40,9 @@ const routes = [
             { path: '', redirect: '/home' },
             { path: 'home', name: 'home', component: Home, meta: { title: 'Dashboard' } },
 
-            // Profiles & Relationship Management (pending: replace redirect with its routes)
-            { path: 'students', redirect: '/home' },
+            // Profiles & Relationship Management
+            { path: 'profiles', children: profilesRoutes },
+            { path: 'students', redirect: { name: 'profiles-students-list' } }, // sidebar link
 
             // Vehicle & Credential Management
             { path: 'vehicles', children: vehiclesRoutes },
