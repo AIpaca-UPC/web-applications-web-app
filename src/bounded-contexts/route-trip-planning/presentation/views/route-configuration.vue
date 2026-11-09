@@ -8,15 +8,17 @@ import '../styles/route-configuration.css'
 const { locale } = useI18n({ useScope: 'global' })
 const demoMode = import.meta.env.DEV && import.meta.env.VITE_ROUTE_DEMO_MODE === 'true'
 const store = useRouteCrudStore()
-const { routes, studentOptions, loading, saving, error } = storeToRefs(store)
+const { routes, studentOptions, studentError, studentsLoading, loading, saving, error } = storeToRefs(store)
 const editing = ref(false)
+const opening = ref(false)
+const success = ref('')
 const step = ref(0)
 const localError = ref('')
 const search = ref('')
 const filter = ref('all')
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 const empty = () => ({ id:null, name:'', driverName:'', vehicleLabel:'',shift:'MORNING',
-  departureTime:'07:30',status:'CONFIGURABLE', scheduleConfirmed:false,
+  departureTime:'07:30',status:'CONFIGURABLE',
   stops:[{id:null,address:'',studentId:''}],schedule:[] })
 const form = reactive(empty())
 const copy = (o) => JSON.parse(JSON.stringify(o))
@@ -37,9 +39,9 @@ const txt = {
     code:'Code',codeAuto:'Generated when the route is saved',hoursHelp:'Each day can have a different departure time.',
     errorName:'Enter a route name of at least 3 characters, driver and vehicle.',
     errorStop:'Provide at least one stop with a valid address (5 characters).',
-    errorSchedule:'Select at least one day and confirm the schedule.',
+    errorSchedule:'Select at least one service day and set a departure time.',
     deleteConfirm:'Delete this configurable route?',saved:'Route saved.',publishDone:'Route published.',
-    status:'Status',saveFirst:'Save the route first to publish it.',
+    status:'Status',saveFirst:'Save the route first to publish it.',loadingStudents:'Loading authorized students…',refreshStudents:'Refresh student list',studentAssigned:'Assigned student',readonly:'Published routes are read-only until changes to active trips are supported.',
   },
   es: {
     title:'Mis rutas escolares',subtitle:'Organiza paradas, estudiantes y horarios del servicio.',newRoute:'Nueva ruta',
@@ -57,9 +59,9 @@ const txt = {
     code:'Código',codeAuto:'Se genera al guardar la ruta',hoursHelp:'Cada día puede tener una hora de salida diferente.',
     errorName:'Ingresa nombre de ruta (mínimo 3 caracteres), conductor y vehículo.',
     errorStop:'Agrega al menos una parada con dirección válida (5 caracteres).',
-    errorSchedule:'Selecciona al menos un día y confirma el horario.',
+    errorSchedule:'Selecciona al menos un día de servicio e indica su horario.',
     deleteConfirm:'¿Eliminar esta ruta configurable?',saved:'Ruta guardada.',publishDone:'Ruta publicada.',
-    status:'Estado',saveFirst:'Guarda la ruta antes de publicarla.',
+    status:'Estado',saveFirst:'Guarda la ruta antes de publicarla.',loadingStudents:'Consultando estudiantes autorizados…',refreshStudents:'Actualizar estudiantes',studentAssigned:'Estudiante asignado',readonly:'Esta ruta publicada es de solo lectura hasta integrar la protección de viajes en curso.',
   }
 }
 const es = computed(() => String(locale.value).toLowerCase().startsWith('es'))
@@ -71,13 +73,28 @@ const filteredRoutes = computed(() => routes.value.filter(r =>
 const assignedCount = computed(() => form.stops.filter(s=>s.studentId).length)
 const validName = computed(() => form.name.trim().length>=3 && form.driverName.trim() && form.vehicleLabel.trim())
 const validStops = computed(() => form.stops.length>0 && form.stops.every(s=>s.address.trim().length>=5))
-const validSchedule = computed(() => form.schedule.length>0 && form.scheduleConfirmed && form.schedule.every(s=>s.departureTime))
-const canPublish = computed(() => validName.value && validStops.value && validSchedule.value && assignedCount.value>0)
+const validSchedule = computed(() => form.schedule.length>0 && form.schedule.every(s=>/^\d{2}:\d{2}$/.test(s.departureTime)))
+const uniqueStudents = computed(() => { const ids = form.stops.map(s=>s.studentId).filter(Boolean); return new Set(ids).size === ids.length })
+const canPublish = computed(() => validName.value && validStops.value && validSchedule.value && uniqueStudents.value && assignedCount.value>0)
 const isPublished = computed(() => form.status==='PUBLISHED')
 const steps = ['general','stops','hours','summary']
 onMounted(async () => { await Promise.all([store.load(),store.loadStudents()]) })
-function startNew() { Object.assign(form,empty()); step.value=0;localError.value='';editing.value=true }
-function startEdit(route) { Object.assign(form,copy(route)); step.value=0;localError.value='';editing.value=true }
+function startNew() {
+  Object.assign(form,empty()); step.value=0; localError.value=''; success.value=''; editing.value=true
+  if (!studentsLoading.value && !studentOptions.value.length) store.loadStudents()
+}
+async function startEdit(route) {
+  if (opening.value) return
+  opening.value = true; localError.value = ''; success.value = ''
+  try {
+    // Fetch current details, not only the list-card's reduced representation.
+    const current = await store.getDetails(route.id)
+    if (!current) return
+    Object.assign(form,empty(),copy(current))
+    step.value=0; editing.value=true
+    if (!studentsLoading.value && !studentOptions.value.length) await store.loadStudents()
+  } finally { opening.value=false }
+}
 function cancel() { editing.value=false;localError.value='' }
 function addStop() { form.stops.push({id:null,address:'',studentId:''}) }
 function removeStop(i) { if(form.stops.length>1)form.stops.splice(i,1) }
@@ -86,34 +103,40 @@ function moveStop(i,dir) { const j=i+dir;if(j<0||j>=form.stops.length)return;
 function selectedElsewhere(studentId,index) { return form.stops.some((s,i)=>i!==index&&s.studentId===studentId) }
 function choices(index) { return studentOptions.value.filter(s=>
   s.id===form.stops[index].studentId || !selectedElsewhere(s.id,index)) }
-function setDayTime(day,value) { const row=form.schedule.find(s=>s.day===day); if(row){row.departureTime=value;form.scheduleConfirmed=false} }
+function setDayTime(day,value) { const row=form.schedule.find(s=>s.day===day); if(row)row.departureTime=value }
 function toggleDay(day) {
   const i=form.schedule.findIndex(d=>d.day===day)
   if(i>=0)form.schedule.splice(i,1)
   else form.schedule.push({day,departureTime:form.departureTime})
-  form.scheduleConfirmed=false
 }
 function selectWeekdays() { for(const day of DAYS.slice(0,5))
-  if(!form.schedule.some(s=>s.day===day))form.schedule.push({day,departureTime:form.departureTime});form.scheduleConfirmed=false }
-function clearDays() { form.schedule=[];form.scheduleConfirmed=false }
+  if(!form.schedule.some(s=>s.day===day))form.schedule.push({day,departureTime:form.departureTime}) }
+function clearDays() { form.schedule=[] }
 function goto(n) { localError.value=''; if(n>step.value && !validateStep(step.value))return;step.value=n }
 function validateStep(i) {
   localError.value=''
   if(i===0&&!validName.value){localError.value=t('errorName');return false}
   if(i===1&&!validStops.value){localError.value=t('errorStop');return false}
+  if(i===1&&!uniqueStudents.value){localError.value=es.value?'No asignes el mismo estudiante dos veces.':'A student can only be assigned once.';return false}
   if(i===2&&!validSchedule.value){localError.value=t('errorSchedule');return false}
   return true
 }
 async function save(publishAfter=false) {
-  if(!validName.value || !validStops.value) { localError.value=t('errorName');return }
-  if(form.scheduleConfirmed&&!form.schedule.length) {localError.value=t('errorSchedule');return}
+  if(!validName.value) { localError.value=t('errorName');step.value=0;return }
+  if(!validStops.value || !uniqueStudents.value) { localError.value=t('errorStop');step.value=1;return }
+  if(!validSchedule.value) {localError.value=t('errorSchedule');step.value=2;return }
+  if(publishAfter&&!canPublish.value) {localError.value=t('notReady');return}
   localError.value=''
   const result=await store.save(copy(form))
-  if(!result)return
+  if(!result) {
+    if(store.lastSavedId) form.id=store.lastSavedId
+    return
+  }
   if(publishAfter) {
     const published=await store.publish(result.id)
     if(!published) {Object.assign(form,copy(result));return}
   }
+  success.value = publishAfter ? t('publishDone') : t('saved')
   cancel()
 }
 async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await store.remove(route.id)}
@@ -122,6 +145,7 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
 <template>
   <section class="rp-v3">
     <p v-if="demoMode" class="rp-demo-banner" role="status">{{ es ? 'MODO DEMOSTRACIÓN LOCAL · Datos ficticios guardados solo en este navegador' : 'LOCAL DEMO MODE · Fictional data stored in this browser only' }}</p>
+    <p v-if="success && !editing" class="rp-ready" role="status">{{success}}</p>
     <div class="rp-top" v-if="!editing">
       <div><p class="rp-eyebrow">ROUTE &amp; TRIP PLANNING</p><h1>{{ t('title') }}</h1><p class="rp-muted">{{t('subtitle')}}</p></div>
       <button class="rp-action" type="button" @click="startNew">+ {{t('newRoute')}}</button>
@@ -141,7 +165,7 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
         <h3>{{r.name}}</h3><p class="rp-muted">{{r.code}}</p>
         <div class="rp-card-facts"><span>◷ {{r.departureTime}}</span><span>⌖ {{r.stops.length}}</span><span>▦ {{r.schedule.length}}</span></div>
         <p>{{t('firstStop')}}: <strong>{{r.stops[0]?.address||'—'}}</strong></p>
-        <div class="rp-card-actions"><button type="button" @click="startEdit(r)">{{t('edit')}}</button>
+        <div class="rp-card-actions"><button type="button" :disabled="opening" @click="startEdit(r)">{{t('edit')}}</button>
           <button type="button" :disabled="r.status==='PUBLISHED'||saving" @click="deleteRoute(r)" :aria-label="t('delete')">⌫</button></div>
       </article></div>
     </template>
@@ -163,6 +187,13 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
         </section>
         <section v-if="step===1" class="rp-panel"><p class="rp-eyebrow">2 / 4</p><h2>{{t('stops')}}</h2>
           <p class="rp-muted">{{t('studentsHelp')}}</p>
+          <p v-if="studentsLoading" class="rp-muted" role="status">{{t('loadingStudents')}}</p>
+          <div v-if="studentError" class="rp-error" role="alert">{{studentError}}
+            <button type="button" class="rp-outline" @click="store.loadStudents()">{{t('refreshStudents')}}</button>
+          </div>
+          <p v-else-if="!studentsLoading && !studentOptions.length" class="rp-muted">{{t('noStudents')}}
+            <button type="button" class="rp-outline" @click="store.loadStudents()">{{t('refreshStudents')}}</button>
+          </p>
           <div v-for="(stop,i) in form.stops" :key="stop.id||'new-'+i" class="rp-stop-panel">
             <div class="rp-stop-heading"><strong>{{i+1}}. {{t('stops')}}</strong><div>
               <button type="button" :disabled="isPublished||i===0" :aria-label="t('up')" @click="moveStop(i,-1)">↑</button>
@@ -171,7 +202,11 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
             </div></div>
             <label>{{t('stopAddress')}} * <input v-model.trim="stop.address" :disabled="isPublished" maxlength="300" required/></label>
             <label>{{t('student')}} <select v-model="stop.studentId" :disabled="isPublished||!studentOptions.length">
-              <option value="">{{t('unassigned')}}</option><option v-for="student in choices(i)" :key="student.id" :value="student.id">{{student.name}}</option>
+              <option value="">{{t('unassigned')}}</option>
+              <option v-if="stop.studentId && !studentOptions.some(s=>s.id===stop.studentId)" :value="stop.studentId">
+                {{stop.studentName || stop.studentId}} ({{t('studentAssigned')}})
+              </option>
+              <option v-for="student in choices(i)" :key="student.id" :value="student.id">{{student.name}}</option>
             </select></label>
           </div>
           <button type="button" class="rp-outline" :disabled="isPublished" @click="addStop">+ {{t('addStop')}}</button>
@@ -186,7 +221,7 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
               :disabled="isPublished" :value="form.schedule.find(x=>x.day===day)?.departureTime" @input="setDayTime(day,$event.target.value)"/>
           </div></div>
           <p class="rp-muted">{{form.schedule.length}} {{t('scheduled')}}</p>
-          <label class="rp-confirm"><input v-model="form.scheduleConfirmed" type="checkbox" :disabled="isPublished||!form.schedule.length"/> {{t('confirmDays')}}</label>
+          <p class="rp-muted">{{es ? 'Los horarios se guardan con la ruta; no necesitan confirmación adicional.' : 'Service times are saved with the route automatically.'}}</p>
         </section>
         <section v-if="step===3" class="rp-panel"><p class="rp-eyebrow">4 / 4</p><h2>{{t('summary')}}</h2>
           <p>{{t('review')}}</p>
@@ -196,6 +231,7 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
           <div><dt>{{t('scheduled')}}</dt><dd>{{form.schedule.length}}</dd></div>
           <div><dt>{{t('students')}}</dt><dd>{{assignedCount}}</dd></div></dl>
           <p :class="canPublish?'rp-ready':'rp-hint'">{{canPublish?t('ready'):t('notReady')}}</p>
+          <p v-if="isPublished" class="rp-muted">{{t('readonly')}}</p>
         </section>
         <p v-if="localError" class="rp-error" role="alert">{{localError}}</p>
         <p v-if="error" class="rp-error" role="alert">{{error}}</p>
