@@ -1,5 +1,3 @@
-// Traducciones locales de Route & Trip Planning.
-// Heredan el idioma global configurado en src/i18n.js.
 export const routeMessages = {
   'es-419': {
     header: 'Configurar ruta',
