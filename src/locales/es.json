@@ -1,77 +1,162 @@
-
 {
   "common": {
-    "language": "Language",
-    "project": "School transport platform",
-    "workspace": "Team development workspace",
-    "pending": "Awaiting implementation",
-    "open": "Open workspace",
-    "back": "Back to dashboard"
+    "language": "Idioma",
+    "project": "Plataforma de transporte escolar",
+    "workspace": "Espacio de trabajo del equipo de desarrollo",
+    "pending": "Pendiente de implementación",
+    "open": "Abrir espacio de trabajo",
+    "back": "Volver al panel principal"
   },
   "nav": {
-    "home": "Home",
-    "students": "Students",
-    "routes": "Routes",
-    "vehicles": "Vehicles",
-    "notifications": "Notifications",
-    "billing": "Plan & billing",
-    "helpTitle": "Need help?",
-    "helpText": "Review the guidance and safety information.",
-    "navigation": "Main navigation",
-    "dashboard": "Dashboard",
-    "workspaces": "Bounded Contexts"
+    "home": "Inicio",
+    "students": "Estudiantes",
+    "routes": "Rutas",
+    "vehicles": "Vehículos",
+    "notifications": "Notificaciones",
+    "billing": "Plan y facturación",
+    "helpTitle": "¿Necesitas ayuda?",
+    "helpText": "Consulta las indicaciones y la información de seguridad.",
+    "navigation": "Navegación principal",
+    "dashboard": "Panel principal",
+    "workspaces": "Contextos delimitados"
   },
   "home": {
-    "title": "Rumbo operations",
-    "content": "Manage the main frontend CRUD modules from this dashboard.",
-    "eyebrow": "AIpaca-UPC · Team Project",
-    "description": "This is the shared Vue 3 foundation for the team. Every bounded context has its own folder and will be implemented independently.",
-    "ready": "Vue 3, PrimeVue, Vue Router, Pinia and i18n are configured.",
-    "sectionsTitle": "Module workspaces",
-    "moduleDescription": "Frontend feature is not implemented yet. This workspace is reserved for its team member."
+    "title": "Operaciones de Rumbo",
+    "content": "Gestiona los principales módulos CRUD del frontend desde este panel.",
+    "eyebrow": "AIpaca-UPC · Proyecto grupal",
+    "description": "Esta es la base compartida de Vue 3 para el equipo. Cada contexto delimitado tiene su propia carpeta y se implementará de manera independiente.",
+    "ready": "Vue 3, PrimeVue, Vue Router, Pinia e i18n están configurados.",
+    "sectionsTitle": "Espacios de trabajo de los módulos",
+    "moduleDescription": "Esta funcionalidad del frontend aún no está implementada. Este espacio está reservado para el integrante responsable."
   },
   "modules": {
-    "profiles": "Profiles & Relationship Management",
-    "vehicles": "Vehicle & Credential Management",
-    "routes": "Route & Trip Planning",
-    "alerting": "Alerting & Incident Management",
-    "billing": "Subscriptions & Billing"
+    "profiles": "Gestión de perfiles y relaciones",
+    "vehicles": "Gestión de vehículos y credenciales",
+    "routes": "Planificación de rutas y viajes",
+    "alerting": "Gestión de alertas e incidentes",
+    "billing": "Suscripciones y facturación"
   },
   "quickActions": {
-    "title": "Quick actions",
-    "reportDelay": "Report delay",
-    "reportIncident": "Report incident",
-    "configureRoute": "Configure route"
+    "title": "Acciones rápidas",
+    "reportDelay": "Reportar retraso",
+    "reportIncident": "Reportar incidente",
+    "configureRoute": "Configurar ruta"
+  },
+  "delayForm": {
+    "title": "Reportar retraso",
+    "subtitle": "Selecciona la duración estimada del retraso:",
+    "cause": "Motivo del retraso",
+    "cancel": "Cancelar",
+    "save": "Confirmar y guardar",
+    "5min": "5 minutos",
+    "10min": "10 minutos",
+    "15min": "Más de 15 minutos"
+  },
+  "incidentForm": {
+    "title": "Reportar incidente",
+    "title-placeholder": "Reportar incidente",
+    "description-placeholder": "Selecciona la duración estimada del retraso:",
+    "priority": "Causa del retraso",
+    "cancel": "Cancelar",
+    "save": "Confirmar y guardar",
+    "important": "Importante",
+    "critical": "Crítico",
+    "regular": "Normal",
+    "priority-placeholder": "Seleccionar prioridad"
   },
   "students": {
     "main": {
-      "title": "Students",
-      "subtitle": "Manage students associated to your account.",
-      "newStudent": "New student",
-      "noStudents": "No students registered."
+      "title": "Estudiantes",
+      "subtitle": "Gestiona los estudiantes asociados a tu cuenta.",
+      "newStudent": "Nuevo estudiante",
+      "noStudents": "No hay estudiantes registrados."
     },
     "data": {
-      "name": "Name",
-      "birthdate": "Birthdate",
-      "school": "School",
-      "state": "State",
-      "actions": "Actions"
+      "name": "Nombre",
+      "birthdate": "Fecha de nacimiento",
+      "school": "Colegio",
+      "state": "Estado",
+      "actions": "Acciones"
     }
   },
+  "routePlanning": {
+    "header": "Configurar ruta",
+    "routeAssigned": "Ruta asignada",
+    "students": "Estudiantes",
+    "routeSetup": "Configurar ruta",
+    "notifications": "Notificaciones",
+    "billing": "Plan y facturación",
+    "settings": "Configuración",
+    "driver": "Conductor",
+    "helpTitle": "¿Necesitas ayuda?",
+    "helpMessage": "Consulta las indicaciones de ayuda y seguridad.",
+    "signOut": "Cerrar sesión",
+    "headline": "Configurar ruta",
+    "subheading": "Gestiona la ruta, las paradas, las vinculaciones de estudiantes y los accesos delegados.",
+    "addStop": "Agregar parada",
+    "stopOrder": "Orden de las paradas",
+    "stopOrderHelp": "Los nuevos viajes utilizarán la secuencia guardada hasta que se modifique.",
+    "destination": "Destino",
+    "absentToday": "Ausente hoy",
+    "linkStudent": "Vincular estudiante",
+    "linkDescription": "El apoderado debe aprobar la vinculación antes de que se conceda el acceso.",
+    "invitationCode": "Código de invitación",
+    "requestLink": "Solicitar vinculación",
+    "mobilityAssistant": "Asistente de movilidad",
+    "noAssistant": "Ningún asistente tiene acceso a esta ruta.",
+    "addAssistant": "Agregar asistente",
+    "moveUp": "Mover parada hacia arriba",
+    "moveDown": "Mover parada hacia abajo",
+    "deleteStop": "Eliminar parada",
+    "newStop": "Nueva parada",
+    "address": "Dirección",
+    "person": "Estudiante",
+    "plannedTime": "Hora programada",
+    "cancel": "Cancelar",
+    "saveLocal": "Agregar parada",
+    "deleteConfirm": "¿Deseas eliminar esta parada de la vista previa?",
+    "demoNote": "CRUD conectado a la API configurada mediante Axios.",
+    "noStops": "Todavía no se han agregado paradas.",
+    "retryApi": "Reintentar",
+    "loadingApi": "Cargando rutas...",
+    "stopsMissing": "Esta ruta no contiene un arreglo de paradas. La edición de paradas está deshabilitada para proteger sus datos.",
+    "otherModule": "Funcionalidad pendiente: pertenece a otro módulo.",
+    "previewOnly": "Pantalla en construcción",
+    "previewInfo": "Completaremos la interfaz antes de conectar las operaciones CRUD.",
+    "close": "Cerrar",
+    "spanish": "Español (Latinoamérica)",
+    "english": "Inglés",
+    "currentRoute": "Ruta actual",
+    "createRoute": "Nueva ruta",
+    "editRoute": "Editar ruta",
+    "deleteRoute": "Eliminar ruta",
+    "routeName": "Nombre de la ruta",
+    "driverName": "Conductor",
+    "vehicleLabel": "Vehículo",
+    "saveRoute": "Guardar cambios",
+    "saveStop": "Guardar cambios",
+    "editStop": "Editar parada",
+    "confirmDeleteTitle": "Confirmar eliminación",
+    "confirmDeleteRoute": "¿Estás seguro de que deseas eliminar esta ruta y sus paradas de la API?",
+    "confirmDeleteStop": "¿Estás seguro de que deseas eliminar esta parada de la API?",
+    "confirmDeleteAction": "Eliminar",
+    "routeHasNoStops": "Esta ruta todavía no tiene paradas.",
+    "noRoutes": "Todavía no hay rutas. Crea una nueva ruta para comenzar."
+  },
   "placeholder": {
-    "title": "Workspace ready for development",
-    "description": "No CRUD or business logic is included. The responsible team member can add domain models, Pinia stores, REST services and Vue components here.",
-    "hint": "Update the router after adding your first Vue view."
+    "title": "Espacio de trabajo listo para el desarrollo",
+    "description": "No se incluye ninguna operación CRUD ni lógica de negocio. El integrante responsable puede agregar modelos de dominio, stores de Pinia, servicios REST y componentes Vue.",
+    "hint": "Actualiza el router después de agregar tu primera vista de Vue."
   },
   "notFound": {
     "description": "La página solicitada no existe."
   },
   "vehicles": {
     "list": {
-      "title": "Gestión de Vehículos y Credenciales",
-      "subtitle": "Rumbo muestra y centraliza la información registrada de la flota vehicular.",
+      "title": "Gestión de vehículos y credenciales",
+      "subtitle": "Rumbo muestra y centraliza la información de la flota de vehículos registrada.",
       "seats": "{count} asientos",
-      "empty": "Aún no hay vehículos registrados.",
+      "empty": "Todavía no hay vehículos registrados.",
       "loadError": "No se pudieron cargar los vehículos."
     },
     "card": {
@@ -80,7 +165,7 @@
       "year": "Año"
     },
     "fields": {
-      "licensePlate": "Placa",
+      "licensePlate": "Placa del vehículo",
       "brand": "Marca",
       "model": "Modelo",
       "capacity": "Capacidad",
@@ -91,11 +176,11 @@
     "status": {
       "ACTIVE": "Activo",
       "INACTIVE": "Inactivo",
-      "MAINTENANCE": "Mantenimiento"
+      "MAINTENANCE": "En mantenimiento"
     },
     "actions": {
       "new": "Nuevo vehículo",
-      "create": "Crear vehículo",
+      "create": "Registrar vehículo",
       "save": "Guardar cambios",
       "edit": "Editar",
       "delete": "Eliminar",
@@ -106,29 +191,71 @@
       "newTitle": "Nuevo vehículo",
       "editTitle": "Editar vehículo",
       "newSubtitle": "Completa los datos del vehículo para agregarlo a la flota.",
-      "editSubtitle": "Actualiza los datos del vehículo para mantener al día el registro de la flota."
+      "editSubtitle": "Actualiza los datos del vehículo para mantener su registro al día."
     },
     "delete": {
       "header": "Eliminar vehículo",
-      "message": "¿Seguro que deseas eliminar {name} ({plate})? Esta acción no se puede deshacer."
+      "message": "¿Estás seguro de que deseas eliminar {name} ({plate})? Esta acción no se puede deshacer."
     },
     "toast": {
-      "created": "Vehículo creado correctamente",
+      "created": "Vehículo registrado correctamente",
       "updated": "Vehículo actualizado correctamente",
       "deleted": "Vehículo eliminado",
       "notFound": "No se encontró el vehículo",
-      "error": "Ocurrió un error. Inténtalo de nuevo."
+      "error": "Ocurrió un error. Inténtalo nuevamente."
     },
     "validation": {
       "required": "Este campo es obligatorio.",
-      "plateFormat": "Usa el formato ABC-123.",
+      "plateFormat": "Utiliza el formato ABC-123.",
       "plateDuplicated": "Esta placa ya está registrada.",
       "capacityRange": "La capacidad debe estar entre {min} y {max} asientos.",
       "yearRange": "El año debe estar entre {min} y {max}."
     },
     "notice": {
       "title": "Importante",
-      "text": "Estos registros y capacidades son declarados por el prestador en este prototipo. Rumbo centraliza la gestión operativa sin simular una validación gubernamental externa."
+      "text": "En este prototipo, los registros y las capacidades son declarados por el proveedor. Rumbo centraliza la gestión operativa sin simular una validación gubernamental externa."
     }
+  },
+  "billing": {
+    "label": "SUSCRIPCIONES",
+    "plansTitle": "Planes disponibles",
+    "plansDescription": "Elige el plan que mejor se adapte a tus necesidades.",
+    "viewSubscription": "Ver mi suscripción",
+    "available": "Disponible",
+    "selectPlan": "Seleccionar plan",
+    "loading": "Cargando planes...",
+    "retry": "Reintentar",
+    "noPlans": "No hay planes disponibles.",
+    "confirmTitle": "Confirmar suscripción",
+    "confirmDescription": "Revisa el plan seleccionado antes de confirmar.",
+    "planField": "Plan",
+    "selectedPlan": "Plan seleccionado",
+    "driverProfileField": "Identificador del conductor",
+    "startDateField": "Fecha de inicio",
+    "registrationNotice": "La información se guardará en Rumbo cuando confirmes.",
+    "confirmSubscription": "Confirmar suscripción",
+    "back": "Volver",
+    "saving": "Guardando...",
+    "createdSuccessfully": "¡Suscripción registrada correctamente!",
+    "savedNotice": "El registro se guardó en MockAPI.",
+    "myTitle": "Mi suscripción",
+    "myDescription": "Consulta y administra la información de tu suscripción en Rumbo.",
+    "plansButton": "Ver planes",
+    "currentPlan": "PLAN ACTUAL",
+    "statusField": "Estado de la suscripción",
+    "statusActive": "Activa",
+    "statusPaused": "Pausada",
+    "amount": "Monto",
+    "manage": "Administrar suscripción",
+    "remove": "Cancelar suscripción",
+    "noSubscriptions": "No hay suscripciones registradas.",
+    "unknownPlan": "Plan no disponible",
+    "editTitle": "Administrar mi suscripción",
+    "editDescription": "Actualiza el plan o el estado de tu suscripción.",
+    "saveChanges": "Guardar cambios",
+    "deleteTitle": "¿Cancelar suscripción?",
+    "deleteDescription": "Esta acción eliminará el registro de tu suscripción. ¿Estás seguro de que deseas continuar?",
+    "keepSubscription": "Mantener suscripción",
+    "confirmDelete": "Sí, cancelar"
   }
 }
