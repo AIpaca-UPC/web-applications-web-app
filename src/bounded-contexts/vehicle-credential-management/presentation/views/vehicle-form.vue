@@ -14,7 +14,7 @@ import Select from 'primevue/select'
 import Skeleton from 'primevue/skeleton'
 import Toast from 'primevue/toast'
 import vehicleStore from "../../application/vehicle.store.js";
-import {Vehicle} from "../../domain/vehicle.entity.js";
+import {Vehicle} from "../../domain/model/vehicle.entity.js";
 
 const { t } = useI18n()
 const route = useRoute()
