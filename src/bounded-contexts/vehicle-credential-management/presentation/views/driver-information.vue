@@ -2,7 +2,7 @@
 import { onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import vehiclesStore from '../../application/vehicle.store.js'
-import { CredentialDisplayStatus } from '../../domain/credential.js'
+import { CredentialDisplayStatus } from '../../domain/model/credential.js'
 
 const { t } = useI18n()
 const vehicles = vehiclesStore()
@@ -15,7 +15,7 @@ const vehicles = vehiclesStore()
  * active vehicle of the fleet. Once that link is available, this computed
  * value selects the vehicle of the route the student is assigned to.
  *
- * @type {import('vue').ComputedRef<?import('../../domain/vehicle.entity.js').Vehicle>}
+ * @type {import('vue').ComputedRef<?import('../../domain/model/vehicle.entity.js').Vehicle>}
  */
 const vehicle = computed(
     () => vehicles.vehicles.find((candidate) => candidate.isActive) ?? vehicles.vehicles[0] ?? null,

@@ -1,8 +1,21 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import {RouterLink, RouterView, useRoute} from 'vue-router'
 import LanguageSwitcher from './language-switcher.vue'
 import FooterContent from './footer-content.vue'
 import { moduleCatalog } from '../../domain/module-catalog.js'
+import {computed} from "vue";
+
+const route = useRoute()
+
+const activeModuleId = computed(() => {
+  const matches = moduleCatalog.filter(
+      (module) => route.path === module.path || route.path.startsWith(`${module.path}/`),
+  )
+  if (matches.length === 0) return null
+  return matches.reduce((longest, module) =>
+      module.path.length > longest.path.length ? module : longest,
+  ).id
+})
 </script>
 
 <template>
@@ -22,7 +35,7 @@ import { moduleCatalog } from '../../domain/module-catalog.js'
             :key="module.id"
             :to="module.path"
             class="nav-item"
-            active-class="active"
+            :class="{ active: activeModuleId === module.id }"
         >
           <i class="pi" :class="module.icon" aria-hidden="true"></i>
           {{ $t(module.titleKey) }}
