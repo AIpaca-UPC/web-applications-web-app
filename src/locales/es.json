@@ -18,7 +18,30 @@
     "helpText": "Consulta las indicaciones y la información de seguridad.",
     "navigation": "Navegación principal",
     "dashboard": "Panel principal",
-    "workspaces": "Contextos delimitados"
+    "workspaces": "Contextos delimitados",
+    "serviceInformation": "El servicio de mi hijo"
+  },
+  "serviceInformation": {
+    "title": "Información del servicio",
+    "subtitle": "Vehículo y credenciales declaradas por el conductor del servicio.",
+    "refresh": "Actualizar",
+    "driver": "Conductor",
+    "credentialsTitle": "Credenciales declaradas",
+    "validUntil": "Vigente hasta",
+    "source": "Fuente",
+    "empty": "Todavía no hay un servicio registrado.",
+    "notice": "Rumbo presenta la información declarada por el conductor y el resultado registrado para cada credencial. No realiza una validación oficial propia.",
+    "credentialType": {
+      "SOAT": "Seguro Obligatorio de Accidentes de Tránsito (SOAT)",
+      "CITV": "Certificado de Inspección Técnica Vehicular (CITV)",
+      "DRIVER_LICENSE": "Licencia de conducir, categoría A-IIb"
+    },
+    "credentialStatus": {
+      "VERIFIED": "Verificada",
+      "PENDING": "Pendiente de verificación",
+      "FAILED": "No confirmada",
+      "EXPIRED": "Vencida"
+    }
   },
   "home": {
     "title": "Operaciones de Rumbo",
@@ -171,7 +194,10 @@
       "capacity": "Capacidad",
       "capacitySeats": "Capacidad (asientos)",
       "year": "Año",
-      "status": "Estado"
+      "status": "Estado",
+      "driverName": "Conductor",
+      "credentialNumber": "Número de documento",
+      "credentialExpiresAt": "Vigente hasta"
     },
     "status": {
       "ACTIVE": "Activo",
@@ -191,7 +217,9 @@
       "newTitle": "Nuevo vehículo",
       "editTitle": "Editar vehículo",
       "newSubtitle": "Completa los datos del vehículo para agregarlo a la flota.",
-      "editSubtitle": "Actualiza los datos del vehículo para mantener su registro al día."
+      "editSubtitle": "Actualiza los datos del vehículo para mantener su registro al día.",
+      "credentialsTitle": "Credenciales del servicio",
+      "credentialsHelp": "Declaradas por el conductor. Permanecen pendientes hasta obtener un resultado de verificación."
     },
     "delete": {
       "header": "Eliminar vehículo",

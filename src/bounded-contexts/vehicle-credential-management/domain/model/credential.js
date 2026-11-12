@@ -43,6 +43,12 @@ export const CredentialDisplayStatus = Object.freeze({
  * Credential declared by a driver within the Vehicle & Credential Management
  * bounded context.
  *
+ * It is a value object: it has no identity of its own and is recognised by its
+ * type inside the vehicle that declares it, so a vehicle never holds two
+ * credentials of the same type. Instances are frozen and the operations that
+ * change its state return a new credential instead of modifying this one, so a
+ * recorded verification result can never be overwritten in place.
+ *
  * The platform records what the driver declared and, when a verification
  * service returns a result, the result together with its source and the date
  * of the query. It never asserts an official validation of its own.
@@ -73,6 +79,7 @@ export class Credential {
         this.verificationStatus = verificationStatus
         this.verificationSource = verificationSource
         this.verifiedAt = verifiedAt
+        Object.freeze(this)
     }
 
     /**
@@ -110,29 +117,53 @@ export class Credential {
     }
 
     /**
-     * Records the result returned by a verification service, together with
-     * its source and the date of the query.
+     * Returns a copy of the credential carrying the result returned by a
+     * verification service, together with its source and the date of the query.
      *
      * @param {Object} params - Verification outcome.
      * @param {boolean} params.verified - Whether the service confirmed the credential.
      * @param {string} params.source - Service that returned the result.
-     * @returns {void}
+     * @returns {Credential} A new credential with the recorded result.
      */
-    registerVerification({ verified, source }) {
-        this.verificationStatus = verified ? VerificationStatus.VERIFIED : VerificationStatus.FAILED
-        this.verificationSource = source
-        this.verifiedAt = new Date().toISOString()
+    withVerification({ verified, source }) {
+        return new Credential({
+            ...this,
+            verificationStatus: verified ? VerificationStatus.VERIFIED : VerificationStatus.FAILED,
+            verificationSource: source,
+            verifiedAt: new Date().toISOString(),
+        })
     }
 
     /**
-     * Keeps the credential pending when the verification service could not be
-     * reached, so it is never declared verified without a result.
+     * Returns a copy of the credential kept pending, for when the verification
+     * service could not be reached, so it is never declared verified without a
+     * result.
      *
-     * @returns {void}
+     * @returns {Credential} A new pending credential.
      */
-    keepPending() {
-        this.verificationStatus = VerificationStatus.PENDING
-        this.verifiedAt = null
+    asPending() {
+        return new Credential({
+            ...this,
+            verificationStatus: VerificationStatus.PENDING,
+            verificationSource: '',
+            verifiedAt: null,
+        })
+    }
+
+    /**
+     * Returns a copy of the credential with the data the driver declares.
+     *
+     * Any previous verification result is dropped, because a result obtained
+     * for a document number or a validity date that no longer apply cannot be
+     * carried over to the new ones.
+     *
+     * @param {Object} params - Declared data.
+     * @param {string} [params.number] - Document number.
+     * @param {?string} [params.expiresAt] - Validity date, as YYYY-MM-DD.
+     * @returns {Credential} A new pending credential with the declared data.
+     */
+    withDeclaredData({ number = this.number, expiresAt = this.expiresAt } = {}) {
+        return new Credential({ type: this.type, number, expiresAt })
     }
 }
 
