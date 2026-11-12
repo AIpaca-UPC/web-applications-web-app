@@ -18,7 +18,30 @@
     "helpText": "Review the guidance and safety information.",
     "navigation": "Main navigation",
     "dashboard": "Dashboard",
-    "workspaces": "Bounded Contexts"
+    "workspaces": "Bounded Contexts",
+    "serviceInformation": "My child's service"
+  },
+  "serviceInformation": {
+    "title": "Service information",
+    "subtitle": "Vehicle and credentials declared by the driver of the service.",
+    "refresh": "Refresh",
+    "driver": "Driver",
+    "credentialsTitle": "Declared credentials",
+    "validUntil": "Valid until",
+    "source": "Source",
+    "empty": "There is no service registered yet.",
+    "notice": "Rumbo presents the information declared by the driver and the result recorded for each credential. It does not carry out an official validation of its own.",
+    "credentialType": {
+      "SOAT": "Compulsory traffic accident insurance (SOAT)",
+      "CITV": "Technical inspection certificate (CITV)",
+      "DRIVER_LICENSE": "Driving licence, category A-IIb"
+    },
+    "credentialStatus": {
+      "VERIFIED": "Verified",
+      "PENDING": "Pending verification",
+      "FAILED": "Not confirmed",
+      "EXPIRED": "Expired"
+    }
   },
   "home": {
     "title": "Rumbo operations",
@@ -171,7 +194,10 @@
       "capacity": "Capacity",
       "capacitySeats": "Capacity (Seats)",
       "year": "Year",
-      "status": "Status"
+      "status": "Status",
+      "driverName": "Driver",
+      "credentialNumber": "Document number",
+      "credentialExpiresAt": "Valid until"
     },
     "status": {
       "ACTIVE": "Active",
@@ -191,7 +217,9 @@
       "newTitle": "New Vehicle",
       "editTitle": "Edit Vehicle",
       "newSubtitle": "Fill in the vehicle details to add it to the fleet.",
-      "editSubtitle": "Update the vehicle details to keep the fleet record current."
+      "editSubtitle": "Update the vehicle details to keep the fleet record current.",
+      "credentialsTitle": "Service credentials",
+      "credentialsHelp": "Declared by the driver. They stay pending until a verification result is obtained."
     },
     "delete": {
       "header": "Delete vehicle",

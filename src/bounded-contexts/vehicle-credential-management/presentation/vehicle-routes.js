@@ -8,7 +8,7 @@ const vehiclesRoutes = [
     { path: '', name: 'vehicles-list', component: vehicleList, meta: { title: 'Vehicles' } },
     { path: 'new', name: 'vehicles-new', component: vehicleForm, meta: { title: 'New Vehicle' } },
     { path: ':id/edit', name: 'vehicles-edit', component: vehicleForm, meta: { title: 'Edit Vehicle' } },
-    { path: 'service', name: 'vehicles-service-information', component: driverInformation, meta: { title: 'Service information' },},
+    { path: 'service', name: 'vehicles-service-information', component: driverInformation, meta: { title: 'Service information' },}
 ]
 
 export default vehiclesRoutes

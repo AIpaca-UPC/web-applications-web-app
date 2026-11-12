@@ -15,6 +15,13 @@ export const moduleCatalog = [
         folder: 'vehicle-credential-management',
     },
     {
+        id: 'service-information',
+        titleKey: 'nav.serviceInformation',
+        path: '/vehicles/service',
+        icon: 'pi-id-card',
+        folder: 'vehicle-credential-management',
+    },
+    {
         id: 'routes',
         titleKey: 'modules.routes',
         path: '/routes',
