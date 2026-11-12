@@ -3,9 +3,11 @@ import AppLayout from './shared/presentation/components/layout.vue'
 import Home from './shared/presentation/views/home.vue'
 import vehiclesRoutes from '../src/bounded-contexts/vehicle-credential-management/presentation/vehicle-routes.js'
 import profilesRoutes from '../src/bounded-contexts/profiles-and-relationship-management/presentatiton/profiles-routes.js'
+import {registerAccessGuard} from "@/shared/presentation/guards/access.guard.js";
 
 // Shared views
 const PageNotFound = () => import('./shared/presentation/views/page-not-found.vue')
+const AccessView = () => import('./shared/presentation/views/access.vue')
 
 // Route & Trip Planning views
 const RouteConfiguration = () =>
@@ -33,6 +35,7 @@ const billingRoutes = [
 ]
 
 const routes = [
+    { path: '/access', name: 'access', component: AccessView, meta: { title: 'Access' } },
     {
         path: '/',
         component: AppLayout,
@@ -64,6 +67,8 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
 })
+
+registerAccessGuard(router)
 
 router.afterEach((to) => {
     document.title = `Rumbo | ${to.meta.title || 'Frontend'}`

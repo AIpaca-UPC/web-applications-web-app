@@ -2,7 +2,7 @@
   "common": {
     "language": "Language",
     "project": "School transport platform",
-    "workspace": "Team development workspace",
+    "workspace": "School transport platform",
     "pending": "Awaiting implementation",
     "open": "Open workspace",
     "back": "Back to dashboard"
@@ -285,5 +285,23 @@
     "deleteDescription": "This action will delete your subscription record. Are you sure you want to continue?",
     "keepSubscription": "Keep subscription",
     "confirmDelete": "Yes, cancel"
+  },
+  "access": {
+    "tagline": "Peace of mind on every trip.",
+    "eyebrow": "ROLE PREVIEW",
+    "title": "Explore Rumbo",
+    "description": "Choose the experience you want to review.",
+    "driver": {
+      "name": "Driver",
+      "description": "Register vehicles and their documents, plan routes and report incidents."
+    },
+    "tutor": {
+      "name": "Tutor",
+      "description": "Check the service assigned to your child and the documents declared for it."
+    },
+    "copyright": "2026 Rumbo",
+    "viewingAs": "Viewing as",
+    "change": "Change role",
+    "exit": "Exit"
   }
 }

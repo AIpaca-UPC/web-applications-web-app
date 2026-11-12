@@ -2,7 +2,7 @@
   "common": {
     "language": "Idioma",
     "project": "Plataforma de transporte escolar",
-    "workspace": "Espacio de trabajo del equipo de desarrollo",
+    "workspace": "Plataforma de transporte escolar",
     "pending": "Pendiente de implementación",
     "open": "Abrir espacio de trabajo",
     "back": "Volver al panel principal"
@@ -285,5 +285,23 @@
     "deleteDescription": "Esta acción eliminará el registro de tu suscripción. ¿Estás seguro de que deseas continuar?",
     "keepSubscription": "Mantener suscripción",
     "confirmDelete": "Sí, cancelar"
+  },
+  "access": {
+    "tagline": "Tranquilidad en cada trayecto.",
+    "eyebrow": "VISTA POR ROL",
+    "title": "Explora Rumbo",
+    "description": "Elige la experiencia que quieres revisar.",
+    "driver": {
+      "name": "Conductor",
+      "description": "Registra vehículos y sus documentos, planifica rutas y reporta incidencias."
+    },
+    "tutor": {
+      "name": "Tutor",
+      "description": "Consulta el servicio asignado a tu hijo y los documentos declarados para él."
+    },
+    "copyright": "Rumbo · AIpaca",
+    "viewingAs": "Viendo como",
+    "change": "Cambiar de rol",
+    "exit": "Salir"
   }
 }
