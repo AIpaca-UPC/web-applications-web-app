@@ -304,7 +304,12 @@
     "copyright": "Rumbo · AIpaca",
     "viewingAs": "Viendo como",
     "change": "Cambiar de rol",
-    "exit": "Salir"
+    "exit": "Salir",
+    "back": "Elegir otro rol",
+    "chooseTutor": "¿Como quién estás revisando?",
+    "chooseTutorHint": "Un tutor solo ve a los niños sobre los que tiene autorización.",
+    "loadingTutors": "Cargando tutores…",
+    "noTutors": "Todavía no hay tutores registrados."
   },
   "trips": {
     "events": {

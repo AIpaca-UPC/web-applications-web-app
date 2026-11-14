@@ -304,7 +304,12 @@
     "copyright": "2026 Rumbo",
     "viewingAs": "Viewing as",
     "change": "Change role",
-    "exit": "Exit"
+    "exit": "Exit",
+    "back": "Choose another role",
+    "chooseTutor": "Who are you reviewing as?",
+    "chooseTutorHint": "A tutor only sees the children they are authorized over.",
+    "loadingTutors": "Loading tutors…",
+    "noTutors": "There are no tutors registered yet."
   },
   "trips": {
     "events": {
