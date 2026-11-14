@@ -13,13 +13,15 @@ import Tag from 'primevue/tag';
 
 import useProfilesStore from '../../application/profiles.store.js';
 import { StudentStatus } from '../../domain/model/student.entity.js';
+import relationshipsStore
+  from "@/bounded-contexts/profiles-and-relationship-management/application/relationships.store.js";
 
 const router = useRouter();
 const { t, te } = useI18n();
 const store = useProfilesStore();
-
+const relationships = relationshipsStore();
 const {
-  students,
+  visibleStudents,
   studentsLoading,
   studentsLoaded,
   errors
@@ -42,6 +44,7 @@ const errorMessage = computed(() =>
 
 onMounted(async () => {
   await store.fetchStudents();
+  await relationships.fetchRelationships();
 });
 
 /**
@@ -101,11 +104,11 @@ const editStudent = (id) => {
 
     <div class="table-card">
       <DataTable
-          :value="students"
+          :value="visibleStudents"
           :loading="studentsLoading"
           :rows="10"
           :rows-per-page-options="[5, 10, 20]"
-          :paginator="students.length > 10"
+          :paginator="visibleStudents.length > 10"
           stripedRows
           tableStyle="min-width: 45rem"
           :emptyMessage="studentsLoaded
