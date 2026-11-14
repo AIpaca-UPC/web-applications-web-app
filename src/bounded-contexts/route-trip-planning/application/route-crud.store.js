@@ -1,64 +1,47 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { routesApi } from '../infrastructure/routes-api.js'
+import { RouteAssembler } from '../infrastructure/route.assembler.js'
+import { Route } from '../domain/model/route.entity.js'
 
-const time = value => String(value || '07:30').slice(0, 5)
 const id = value => value == null ? '' : String(value)
 const asList = value => Array.isArray(value) ? value : []
 
-export function normalizeRoute(raw) {
-  const r = raw || {}
-  return {
-    ...r,
-    id: id(r.id),
-    name: String(r.name ?? ''),
-    driverName: String(r.driverName ?? r.driver?.fullName ?? r.driver?.name ?? ''),
-    vehicleLabel: String(r.vehicleLabel ?? r.vehicle?.label ?? r.vehicle?.plate ?? r.vehicleName ?? ''),
-    shift: r.shift || 'MORNING',
-    departureTime: time(r.departureTime ?? r.departure_time),
-    status: r.status || 'CONFIGURABLE',
-    stops: asList(r.stops).slice().sort((a, b) => (a.position ?? 0) - (b.position ?? 0)).map(s => ({
-      ...s,
-      id: id(s.id),
-      address: String(s.address ?? ''),
-      studentId: id(s.studentId ?? s.studentRef ?? s.student?.id),
-      studentName: String(s.studentName ?? s.student?.name ?? s.student?.fullName ?? ''),
-    })),
-    schedule: asList(r.schedule).map(s => ({
-      day: typeof s.day === 'number' ? ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][s.day] : s.day,
-      departureTime: time(s.departureTime),
-    })),
-  }
-}
-
+/**
+ * Reduces a student returned by Profiles to the reference and the name this context shows.
+ *
+ * @param {Object} raw - Student resource.
+ * @returns {?{id: string, name: string}} The option, or null when it lacks an id or a name.
+ */
 export function normalizeStudent(raw) {
   const idValue = id(raw?.id ?? raw?.studentId)
   const name = String(raw?.name ?? raw?.fullName ?? [raw?.firstName, raw?.lastName].filter(Boolean).join(' ')).trim()
   return idValue && name ? { id: idValue, name } : null
 }
 
+/**
+ * Turns a failed request into a message a driver can act on.
+ *
+ * @param {Error} error - Error thrown by the data source.
+ * @returns {string} Message for the screen.
+ */
 export function apiMessage(error) {
   const response = error?.response
   const data = response?.data
   if (!response) return error?.message || 'No se pudo conectar con el servicio de rutas.'
   const validation = data?.errors && typeof data.errors === 'object'
-    ? Object.values(data.errors).flat().filter(Boolean).join(' · ') : ''
+      ? Object.values(data.errors).flat().filter(Boolean).join(' · ') : ''
   const text = validation || data?.message || data?.detail || data?.title || error?.message
   return `HTTP ${response.status}: ${text || 'El servidor rechazó la solicitud.'}`
 }
 
-const writeRoute = r => ({
-  name: String(r.name || '').trim(),
-  driverName: String(r.driverName || '').trim(),
-  vehicleLabel: String(r.vehicleLabel || '').trim(),
-  shift: r.shift || 'MORNING',
-  departureTime: `${time(r.departureTime)}:00`,
-  stops: asList(r.stops).map(s => ({ id: s.id || null, address: String(s.address || '').trim() })),
-  schedule: asList(r.schedule).map(d => ({ day: d.day, departureTime: `${time(d.departureTime)}:00` })),
-  // A complete schedule is confirmed by saving it. No extra confirmation checkbox.
-  scheduleConfirmed: asList(r.schedule).length > 0 && asList(r.schedule).every(d => /^\d{2}:\d{2}$/.test(time(d.departureTime))),
-})
-
+/**
+ * Application layer of Route & Trip Planning.
+ *
+ * It orchestrates: it talks to the data source, keeps what the screens read, and reports
+ * failures. The rules of the plan are not here — they belong to the Route aggregate, which
+ * this store asks before writing anything.
+ */
 export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
   const routes = ref([])
   const studentOptions = ref([])
@@ -75,8 +58,7 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
     loading.value = true
     error.value = ''
     try {
-      const result = await routesApi.list()
-      routes.value = asList(result).map(normalizeRoute)
+      routes.value = RouteAssembler.toEntitiesFromResources(await routesApi.list())
       if (!routes.value.some(r => r.id === selectedRouteId.value)) selectedRouteId.value = routes.value[0]?.id || null
       return true
     } catch (e) {
@@ -103,66 +85,74 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
   async function getDetails(routeId) {
     error.value = ''
     try {
-      return normalizeRoute(await routesApi.getById(routeId))
+      return RouteAssembler.toEntityFromResource(await routesApi.getById(routeId))
     } catch (e) {
       error.value = apiMessage(e)
       return null
     }
   }
 
+  /**
+   * Saves a route whole, after its own plan and the authorized student list accept it.
+   *
+   * @param {Object|Route} form - The plan as the screen edited it.
+   * @returns {?Route} The saved route, or null when something was rejected.
+   */
   async function save(form) {
     saving.value = true
     error.value = ''
     lastSavedId.value = null
     try {
-      const existingId = id(form.id)
+      const draft = form instanceof Route ? form : new Route(form)
+      const existingId = id(draft.id)
       const existing = existingId ? await getDetails(existingId) : null
       if (existingId && !existing) return null
-      const ids = form.stops.map(s => id(s.studentId)).filter(Boolean)
-      if (new Set(ids).size !== ids.length) throw new Error('Un estudiante no puede aparecer en dos paradas de la misma ruta.')
+      if (existing && !existing.isEditable) throw new Error('Una ruta publicada no puede editarse en esta versión.')
+
+      // The aggregate owns this rule; the store only reports what it decided.
+      if (!draft.hasUniqueStudents) throw new Error('Un estudiante no puede aparecer en dos paradas de la misma ruta.')
+
+      // This one is not the aggregate's: only the application knows who Profiles authorized.
       const allowed = new Set(studentOptions.value.map(s => s.id))
-      for (const studentId of ids) {
+      for (const { studentId } of RouteAssembler.toStudentAssignments(draft)) {
         // Existing assignments stay visible, even if Profiles has stopped returning them.
-        const previouslyAssigned = existing?.stops.some(s => s.studentId === studentId)
-        if (!allowed.has(studentId) && !previouslyAssigned) {
+        if (!allowed.has(studentId) && !(existing?.serves(studentId) ?? false)) {
           throw new Error('Hay un estudiante no autorizado o que ya no está disponible. Actualiza la lista.')
         }
       }
+
+      const payload = RouteAssembler.toResourceFromEntity(draft)
       const saved = existing
-        ? await routesApi.update(existing.id, writeRoute(form))
-        : await routesApi.create(writeRoute(form))
+          ? await routesApi.update(existing.id, payload)
+          : await routesApi.create(payload)
       lastSavedId.value = id(saved.id)
-      const beforeByStop = new Map((existing?.stops || []).map(s => [id(s.id), id(s.studentId)]))
-      const ordered = asList(saved.stops).slice().sort((a,b) => (a.position ?? 0) - (b.position ?? 0))
-      if (ordered.length !== form.stops.length) throw new Error('La API no devolvió todas las paradas guardadas.')
-      for (let i = 0; i < ordered.length; i++) {
-        const stopId = id(ordered[i].id)
-        const wanted = id(form.stops[i].studentId)
-        const previous = beforeByStop.get(stopId) || ''
-        if (wanted === previous) continue
-        if (wanted) await routesApi.assignStudent(saved.id, stopId, wanted)
-        else if (previous) await routesApi.unassignStudent(saved.id, stopId)
-        // No DELETE for a new stop without an assigned student.
-      }
+
       selectedRouteId.value = id(saved.id)
       if (!(await load())) throw new Error('Se guardó la ruta, pero falló la actualización de la lista.')
-      return routes.value.find(r => r.id === id(saved.id)) || normalizeRoute(saved)
+      return routes.value.find(r => r.id === id(saved.id)) || RouteAssembler.toEntityFromResource(saved)
     } catch (e) {
-      const originalMessage = apiMessage(e)
-      if (lastSavedId.value) {
-        // API writes are not atomic across route + student assignment requests.
-        await load()
-        error.value = `${originalMessage} La ruta pudo guardarse parcialmente. Vuelve a abrirla antes de reintentar.`
-      } else error.value = originalMessage
+      error.value = apiMessage(e)
       return null
     } finally { saving.value = false }
   }
 
+  /**
+   * Publishes a route, once its own plan says it is ready.
+   *
+   * @param {string} routeId - Identifier of the route.
+   * @returns {?Route} The published route, or null when it was refused.
+   */
   async function publish(routeId) {
     saving.value = true
     error.value = ''
     try {
-      const result = normalizeRoute(await routesApi.publish(routeId))
+      const known = routes.value.find(r => r.id === id(routeId)) ?? await getDetails(routeId)
+      if (known && !known.canBePublished) {
+        throw new Error(known.isPublished
+            ? 'Esta ruta ya está publicada.'
+            : 'La ruta todavía no está lista: necesita nombre, conductor, vehículo, paradas con dirección, al menos un estudiante asignado y días de servicio con horario.')
+      }
+      const result = RouteAssembler.toEntityFromResource(await routesApi.publish(routeId))
       await load()
       return result
     } catch (e) { error.value = apiMessage(e); return null }
