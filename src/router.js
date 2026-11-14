@@ -5,6 +5,7 @@ import vehiclesRoutes from '../src/bounded-contexts/vehicle-credential-managemen
 import profilesRoutes from '../src/bounded-contexts/profiles-and-relationship-management/presentatiton/profiles-routes.js'
 import {registerAccessGuard} from "@/shared/presentation/guards/access.guard.js";
 import tripRoutes from "@/bounded-contexts/trip-execution-and-monitoring/presentation/trip-routes.js";
+import alertingRoutes from '@/bounded-contexts/alerting-and-incident-management/presentation/alerting-routes.js'
 
 // Shared views
 const PageNotFound = () => import('./shared/presentation/views/page-not-found.vue')
@@ -54,8 +55,8 @@ const routes = [
             // Route & Trip Planning
             { path: 'routes', children: routeTripPlanningRoutes },
 
-            // Alerting & Incident Management (pending: replace redirect with its routes)
-            { path: 'notifications', redirect: '/home' },
+            // Alerting & Incident Management
+            { path: 'notifications', children: alertingRoutes },
 
             // Subscriptions & Billing
             { path: 'subscriptions-and-billing', children: billingRoutes },

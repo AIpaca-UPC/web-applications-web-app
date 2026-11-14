@@ -307,6 +307,24 @@
     "exit": "Salir"
   },
   "trips": {
+    "events": {
+      "TRIP_STARTED": {
+        "title": "Viaje iniciado",
+        "message": "El conductor inició el viaje de {route}."
+      },
+      "STOP_SERVED": {
+        "title": "Recogido",
+        "message": "{student} fue recogido en su parada."
+      },
+      "ABSENT": {
+        "title": "No subió",
+        "message": "El conductor atendió la parada y {student} no subió."
+      },
+      "TRIP_COMPLETED": {
+        "title": "Viaje finalizado",
+        "message": "El viaje de {route} ha finalizado."
+      }
+    },
     "list": {
       "title": "Viajes",
       "subtitle": "Inicia el viaje del día y confirma cada parada conforme la atiendes.",
@@ -364,6 +382,30 @@
       "NOT_BOARDED": "No subió",
       "TRIP_COMPLETED": "Viaje finalizado",
       "NOT_APPLICABLE": "No está en este viaje"
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "subtitle": "Avisos sobre el servicio, sus viajes y las incidencias reportadas por el conductor.",
+    "empty": "Todavía no hay notificaciones.",
+    "emptyUnread": "No queda nada por leer.",
+    "loadError": "No se pudieron cargar las notificaciones. Revisa tu conexión e inténtalo de nuevo.",
+    "refresh": "Actualizar",
+    "markRead": "Marcar como leída",
+    "unreadSummary": "{count} sin leer",
+    "filter": {
+      "all": "Todas",
+      "unread": "Solo sin leer"
+    },
+    "type": {
+      "INFO": "Información",
+      "SUCCESS": "Listo",
+      "IMPORTANT": "Importante",
+      "WARNING": "Advertencia"
+    },
+    "priority": {
+      "REGULAR": "Normal",
+      "CRITICAL": "Crítica"
     }
   }
 }
