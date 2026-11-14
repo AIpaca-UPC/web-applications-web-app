@@ -1,41 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AppLayout from './shared/presentation/components/layout.vue'
-import Home from './shared/presentation/views/home.vue'
-import vehiclesRoutes from '../src/bounded-contexts/vehicle-credential-management/presentation/vehicle-routes.js'
-import profilesRoutes from '../src/bounded-contexts/profiles-and-relationship-management/presentatiton/profiles-routes.js'
-import {registerAccessGuard} from "@/shared/presentation/guards/access.guard.js";
-import tripRoutes from "@/bounded-contexts/trip-execution-and-monitoring/presentation/trip-routes.js";
+
+import AppLayout from '@/shared/presentation/components/layout.vue'
+import Home from '@/shared/presentation/views/home.vue'
+import { registerAccessGuard } from '@/shared/presentation/guards/access.guard.js'
+import vehiclesRoutes from '@/bounded-contexts/vehicle-credential-management/presentation/vehicle-routes.js'
+import routeRoutes from '@/bounded-contexts/route-trip-planning/presentation/route-routes.js'
+import tripRoutes from '@/bounded-contexts/trip-execution-and-monitoring/presentation/trip-routes.js'
 import alertingRoutes from '@/bounded-contexts/alerting-and-incident-management/presentation/alerting-routes.js'
+import billingRoutes from '@/bounded-contexts/subscriptions-and-billing/presentation/billing-routes.js'
+import profilesRoutes from "@/bounded-contexts/profiles-and-relationship-management/presentatiton/profiles-routes.js";
 
 // Shared views
-const PageNotFound = () => import('./shared/presentation/views/page-not-found.vue')
-const AccessView = () => import('./shared/presentation/views/access.vue')
+const PageNotFound = () => import('@/shared/presentation/views/page-not-found.vue')
+const AccessView = () => import('@/shared/presentation/views/access.vue')
 
-// Route & Trip Planning views
-const RouteConfiguration = () =>
-    import('./bounded-contexts/route-trip-planning/presentation/views/route-configuration.vue')
-
-// Subscriptions & Billing views
-const BillingPlanList = () =>
-    import('./bounded-contexts/subscriptions-and-billing/presentation/views/plan-list.vue')
-const BillingSubscriptionForm = () =>
-    import('./bounded-contexts/subscriptions-and-billing/presentation/views/subscription-form.vue')
-const BillingSubscriptionList = () =>
-    import('./bounded-contexts/subscriptions-and-billing/presentation/views/subscription-list.vue')
-
-// Child routes per bounded context (relative to their parent path)
-const routeTripPlanningRoutes = [
-    { path: '', redirect: '/routes/configure' },
-    { path: 'configure', name: 'route-configuration', component: RouteConfiguration, meta: { title: 'Configurar ruta' } },
-]
-
-const billingRoutes = [
-    { path: '', name: 'billing', component: BillingPlanList, meta: { title: 'Subscriptions & Billing' } },
-    { path: 'plans', name: 'billing-plans', component: BillingPlanList, meta: { title: 'Available Plans' } },
-    { path: 'subscriptions', name: 'billing-subscriptions', component: BillingSubscriptionList, meta: { title: 'My Subscription' } },
-    { path: 'subscriptions/new', name: 'billing-new', component: BillingSubscriptionForm, meta: { title: 'Confirm Subscription' } },
-]
-
+// Each bounded context declares its own child routes; this file only mounts them.
 const routes = [
     { path: '/access', name: 'access', component: AccessView, meta: { title: 'Access' } },
     {
@@ -53,7 +32,7 @@ const routes = [
             { path: 'vehicles', children: vehiclesRoutes },
 
             // Route & Trip Planning
-            { path: 'routes', children: routeTripPlanningRoutes },
+            { path: 'routes', children: routeRoutes },
 
             // Alerting & Incident Management
             { path: 'notifications', children: alertingRoutes },
