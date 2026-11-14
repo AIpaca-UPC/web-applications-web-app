@@ -249,3 +249,21 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
     </template>
   </section>
 </template>
+
+<style scoped>
+/* The page now lives inside the shared AppLayout: no own sidebar column or full-height shell. */
+.route-configuration-page {
+  display: block;
+  min-height: 0;
+  height: auto;
+  background: transparent;
+}
+.rp-workspace {
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+}
+.rp-main {
+  padding: 0;
+}
+</style>

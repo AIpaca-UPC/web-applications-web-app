@@ -3,9 +3,13 @@ import AppLayout from './shared/presentation/components/layout.vue'
 import Home from './shared/presentation/views/home.vue'
 import vehiclesRoutes from '../src/bounded-contexts/vehicle-credential-management/presentation/vehicle-routes.js'
 import profilesRoutes from '../src/bounded-contexts/profiles-and-relationship-management/presentatiton/profiles-routes.js'
+import {registerAccessGuard} from "@/shared/presentation/guards/access.guard.js";
+import tripRoutes from "@/bounded-contexts/trip-execution-and-monitoring/presentation/trip-routes.js";
+import alertingRoutes from '@/bounded-contexts/alerting-and-incident-management/presentation/alerting-routes.js'
 
 // Shared views
 const PageNotFound = () => import('./shared/presentation/views/page-not-found.vue')
+const AccessView = () => import('./shared/presentation/views/access.vue')
 
 // Route & Trip Planning views
 const RouteConfiguration = () =>
@@ -33,6 +37,7 @@ const billingRoutes = [
 ]
 
 const routes = [
+    { path: '/access', name: 'access', component: AccessView, meta: { title: 'Access' } },
     {
         path: '/',
         component: AppLayout,
@@ -50,11 +55,14 @@ const routes = [
             // Route & Trip Planning
             { path: 'routes', children: routeTripPlanningRoutes },
 
-            // Alerting & Incident Management (pending: replace redirect with its routes)
-            { path: 'notifications', redirect: '/home' },
+            // Alerting & Incident Management
+            { path: 'notifications', children: alertingRoutes },
 
             // Subscriptions & Billing
             { path: 'subscriptions-and-billing', children: billingRoutes },
+
+            // Trip Execution & Monitoring
+            { path: 'trips', children: tripRoutes },
         ],
     },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: PageNotFound, meta: { title: 'Page Not Found' } },
@@ -64,6 +72,8 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
 })
+
+registerAccessGuard(router)
 
 router.afterEach((to) => {
     document.title = `Rumbo | ${to.meta.title || 'Frontend'}`

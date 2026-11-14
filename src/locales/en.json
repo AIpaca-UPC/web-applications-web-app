@@ -2,7 +2,7 @@
   "common": {
     "language": "Language",
     "project": "School transport platform",
-    "workspace": "Team development workspace",
+    "workspace": "School transport platform",
     "pending": "Awaiting implementation",
     "open": "Open workspace",
     "back": "Back to dashboard"
@@ -18,7 +18,32 @@
     "helpText": "Review the guidance and safety information.",
     "navigation": "Main navigation",
     "dashboard": "Dashboard",
-    "workspaces": "Bounded Contexts"
+    "workspaces": "Bounded Contexts",
+    "serviceInformation": "My child's service",
+    "trips": "Trips",
+    "tripStatus": "My child's trip"
+  },
+  "serviceInformation": {
+    "title": "Service information",
+    "subtitle": "Vehicle and credentials declared by the driver of the service.",
+    "refresh": "Refresh",
+    "driver": "Driver",
+    "credentialsTitle": "Declared credentials",
+    "validUntil": "Valid until",
+    "source": "Source",
+    "empty": "There is no service registered yet.",
+    "notice": "Rumbo presents the information declared by the driver and the result recorded for each credential. It does not carry out an official validation of its own.",
+    "credentialType": {
+      "SOAT": "Compulsory traffic accident insurance (SOAT)",
+      "CITV": "Technical inspection certificate (CITV)",
+      "DRIVER_LICENSE": "Driving licence, category A-IIb"
+    },
+    "credentialStatus": {
+      "VERIFIED": "Verified",
+      "PENDING": "Pending verification",
+      "FAILED": "Not confirmed",
+      "EXPIRED": "Expired"
+    }
   },
   "home": {
     "title": "Rumbo operations",
@@ -171,7 +196,10 @@
       "capacity": "Capacity",
       "capacitySeats": "Capacity (Seats)",
       "year": "Year",
-      "status": "Status"
+      "status": "Status",
+      "driverName": "Driver",
+      "credentialNumber": "Document number",
+      "credentialExpiresAt": "Valid until"
     },
     "status": {
       "ACTIVE": "Active",
@@ -191,7 +219,9 @@
       "newTitle": "New Vehicle",
       "editTitle": "Edit Vehicle",
       "newSubtitle": "Fill in the vehicle details to add it to the fleet.",
-      "editSubtitle": "Update the vehicle details to keep the fleet record current."
+      "editSubtitle": "Update the vehicle details to keep the fleet record current.",
+      "credentialsTitle": "Service credentials",
+      "credentialsHelp": "Declared by the driver. They stay pending until a verification result is obtained."
     },
     "delete": {
       "header": "Delete vehicle",
@@ -257,5 +287,125 @@
     "deleteDescription": "This action will delete your subscription record. Are you sure you want to continue?",
     "keepSubscription": "Keep subscription",
     "confirmDelete": "Yes, cancel"
+  },
+  "access": {
+    "tagline": "Peace of mind on every trip.",
+    "eyebrow": "ROLE PREVIEW",
+    "title": "Explore Rumbo",
+    "description": "Choose the experience you want to review.",
+    "driver": {
+      "name": "Driver",
+      "description": "Register vehicles and their documents, plan routes and report incidents."
+    },
+    "tutor": {
+      "name": "Tutor",
+      "description": "Check the service assigned to your child and the documents declared for it."
+    },
+    "copyright": "2026 Rumbo",
+    "viewingAs": "Viewing as",
+    "change": "Change role",
+    "exit": "Exit"
+  },
+  "trips": {
+    "events": {
+      "TRIP_STARTED": {
+        "title": "Trip started",
+        "message": "The driver started the trip on {route}."
+      },
+      "STOP_SERVED": {
+        "title": "Picked up",
+        "message": "{student} was picked up at their stop."
+      },
+      "ABSENT": {
+        "title": "Did not board",
+        "message": "The driver served the stop and {student} did not board."
+      },
+      "TRIP_COMPLETED": {
+        "title": "Trip finished",
+        "message": "The trip on {route} is finished."
+      }
+    },
+    "list": {
+      "title": "Trips",
+      "subtitle": "Start the trip of the day and confirm each stop as you serve it.",
+      "empty": "There are no trips registered yet."
+    },
+    "status": {
+      "SCHEDULED": "Scheduled",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "stopStatus": {
+      "PENDING": "Pending",
+      "CONFIRMED": "Picked up",
+      "SKIPPED": "Skipped"
+    },
+    "shift": {
+      "MORNING": "Morning",
+      "AFTERNOON": "Afternoon"
+    },
+    "actions": {
+      "start": "Start trip",
+      "continue": "Continue",
+      "view": "View",
+      "back": "Back to trips",
+      "confirm": "Picked up",
+      "skip": "Nobody boarded",
+      "complete": "Close trip",
+      "refresh": "Refresh"
+    },
+    "stopsResolved": "{progress} stops resolved",
+    "noStudents": "No students expected at this stop",
+    "completeHint": "Resolve every stop before closing the trip.",
+    "untitledRoute": "Route without a name",
+    "notFound": "That trip could not be found."
+  },
+  "tripStatus": {
+    "title": "My child's trip",
+    "subtitle": "Follow the trip published by the driver, stop by stop.",
+    "empty": "There is no trip registered for the service yet.",
+    "myChild": "MY CHILD",
+    "boardsAt": "Boards at",
+    "driver": "Driver",
+    "vehicle": "Vehicle",
+    "progress": "Stops resolved",
+    "timeline": "Route of the day",
+    "scheduled": "Planned",
+    "confirmedAt": "recorded",
+    "refresh": "Refresh",
+    "notice": "This screen shows what the driver recorded. Rumbo does not track the vehicle: each stop appears once the driver confirms it. The page refreshes on its own every few seconds.",
+    "journey": {
+      "SCHEDULED": "Trip not started",
+      "IN_PROGRESS": "On the way",
+      "STOP_SERVED": "Picked up",
+      "NOT_BOARDED": "Did not board",
+      "TRIP_COMPLETED": "Trip finished",
+      "NOT_APPLICABLE": "Not on this trip"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Notices about the service, its trips and the incidents reported by the driver.",
+    "empty": "There are no notifications yet.",
+    "emptyUnread": "Nothing left to read.",
+    "loadError": "The notifications could not be loaded. Check your connection and try again.",
+    "refresh": "Refresh",
+    "markRead": "Mark as read",
+    "unreadSummary": "{count} unread",
+    "filter": {
+      "all": "All",
+      "unread": "Unread only"
+    },
+    "type": {
+      "INFO": "Information",
+      "SUCCESS": "Done",
+      "IMPORTANT": "Important",
+      "WARNING": "Warning"
+    },
+    "priority": {
+      "REGULAR": "Regular",
+      "CRITICAL": "Critical"
+    }
   }
 }
