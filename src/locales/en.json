@@ -307,6 +307,24 @@
     "exit": "Exit"
   },
   "trips": {
+    "events": {
+      "TRIP_STARTED": {
+        "title": "Trip started",
+        "message": "The driver started the trip on {route}."
+      },
+      "STOP_SERVED": {
+        "title": "Picked up",
+        "message": "{student} was picked up at their stop."
+      },
+      "ABSENT": {
+        "title": "Did not board",
+        "message": "The driver served the stop and {student} did not board."
+      },
+      "TRIP_COMPLETED": {
+        "title": "Trip finished",
+        "message": "The trip on {route} is finished."
+      }
+    },
     "list": {
       "title": "Trips",
       "subtitle": "Start the trip of the day and confirm each stop as you serve it.",
@@ -364,6 +382,30 @@
       "NOT_BOARDED": "Did not board",
       "TRIP_COMPLETED": "Trip finished",
       "NOT_APPLICABLE": "Not on this trip"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Notices about the service, its trips and the incidents reported by the driver.",
+    "empty": "There are no notifications yet.",
+    "emptyUnread": "Nothing left to read.",
+    "loadError": "The notifications could not be loaded. Check your connection and try again.",
+    "refresh": "Refresh",
+    "markRead": "Mark as read",
+    "unreadSummary": "{count} unread",
+    "filter": {
+      "all": "All",
+      "unread": "Unread only"
+    },
+    "type": {
+      "INFO": "Information",
+      "SUCCESS": "Done",
+      "IMPORTANT": "Important",
+      "WARNING": "Warning"
+    },
+    "priority": {
+      "REGULAR": "Regular",
+      "CRITICAL": "Critical"
     }
   }
 }

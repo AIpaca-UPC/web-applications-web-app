@@ -2,6 +2,9 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { TripsApi } from '../infrastructure/trips-api.js'
 import { TripAssembler } from '../infrastructure/trip.assembler.js'
+import notificationStore from '@/bounded-contexts/alerting-and-incident-management/application/notification.store.js'
+import { JourneyEvent } from '@/bounded-contexts/alerting-and-incident-management/domain/model/notification-type.js'
+import i18n from '@/i18n.js'
 
 const tripsApi = new TripsApi()
 
@@ -42,6 +45,34 @@ const tripsStore = defineStore('trips', () => {
     function registerError(error) {
         errors.value.push(error)
         console.error('[trips]', error)
+    }
+
+    /**
+     * Announces a moment of the journey through Alerting & Incident Management.
+     *
+     * One notice is produced per student of the stop, because the recipient of a notice is a
+     * tutor and not a trip. A stop with no students produces none.
+     *
+     * @param {string} event - One of JourneyEvent.
+     * @param {Object} trip - The trip the moment belongs to.
+     * @param {Object[]} [students=[]] - Students the notice is about; empty announces the trip itself.
+     */
+    async function announce(event, trip, students = []) {
+        const notifications = notificationStore()
+        const recipients = students.length ? students : [null]
+
+        for (const student of recipients) {
+            await notifications.announceJourneyEvent({
+                event,
+                title: i18n.global.t(`trips.events.${event}.title`),
+                message: i18n.global.t(`trips.events.${event}.message`, {
+                    route: trip.routeName,
+                    student: student?.fullName ?? '',
+                }),
+                tripId: trip.id,
+                studentId: student?.id ?? null,
+            })
+        }
     }
 
     /**
@@ -100,57 +131,38 @@ const tripsStore = defineStore('trips', () => {
         }
     }
 
-    /**
-     * Starts the trip of the day.
-     *
-     * @param {string} tripId - Trip identifier.
-     * @returns {Promise<boolean>} Whether it was started and saved.
-     */
     async function startTrip(tripId) {
         const trip = await getTripById(tripId)
         if (!trip?.start()) return false
-        return persist(trip)
-    }
-
-    /**
-     * Confirms that the driver picked up at a stop.
-     *
-     * @param {string} tripId - Trip identifier.
-     * @param {string} stopId - Stop identifier.
-     * @returns {Promise<boolean>} Whether it was confirmed and saved.
-     */
-    async function confirmStop(tripId, stopId) {
-        const trip = await getTripById(tripId)
-        if (!trip?.confirmStop(stopId)) return false
         const saved = await persist(trip)
-        // Alerting & Incident Management notifies the tutors of this stop once that context
-        // exposes its notifications endpoint. Branch feature/alerting-and-incident-management.
+        if (saved) await announce(JourneyEvent.TRIP_STARTED, trip)
         return saved
     }
 
-    /**
-     * Records that the driver passed a stop without picking anyone up.
-     *
-     * @param {string} tripId - Trip identifier.
-     * @param {string} stopId - Stop identifier.
-     * @returns {Promise<boolean>} Whether it was skipped and saved.
-     */
-    async function skipStop(tripId, stopId) {
+    async function confirmStop(tripId, stopId) {
         const trip = await getTripById(tripId)
-        if (!trip?.skipStop(stopId)) return false
-        return persist(trip)
+        const stop = trip?.stops.find((candidate) => candidate.id === String(stopId))
+        if (!trip?.confirmStop(stopId)) return false
+        const saved = await persist(trip)
+        if (saved) await announce(JourneyEvent.STOP_SERVED, trip, stop.students)
+        return saved
     }
 
-    /**
-     * Closes the trip. The aggregate refuses it while a stop is still pending.
-     *
-     * @param {string} tripId - Trip identifier.
-     * @returns {Promise<boolean>} Whether it was closed and saved.
-     */
+    async function skipStop(tripId, stopId) {
+        const trip = await getTripById(tripId)
+        const stop = trip?.stops.find((candidate) => candidate.id === String(stopId))
+        if (!trip?.skipStop(stopId)) return false
+        const saved = await persist(trip)
+        if (saved) await announce(JourneyEvent.ABSENT, trip, stop.students)
+        return saved
+    }
+
     async function completeTrip(tripId) {
         const trip = await getTripById(tripId)
         if (!trip?.complete()) return false
-        return persist(trip)
+        const saved = await persist(trip)
+        if (saved) await announce(JourneyEvent.TRIP_COMPLETED, trip)
+        return saved
     }
 
     /**
