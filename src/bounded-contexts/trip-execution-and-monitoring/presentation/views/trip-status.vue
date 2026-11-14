@@ -3,6 +3,8 @@ import { computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import tripsStore from '../../application/trip.store.js'
 import { StudentJourneyStatus, TripStatus, TripStopStatus } from '../../domain/model/trip-status.js'
+import useRelationshipsStore
+  from "@/bounded-contexts/profiles-and-relationship-management/application/relationships.store.js";
 
 const { t } = useI18n()
 const trips = tripsStore()
@@ -16,15 +18,19 @@ const trip = computed(() => trips.currentTrip)
 /**
  * The student the tutor is following.
  *
- * While the authorised link between a tutor and their students is resolved by Identity &
- * Access Management together with Profiles & Relationship Management, the view follows the
- * first student of the trip. Once that link exists, this is the only line that changes.
+ * It is the first of their own children that this trip carries. A tutor with several
+ * children sees the one travelling now; the others appear when their trip runs.
  *
  * @type {import('vue').ComputedRef<?Object>}
  */
 const student = computed(() => {
-  const stop = trip.value?.stops.find((candidate) => candidate.studentCount > 0)
-  return stop?.students[0] ?? null
+  if (!trip.value) return null
+  for (const studentId of trips.authorizedStudentIds) {
+    const stop = trip.value.stopForStudent(studentId)
+    const match = stop?.students.find((candidate) => candidate.is(studentId))
+    if (match) return match
+  }
+  return null
 })
 
 /** @type {import('vue').ComputedRef<?string>} The journey state of that student. */
@@ -73,8 +79,11 @@ function formatTime(value) {
   return value ? new Date(value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'
 }
 
+const relationships = useRelationshipsStore()
+
 onMounted(async () => {
   await trips.fetchTrips()
+  await relationships.fetchRelationships()
   refreshTimer = setInterval(() => trips.fetchTrips(true), REFRESH_INTERVAL)
 })
 
