@@ -19,7 +19,9 @@
     "navigation": "Main navigation",
     "dashboard": "Dashboard",
     "workspaces": "Bounded Contexts",
-    "serviceInformation": "My child's service"
+    "serviceInformation": "My child's service",
+    "trips": "Trips",
+    "tripStatus": "My child's trip"
   },
   "serviceInformation": {
     "title": "Service information",
@@ -303,5 +305,65 @@
     "viewingAs": "Viewing as",
     "change": "Change role",
     "exit": "Exit"
+  },
+  "trips": {
+    "list": {
+      "title": "Trips",
+      "subtitle": "Start the trip of the day and confirm each stop as you serve it.",
+      "empty": "There are no trips registered yet."
+    },
+    "status": {
+      "SCHEDULED": "Scheduled",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "stopStatus": {
+      "PENDING": "Pending",
+      "CONFIRMED": "Picked up",
+      "SKIPPED": "Skipped"
+    },
+    "shift": {
+      "MORNING": "Morning",
+      "AFTERNOON": "Afternoon"
+    },
+    "actions": {
+      "start": "Start trip",
+      "continue": "Continue",
+      "view": "View",
+      "back": "Back to trips",
+      "confirm": "Picked up",
+      "skip": "Nobody boarded",
+      "complete": "Close trip",
+      "refresh": "Refresh"
+    },
+    "stopsResolved": "{progress} stops resolved",
+    "noStudents": "No students expected at this stop",
+    "completeHint": "Resolve every stop before closing the trip.",
+    "untitledRoute": "Route without a name",
+    "notFound": "That trip could not be found."
+  },
+  "tripStatus": {
+    "title": "My child's trip",
+    "subtitle": "Follow the trip published by the driver, stop by stop.",
+    "empty": "There is no trip registered for the service yet.",
+    "myChild": "MY CHILD",
+    "boardsAt": "Boards at",
+    "driver": "Driver",
+    "vehicle": "Vehicle",
+    "progress": "Stops resolved",
+    "timeline": "Route of the day",
+    "scheduled": "Planned",
+    "confirmedAt": "recorded",
+    "refresh": "Refresh",
+    "notice": "This screen shows what the driver recorded. Rumbo does not track the vehicle: each stop appears once the driver confirms it. The page refreshes on its own every few seconds.",
+    "journey": {
+      "SCHEDULED": "Trip not started",
+      "IN_PROGRESS": "On the way",
+      "STOP_SERVED": "Picked up",
+      "NOT_BOARDED": "Did not board",
+      "TRIP_COMPLETED": "Trip finished",
+      "NOT_APPLICABLE": "Not on this trip"
+    }
   }
 }

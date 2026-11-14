@@ -4,6 +4,7 @@ import Home from './shared/presentation/views/home.vue'
 import vehiclesRoutes from '../src/bounded-contexts/vehicle-credential-management/presentation/vehicle-routes.js'
 import profilesRoutes from '../src/bounded-contexts/profiles-and-relationship-management/presentatiton/profiles-routes.js'
 import {registerAccessGuard} from "@/shared/presentation/guards/access.guard.js";
+import tripRoutes from "@/bounded-contexts/trip-execution-and-monitoring/presentation/trip-routes.js";
 
 // Shared views
 const PageNotFound = () => import('./shared/presentation/views/page-not-found.vue')
@@ -58,6 +59,9 @@ const routes = [
 
             // Subscriptions & Billing
             { path: 'subscriptions-and-billing', children: billingRoutes },
+
+            // Trip Execution & Monitoring
+            { path: 'trips', children: tripRoutes },
         ],
     },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: PageNotFound, meta: { title: 'Page Not Found' } },

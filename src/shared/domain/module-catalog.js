@@ -56,6 +56,22 @@ export const moduleCatalog = [
         folder: 'subscriptions-and-billing',
         roles: [AccessRole.DRIVER],
     },
+    {
+        id: 'trips',
+        titleKey: 'nav.trips',
+        path: '/trips',
+        icon: 'pi-directions',
+        folder: 'trip-execution-and-monitoring',
+        roles: [AccessRole.DRIVER],
+    },
+    {
+        id: 'trip-status',
+        titleKey: 'nav.tripStatus',
+        path: '/trips/status',
+        icon: 'pi-map-marker',
+        folder: 'trip-execution-and-monitoring',
+        roles: [AccessRole.TUTOR],
+    },
 ]
 
 /**
