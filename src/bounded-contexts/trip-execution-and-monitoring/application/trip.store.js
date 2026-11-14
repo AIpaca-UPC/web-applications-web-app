@@ -5,6 +5,8 @@ import { TripAssembler } from '../infrastructure/trip.assembler.js'
 import notificationStore from '@/bounded-contexts/alerting-and-incident-management/application/notification.store.js'
 import { JourneyEvent } from '@/bounded-contexts/alerting-and-incident-management/domain/model/notification-type.js'
 import i18n from '@/i18n.js'
+import accessProfileStore from '@/shared/application/access-profile.store.js'
+import useRelationshipsStore from '@/bounded-contexts/profiles-and-relationship-management/application/relationships.store.js'
 
 const tripsApi = new TripsApi()
 
@@ -31,15 +33,50 @@ const tripsStore = defineStore('trips', () => {
     const upcomingTrip = computed(() => trips.value.find((trip) => trip.isScheduled) ?? null)
 
     /**
+     * Students the person reviewing as a tutor is authorized over.
+     *
+     * Trip Execution does not decide this and must not: who may see a child is answered by
+     * Profiles & Relationship Management, and this store only asks.
+     *
+     * @returns {string[]}
+     */
+    const authorizedStudentIds = computed(() => {
+        const access = accessProfileStore()
+        if (!access.isTutor || !access.profileId) return []
+        return useRelationshipsStore().studentIdsForTutor(access.profileId)
+    })
+
+    /**
+     * Trips that carry at least one of those students.
+     *
+     * @returns {Object[]}
+     */
+    const tripsForTutor = computed(() => {
+        const studentIds = authorizedStudentIds.value
+        if (studentIds.length === 0) return []
+        return trips.value.filter((trip) =>
+            studentIds.some((studentId) => trip.stopForStudent(studentId) !== null),
+        )
+    })
+
+    /**
      * The trip a tutor should be shown: the one running, otherwise the next one scheduled,
-     * otherwise the most recent. Which trip belongs to which tutor needs the relationship
-     * between tutor and student, which Profiles & Relationship Management does not model yet.
+     * otherwise the most recent — among the trips that carry one of their own children.
+     *
+     * A tutor with no authorization is shown nothing. That is the point: an empty screen is
+     * the correct answer for someone with no children on the service, and showing them the
+     * first trip on record would be showing them somebody else's child.
      *
      * @returns {?Object}
      */
-    const currentTrip = computed(
-        () => activeTrip.value ?? upcomingTrip.value ?? trips.value[0] ?? null,
-    )
+    const currentTrip = computed(() => {
+        const access = accessProfileStore()
+        const candidates = access.isTutor ? tripsForTutor.value : trips.value
+        return candidates.find((trip) => trip.isInProgress)
+            ?? candidates.find((trip) => trip.isScheduled)
+            ?? candidates[0]
+            ?? null
+    })
 
     /** Registers an error and keeps it available to the UI. */
     function registerError(error) {
@@ -198,6 +235,8 @@ const tripsStore = defineStore('trips', () => {
         completeTrip,
         cancelTrip,
         clearErrors,
+        authorizedStudentIds,
+        tripsForTutor,
     }
 })
 

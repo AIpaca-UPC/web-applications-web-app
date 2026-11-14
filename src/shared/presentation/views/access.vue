@@ -1,25 +1,71 @@
 <script setup>
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import LanguageSwitcher from '../components/language-switcher.vue'
-import { accessRoleCatalog } from '../../domain/access-role.js'
+import { AccessRole, accessRoleCatalog } from '../../domain/access-role.js'
 import accessProfileStore from '../../application/access-profile.store.js'
+import useProfilesStore from '@/bounded-contexts/profiles-and-relationship-management/application/profiles.store.js'
 
 const route = useRoute()
 const router = useRouter()
 const accessProfile = accessProfileStore()
+const profiles = useProfilesStore()
+
+/** @type {import('vue').Ref<?Object>} The role awaiting a person to review it as. */
+const pendingDescriptor = ref(null)
+
+/** The tutors on record, offered as the identity the preview runs as. */
+const tutors = computed(() => profiles.tutors)
 
 /**
- * Activates the chosen role and opens the experience it leads to.
+ * Opens the experience the chosen role leads to.
  *
  * When the person reached this screen from a protected path, that path is honoured instead
  * of the landing path of the role, so a shared link still works after the role is chosen.
  *
  * @param {import('../../domain/access-role.js').AccessRoleDescriptor} descriptor - The role picked.
  */
-async function chooseRole(descriptor) {
-  if (!accessProfile.selectRole(descriptor.role)) return
+async function enter(descriptor) {
   const requested = typeof route.query.redirect === 'string' ? route.query.redirect : null
   await router.push(requested ?? descriptor.landingPath)
+}
+
+/**
+ * Activates the chosen role.
+ *
+ * A tutor sees their own children and nobody else's, so the preview has to run as someone in
+ * particular before it can open. Every other role enters straight away.
+ *
+ * @param {import('../../domain/access-role.js').AccessRoleDescriptor} descriptor - The role picked.
+ */
+async function chooseRole(descriptor) {
+  if (!accessProfile.selectRole(descriptor.role)) return
+
+  if (descriptor.role !== AccessRole.TUTOR) {
+    await enter(descriptor)
+    return
+  }
+
+  pendingDescriptor.value = descriptor
+  await profiles.fetchProfiles()
+}
+
+/**
+ * Records the tutor the preview runs as and opens their experience.
+ *
+ * @param {Object} tutor - The tutor profile picked.
+ */
+async function chooseTutor(tutor) {
+  accessProfile.selectProfile(tutor.id)
+  const descriptor = pendingDescriptor.value
+  pendingDescriptor.value = null
+  await enter(descriptor)
+}
+
+/** Returns to the list of roles without keeping the one that was picked. */
+function backToRoles() {
+  pendingDescriptor.value = null
+  accessProfile.clearProfile()
 }
 </script>
 
@@ -42,24 +88,58 @@ async function chooseRole(descriptor) {
       </div>
 
       <div class="access-panel-body">
-        <p class="access-eyebrow">{{ $t('access.eyebrow') }}</p>
-        <h1 class="access-title">{{ $t('access.title') }}</h1>
-        <p class="access-description">{{ $t('access.description') }}</p>
+        <div class="access-panel-body">
+          <template v-if="!pendingDescriptor">
+            <p class="access-eyebrow">{{ $t('access.eyebrow') }}</p>
+            <h1 class="access-title">{{ $t('access.title') }}</h1>
+            <p class="access-description">{{ $t('access.description') }}</p>
 
-        <ul class="access-roles">
-          <li v-for="descriptor in accessRoleCatalog" :key="descriptor.role">
-            <button type="button" class="access-role" @click="chooseRole(descriptor)">
-              <span class="access-role-icon">
-                <i class="pi" :class="descriptor.icon" aria-hidden="true"></i>
-              </span>
-              <span class="access-role-body">
-                <span class="access-role-name">{{ $t(descriptor.labelKey) }}</span>
-                <span class="access-role-description">{{ $t(descriptor.descriptionKey) }}</span>
-              </span>
-              <i class="pi pi-arrow-right access-role-arrow" aria-hidden="true"></i>
+            <ul class="access-roles">
+              <li v-for="descriptor in accessRoleCatalog" :key="descriptor.role">
+                <button type="button" class="access-role" @click="chooseRole(descriptor)">
+                <span class="access-role-icon">
+                  <i class="pi" :class="descriptor.icon" aria-hidden="true"></i>
+                </span>
+                  <span class="access-role-body">
+                  <span class="access-role-name">{{ $t(descriptor.labelKey) }}</span>
+                  <span class="access-role-description">{{ $t(descriptor.descriptionKey) }}</span>
+                </span>
+                  <i class="pi pi-arrow-right access-role-arrow" aria-hidden="true"></i>
+                </button>
+              </li>
+            </ul>
+          </template>
+
+          <template v-else>
+            <button type="button" class="access-back" @click="backToRoles">
+              <i class="pi pi-arrow-left" aria-hidden="true"></i>
+              {{ $t('access.back') }}
             </button>
-          </li>
-        </ul>
+
+            <p class="access-eyebrow">{{ $t('access.eyebrow') }}</p>
+            <h1 class="access-title">{{ $t('access.chooseTutor') }}</h1>
+            <p class="access-description">{{ $t('access.chooseTutorHint') }}</p>
+
+            <p v-if="profiles.profilesLoading" class="access-notice" role="status">
+              {{ $t('access.loadingTutors') }}
+            </p>
+
+            <ul v-else-if="tutors.length" class="access-roles">
+              <li v-for="tutor in tutors" :key="tutor.id">
+                <button type="button" class="access-role" @click="chooseTutor(tutor)">
+                  <span class="access-role-icon">{{ tutor.initials }}</span>
+                  <span class="access-role-body">
+                  <span class="access-role-name">{{ tutor.fullName }}</span>
+                  <span class="access-role-description">{{ $t('access.tutor.name') }}</span>
+                </span>
+                  <i class="pi pi-arrow-right access-role-arrow" aria-hidden="true"></i>
+                </button>
+              </li>
+            </ul>
+
+            <p v-else class="access-notice">{{ $t('access.noTutors') }}</p>
+          </template>
+        </div>
 
       </div>
     </section>
@@ -263,5 +343,24 @@ async function chooseRole(descriptor) {
   .access-panel {
     padding: 1.5rem 1rem;
   }
+}
+
+.access-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--rumbo-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.access-back:hover,
+.access-back:focus-visible {
+  color: var(--rumbo-teal);
 }
 </style>
