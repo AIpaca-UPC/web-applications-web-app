@@ -38,6 +38,7 @@ function mustExist(routes, id) {
 function editable(route) {
   if (route.status === 'PUBLISHED') throw Error('Una ruta publicada no puede editarse en esta versión.')
 }
+
 function updateStops(existing, changes) {
   const used = new Set()
   return (changes || []).map((s, i) => {
@@ -46,11 +47,14 @@ function updateStops(existing, changes) {
     const id = old?.id || uid()
     if (used.has(id)) throw Error('Las paradas no pueden repetirse.')
     used.add(id)
+    const assigned = s.studentId !== undefined
     return { id, position: i + 1, address: s.address.trim(),
-      studentId: old?.studentId || null, studentName: old?.studentName || null,
+      studentId: assigned ? (s.studentId || null) : (old?.studentId || null),
+      studentName: assigned ? (s.studentName || null) : (old?.studentName || null),
       geocodingStatus: 'PENDING_VALIDATION' }
   })
 }
+
 function payload(route, incoming, isNew) {
   if (String(incoming.name || '').trim().length < 3) throw Error('El nombre requiere tres caracteres.')
   if (!String(incoming.driverName || '').trim() || !String(incoming.vehicleLabel || '').trim())
