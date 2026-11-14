@@ -37,7 +37,7 @@ export const accessRoleCatalog = [
         labelKey: 'access.tutor.name',
         descriptionKey: 'access.tutor.description',
         icon: 'pi-users',
-        landingPath: '/vehicles/service',
+        landingPath: '/trips/status',
     },
 ]
 
