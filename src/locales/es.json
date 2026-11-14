@@ -19,7 +19,9 @@
     "navigation": "Navegación principal",
     "dashboard": "Panel principal",
     "workspaces": "Contextos delimitados",
-    "serviceInformation": "El servicio de mi hijo"
+    "serviceInformation": "El servicio de mi hijo",
+    "trips": "Viajes",
+    "tripStatus": "El viaje de mi hijo"
   },
   "serviceInformation": {
     "title": "Información del servicio",
@@ -303,5 +305,65 @@
     "viewingAs": "Viendo como",
     "change": "Cambiar de rol",
     "exit": "Salir"
+  },
+  "trips": {
+    "list": {
+      "title": "Viajes",
+      "subtitle": "Inicia el viaje del día y confirma cada parada conforme la atiendes.",
+      "empty": "Todavía no hay viajes registrados."
+    },
+    "status": {
+      "SCHEDULED": "Programado",
+      "IN_PROGRESS": "En recorrido",
+      "COMPLETED": "Finalizado",
+      "CANCELLED": "Cancelado"
+    },
+    "stopStatus": {
+      "PENDING": "Pendiente",
+      "CONFIRMED": "Recogido",
+      "SKIPPED": "Sin pasajeros"
+    },
+    "shift": {
+      "MORNING": "Mañana",
+      "AFTERNOON": "Tarde"
+    },
+    "actions": {
+      "start": "Iniciar viaje",
+      "continue": "Continuar",
+      "view": "Ver",
+      "back": "Volver a viajes",
+      "confirm": "Recogido",
+      "skip": "No subió nadie",
+      "complete": "Cerrar viaje",
+      "refresh": "Actualizar"
+    },
+    "stopsResolved": "{progress} paradas resueltas",
+    "noStudents": "No hay estudiantes en esta parada",
+    "completeHint": "Resuelve todas las paradas antes de cerrar el viaje.",
+    "untitledRoute": "Ruta sin nombre",
+    "notFound": "No se encontró ese viaje."
+  },
+  "tripStatus": {
+    "title": "El viaje de mi hijo",
+    "subtitle": "Sigue el viaje publicado por el conductor, parada por parada.",
+    "empty": "Todavía no hay un viaje registrado para el servicio.",
+    "myChild": "MI HIJO",
+    "boardsAt": "Sube en",
+    "driver": "Conductor",
+    "vehicle": "Vehículo",
+    "progress": "Paradas resueltas",
+    "timeline": "Recorrido del día",
+    "scheduled": "Previsto",
+    "confirmedAt": "registrado",
+    "refresh": "Actualizar",
+    "notice": "Esta pantalla muestra lo que el conductor registró. Rumbo no rastrea el vehículo: cada parada aparece cuando el conductor la confirma. La página se actualiza sola cada pocos segundos.",
+    "journey": {
+      "SCHEDULED": "Viaje no iniciado",
+      "IN_PROGRESS": "En camino",
+      "STOP_SERVED": "Recogido",
+      "NOT_BOARDED": "No subió",
+      "TRIP_COMPLETED": "Viaje finalizado",
+      "NOT_APPLICABLE": "No está en este viaje"
+    }
   }
 }
