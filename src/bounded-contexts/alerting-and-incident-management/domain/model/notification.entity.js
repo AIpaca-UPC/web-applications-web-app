@@ -7,6 +7,21 @@ import {
 } from './notification-type.js'
 
 /**
+ * Normalises a literal that may arrive in any letter case.
+ *
+ * Notices written by other parts of the platform use lower case, while the domain declares
+ * its enumerations in upper case. Normalising on the way in keeps one spelling inside the
+ * model without forcing every producer to change.
+ *
+ * @param {*} value - The literal as received.
+ * @param {*} fallback - Value used when none was provided.
+ * @returns {*} The literal in upper case, or the fallback.
+ */
+function normalizeLiteral(value, fallback) {
+    return typeof value === 'string' && value.trim() ? value.trim().toUpperCase() : fallback
+}
+
+/**
  * Notice delivered to a person within the Alerting & Incident Management bounded context.
  *
  * It records something that happened elsewhere — a trip advanced, an incident was reported —
@@ -48,9 +63,9 @@ export class Notification {
                     journeyEvent = null,
                 } = {}) {
         this.id = id === null ? null : String(id)
-        this.category = category
-        this.type = type
-        this.priority = priority
+        this.category = normalizeLiteral(category, NotificationCategory.GENERAL)
+        this.type = normalizeLiteral(type, NotificationType.INFO)
+        this.priority = normalizeLiteral(priority, NotificationPriority.REGULAR)
         this.title = title
         this.message = message
         this.createdAt = createdAt ?? new Date().toISOString()
@@ -59,7 +74,7 @@ export class Notification {
         this.tripId = tripId === null ? null : String(tripId)
         this.studentId = studentId === null ? null : String(studentId)
         this.recipientProfileId = recipientProfileId === null ? null : String(recipientProfileId)
-        this.journeyEvent = journeyEvent
+        this.journeyEvent = normalizeLiteral(journeyEvent, null)
     }
 
     /**
