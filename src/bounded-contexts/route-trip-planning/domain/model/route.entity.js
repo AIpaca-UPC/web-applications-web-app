@@ -17,6 +17,20 @@ function asClockTime(value) {
 }
 
 /**
+ * Reads a reference to another aggregate as a positive identifier.
+ *
+ * MockAPI sends these as text and the platform backend as integers. Normalizing here keeps
+ * the comparison in one place, so nothing downstream has to ask which service answered.
+ *
+ * @param {*} value - Identifier as sent by the service.
+ * @returns {?number} The identifier, or null when there is none.
+ */
+function toReference(value) {
+    const id = Number(value)
+    return Number.isSafeInteger(id) && id > 0 ? id : null
+}
+
+/**
  * Route of the school transport service: its stops, the students who board at each of them
  * and the days it runs.
  *
@@ -32,25 +46,29 @@ function asClockTime(value) {
  * @class Route
  */
 export class Route {
-    /**
-     * @param {Object} params - Aggregate attributes.
-     * @param {?string} [params.id=null] - Route identifier.
-     * @param {string} [params.code=''] - Code the platform assigns when the route is saved.
-     * @param {string} [params.name=''] - Name the driver gives the route.
-     * @param {string} [params.driverName=''] - Driver in charge of the service.
-     * @param {string} [params.vehicleLabel=''] - Vehicle assigned to the service.
-     * @param {string} [params.shift=MORNING] - Shift the route belongs to.
-     * @param {string} [params.departureTime='07:30'] - Default departure time, as HH:mm.
-     * @param {string} [params.status=CONFIGURABLE] - Lifecycle state of the route.
-     * @param {Array<Object|RouteStop>} [params.stops=[]] - Stops along the route.
-     * @param {Array<Object>|RouteSchedule} [params.schedule=[]] - Days the route runs.
-     */
     constructor({
+                    /**
+                     * @param {Object} params - Aggregate attributes.
+                     * @param {?string} [params.id=null] - Route identifier.
+                     * @param {string} [params.code=''] - Code the platform assigns when the route is saved.
+                     * @param {string} [params.name=''] - Name the driver gives the route.
+                     * @param {string} [params.driverName=''] - Driver in charge of the service.
+                     * @param {?number} [params.driverProfileId=null] - Driver profile this route belongs to.
+                     * @param {string} [params.vehicleLabel=''] - Vehicle assigned to the service.
+                     * @param {?number} [params.vehicleId=null] - Identifier of that vehicle.
+                     * @param {string} [params.shift=MORNING] - Shift the route belongs to.
+                     * @param {string} [params.departureTime='07:30'] - Default departure time, as HH:mm.
+                     * @param {string} [params.status=CONFIGURABLE] - Lifecycle state of the route.
+                     * @param {Array<Object|RouteStop>} [params.stops=[]] - Stops along the route.
+                     * @param {Array<Object>|RouteSchedule} [params.schedule=[]] - Days the route runs.
+                     */
                     id = null,
                     code = '',
                     name = '',
                     driverName = '',
+                    driverProfileId = null,
                     vehicleLabel = '',
+                    vehicleId = null,
                     shift = RouteShift.MORNING,
                     departureTime = '07:30',
                     status = RouteStatus.CONFIGURABLE,
@@ -61,7 +79,9 @@ export class Route {
         this.code = String(code)
         this.name = String(name)
         this.driverName = String(driverName)
+        this.driverProfileId = toReference(driverProfileId)
         this.vehicleLabel = String(vehicleLabel)
+        this.vehicleId = toReference(vehicleId)
         this.shift = isRouteShift(shift) ? shift : RouteShift.MORNING
         this.departureTime = asClockTime(departureTime)
         // An unknown status is read as configurable: it is the state that grants the least.
