@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { routesApi } from '../infrastructure/routes-api.js'
-import { RouteAssembler } from '../infrastructure/route.assembler.js'
+import { routeAssembler, routesApi } from '../infrastructure/routes-api.js'
 import { Route } from '../domain/model/route.entity.js'
 
 const id = value => value == null ? '' : String(value)
@@ -17,6 +16,27 @@ export function normalizeStudent(raw) {
   const idValue = id(raw?.id ?? raw?.studentId)
   const name = String(raw?.name ?? raw?.fullName ?? [raw?.firstName, raw?.lastName].filter(Boolean).join(' ')).trim()
   return idValue && name ? { id: idValue, name } : null
+}
+
+/**
+ * Reduces a vehicle returned by Vehicle & Credential Management to what this context shows.
+ *
+ * A route only needs to know which unit it is planned against and how to name it on screen;
+ * the documents and the rest of the vehicle's life belong to the context that owns it.
+ *
+ * @param {Object} raw - Vehicle resource.
+ * @returns {?{id: string, label: string, status: string}} The option, or null without an id.
+ */
+export function normalizeVehicle(raw) {
+  const idValue = id(raw?.id ?? raw?.vehicleId)
+  if (!idValue) return null
+  const plate = String(raw?.licensePlate ?? raw?.plate ?? '').trim()
+  const name = [raw?.brand, raw?.model].filter(Boolean).join(' ').trim()
+  return {
+    id: idValue,
+    label: [name, plate].filter(Boolean).join(' · ') || `Unidad ${idValue}`,
+    status: String(raw?.status ?? '').toUpperCase(),
+  }
 }
 
 /**
@@ -52,13 +72,16 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
   const loading = ref(false)
   const saving = ref(false)
   const error = ref('')
+  const vehicleOptions = ref([])
+  const vehicleError = ref('')
+  const vehiclesLoading = ref(false)
   const selectedRoute = computed(() => routes.value.find(r => r.id === selectedRouteId.value) || null)
 
   async function load() {
     loading.value = true
     error.value = ''
     try {
-      routes.value = RouteAssembler.toEntitiesFromResources(await routesApi.list())
+      routes.value = routeAssembler.toEntitiesFromResources(await routesApi.list())
       if (!routes.value.some(r => r.id === selectedRouteId.value)) selectedRouteId.value = routes.value[0]?.id || null
       return true
     } catch (e) {
@@ -82,10 +105,25 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
     } finally { studentsLoading.value = false }
   }
 
+  async function loadVehicles() {
+    vehiclesLoading.value = true
+    vehicleError.value = ''
+    try {
+      const result = await routesApi.vehicles()
+      if (!Array.isArray(result)) throw new Error('La API de vehículos debe devolver una lista.')
+      vehicleOptions.value = result.map(normalizeVehicle).filter(Boolean)
+      return true
+    } catch (e) {
+      vehicleOptions.value = []
+      vehicleError.value = apiMessage(e)
+      return false
+    } finally { vehiclesLoading.value = false }
+  }
+
   async function getDetails(routeId) {
     error.value = ''
     try {
-      return RouteAssembler.toEntityFromResource(await routesApi.getById(routeId))
+      return routeAssembler.toEntityFromResource(await routesApi.getById(routeId))
     } catch (e) {
       error.value = apiMessage(e)
       return null
@@ -114,22 +152,26 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
 
       // This one is not the aggregate's: only the application knows who Profiles authorized.
       const allowed = new Set(studentOptions.value.map(s => s.id))
-      for (const { studentId } of RouteAssembler.toStudentAssignments(draft)) {
+      const assignments = routeAssembler.toStudentAssignments(draft)
+      for (const { studentId } of assignments) {
+        // Compared as text: one service answers with integers and the other with strings.
+        const reference = id(studentId)
         // Existing assignments stay visible, even if Profiles has stopped returning them.
-        if (!allowed.has(studentId) && !(existing?.serves(studentId) ?? false)) {
+        if (!allowed.has(reference) && !(existing?.serves(reference) ?? false)) {
           throw new Error('Hay un estudiante no autorizado o que ya no está disponible. Actualiza la lista.')
         }
       }
 
-      const payload = RouteAssembler.toResourceFromEntity(draft)
-      const saved = existing
-          ? await routesApi.update(existing.id, payload)
-          : await routesApi.create(payload)
+      // One call: how many requests the service needs is its own business, not the store's.
+      const saved = await routesApi.saveAggregate(existing ? existing.id : null, {
+        route: routeAssembler.toResourceFromEntity(draft),
+        assignments,
+      })
       lastSavedId.value = id(saved.id)
 
       selectedRouteId.value = id(saved.id)
       if (!(await load())) throw new Error('Se guardó la ruta, pero falló la actualización de la lista.')
-      return routes.value.find(r => r.id === id(saved.id)) || RouteAssembler.toEntityFromResource(saved)
+      return routes.value.find(r => r.id === id(saved.id)) || routeAssembler.toEntityFromResource(saved)
     } catch (e) {
       error.value = apiMessage(e)
       return null
@@ -152,7 +194,7 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
             ? 'Esta ruta ya está publicada.'
             : 'La ruta todavía no está lista: necesita nombre, conductor, vehículo, paradas con dirección, al menos un estudiante asignado y días de servicio con horario.')
       }
-      const result = RouteAssembler.toEntityFromResource(await routesApi.publish(routeId))
+      const result = routeAssembler.toEntityFromResource(await routesApi.publish(routeId))
       await load()
       return result
     } catch (e) { error.value = apiMessage(e); return null }
@@ -167,6 +209,8 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
     finally { saving.value = false }
   }
 
-  return { routes, studentOptions, studentError, studentsLoading, selectedRouteId, selectedRoute,
-    lastSavedId, loading, saving, error, load, loadStudents, getDetails, save, publish, remove }
+  return { routes, studentOptions, studentError, studentsLoading,
+    vehicleOptions, vehicleError, vehiclesLoading,
+    selectedRouteId, selectedRoute, lastSavedId, loading, saving, error,
+    load, loadStudents, loadVehicles, getDetails, save, publish, remove }
 })

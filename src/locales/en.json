@@ -114,6 +114,9 @@
     }
   },
   "routePlanning": {
+    "vehiclePlaceholder": "Select a vehicle",
+    "vehicleUnavailable": "unavailable",
+    "vehicleUnknown": "Vehicle",
     "title": "School routes",
     "subtitle": "Manage stops, students and recurring service hours.",
     "newRoute": "New route",

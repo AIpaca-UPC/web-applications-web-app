@@ -8,7 +8,9 @@ import '../styles/route-configuration.css'
 const { t: translate } = useI18n()
 const demoMode = import.meta.env.DEV && import.meta.env.VITE_ROUTE_DEMO_MODE === 'true'
 const store = useRouteCrudStore()
-const { routes, studentOptions, studentError, studentsLoading, loading, saving, error } = storeToRefs(store)
+const { routes, studentOptions, studentError, studentsLoading,
+  vehicleOptions, vehicleError, vehiclesLoading,
+  loading, saving, error  } = storeToRefs(store)
 const editing = ref(false)
 const opening = ref(false)
 const success = ref('')
@@ -17,7 +19,7 @@ const localError = ref('')
 const search = ref('')
 const filter = ref('all')
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
-const empty = () => ({ id:null, name:'', driverName:'', vehicleLabel:'',shift:'MORNING',
+const empty = () => ({ id:null, name:'', driverName:'', vehicleId:null, shift:'MORNING',
   departureTime:'07:30',status:'CONFIGURABLE',
   stops:[{id:null,address:'',studentId:''}],schedule:[] })
 const form = reactive(empty())
@@ -46,17 +48,20 @@ const filteredRoutes = computed(() => routes.value.filter(r =>
     (filter.value==='all' || (filter.value==='published' ? r.status==='PUBLISHED' : r.status!=='PUBLISHED')) &&
     `${r.name} ${r.code}`.toLowerCase().includes(search.value.toLowerCase())))
 const assignedCount = computed(() => form.stops.filter(s=>s.studentId).length)
-const validName = computed(() => form.name.trim().length>=3 && form.driverName.trim() && form.vehicleLabel.trim())
+const validName = computed(() => form.name.trim().length>=3 && form.driverName.trim() && form.vehicleId !== null)
 const validStops = computed(() => form.stops.length>0 && form.stops.every(s=>s.address.trim().length>=5))
 const validSchedule = computed(() => form.schedule.length>0 && form.schedule.every(s=>/^\d{2}:\d{2}$/.test(s.departureTime)))
+const vehicleOptionLabel = (vehicle) =>
+    vehicle.status === 'ACTIVE' ? vehicle.label : `${vehicle.label} · ${t('vehicleUnavailable')}`
 const uniqueStudents = computed(() => { const ids = form.stops.map(s=>s.studentId).filter(Boolean); return new Set(ids).size === ids.length })
 const canPublish = computed(() => validName.value && validStops.value && validSchedule.value && uniqueStudents.value && assignedCount.value>0)
 const isPublished = computed(() => form.status==='PUBLISHED')
 const steps = ['general','stops','hours','summary']
-onMounted(async () => { await Promise.all([store.load(),store.loadStudents()]) })
+onMounted(async () => { await Promise.all([store.load(),store.loadStudents(),store.loadVehicles()]) })
 function startNew() {
   Object.assign(form,empty()); step.value=0; localError.value=''; success.value=''; editing.value=true
   if (!studentsLoading.value && !studentOptions.value.length) store.loadStudents()
+  if (!vehiclesLoading.value && !vehicleOptions.value.length) store.loadVehicles()
 }
 async function startEdit(route) {
   if (opening.value) return
@@ -68,6 +73,7 @@ async function startEdit(route) {
     Object.assign(form,empty(),copy(current))
     step.value=0; editing.value=true
     if (!studentsLoading.value && !studentOptions.value.length) await store.loadStudents()
+    if (!vehiclesLoading.value && !vehicleOptions.value.length) await store.loadVehicles()
   } finally { opening.value=false }
 }
 function cancel() { editing.value=false;localError.value='' }
@@ -155,7 +161,13 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
         <section v-if="step===0" class="rp-panel"><p class="rp-eyebrow">1 / 4</p><h2>{{t('general')}}</h2>
           <label>{{t('routeName')}} * <input v-model.trim="form.name" :disabled="isPublished" maxlength="160" required/></label>
           <div class="rp-two"><label>{{t('driverName')}} * <input v-model.trim="form.driverName" :disabled="isPublished" required/></label>
-            <label>{{t('vehicle')}} * <input v-model.trim="form.vehicleLabel" :disabled="isPublished" required/></label></div>
+            <label>{{t('vehicle')}} *
+              <select v-model.number="form.vehicleId" :disabled="isPublished||!vehicleOptions.length" required>
+                <option :value="null">{{t('vehiclePlaceholder')}}</option>
+                <option v-for="v in vehicleOptions" :key="v.id" :value="Number(v.id)" :disabled="v.status!=='ACTIVE'">{{vehicleOptionLabel(v)}}</option>
+                <option v-if="form.vehicleId && !vehicleOptions.some(v=>Number(v.id)===form.vehicleId)" :value="form.vehicleId">{{t('vehicleUnknown')}} #{{form.vehicleId}}</option>
+              </select>
+            </label></div>
           <div class="rp-two"><label>{{t('shift')}} <select v-model="form.shift" :disabled="isPublished"><option value="MORNING">{{t('morning')}}</option><option value="AFTERNOON">{{t('afternoon')}}</option></select></label>
             <label>{{t('defaultTime')}} <input type="time" v-model="form.departureTime" :disabled="isPublished"/></label></div>
           <p class="rp-hint">{{t('codeAuto')}}</p>
