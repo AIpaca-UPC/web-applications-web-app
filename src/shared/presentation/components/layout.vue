@@ -3,7 +3,7 @@ import {RouterLink, RouterView, useRoute, useRouter} from 'vue-router'
 import LanguageSwitcher from './language-switcher.vue'
 import FooterContent from './footer-content.vue'
 import {modulesForRole} from '../../domain/module-catalog.js'
-import {computed} from "vue";
+import {computed, ref, watch} from "vue";
 import accessProfileStore from "@/shared/application/access-profile.store.js";
 
 const route = useRoute()
@@ -18,6 +18,12 @@ async function changeRole() {
 
 const modules = computed(() => modulesForRole(accessProfile.role))
 
+/** @type {import('vue').Ref<boolean>} Whether the navigation drawer is open on a narrow screen. */
+const isNavOpen = ref(false)
+
+// Navigating is what the drawer is for, so opening a section closes it.
+watch(() => route.path, () => { isNavOpen.value = false })
+
 const activeModuleId = computed(() => {
   const matches = modules.value.filter(
       (module) => route.path === module.path || route.path.startsWith(`${module.path}/`),
@@ -31,7 +37,19 @@ const activeModuleId = computed(() => {
 
 <template>
   <div class="app-shell">
-    <aside class="sidebar" :aria-label="$t('nav.navigation')">
+    <div
+        v-if="isNavOpen"
+        class="nav-backdrop"
+        aria-hidden="true"
+        @click="isNavOpen = false"
+    ></div>
+
+    <aside
+        id="app-navigation"
+        class="sidebar"
+        :class="{ 'sidebar--open': isNavOpen }"
+        :aria-label="$t('nav.navigation')"
+    >
       <RouterLink to="/home" class="brand" aria-label="Rumbo">
         <img class="logo" src="../../../../public/assets/rumbo-logo.png" alt="Logo"><span>Rumbo</span>
       </RouterLink>
@@ -55,6 +73,16 @@ const activeModuleId = computed(() => {
     </aside>
     <div class="workspace">
       <header class="topbar">
+        <button
+            type="button"
+            class="nav-toggle"
+            aria-controls="app-navigation"
+            :aria-expanded="isNavOpen"
+            :aria-label="$t('nav.navigation')"
+            @click="isNavOpen = !isNavOpen"
+        >
+          <i class="pi" :class="isNavOpen ? 'pi-times' : 'pi-bars'" aria-hidden="true"></i>
+        </button>
         <span class="topbar-caption">{{ $t('common.workspace') }}</span>
         <div class="topbar-actions">
           <LanguageSwitcher />
@@ -84,6 +112,11 @@ const activeModuleId = computed(() => {
 </template>
 
 <style scoped>
+/* The drawer is a narrow-screen affordance only; the sidebar stays in place above it. */
+.nav-toggle {
+  display: none;
+}
+
 .topbar-actions {
   display: flex;
   align-items: center;
@@ -115,5 +148,50 @@ const activeModuleId = computed(() => {
   font-size: 0.65rem;
   letter-spacing: 0.08em;
   color: var(--rumbo-muted);
+}
+
+@media (max-width: 900px) {
+  .nav-toggle {
+    display: grid;
+    place-items: center;
+    flex: 0 0 2.5rem;
+    height: 2.5rem;
+    margin-right: 0.25rem;
+    border: 1px solid var(--rumbo-border);
+    border-radius: 0.7rem;
+    background: var(--rumbo-surface);
+    color: var(--rumbo-green-900);
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 40;
+    width: min(17rem, 82vw);
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+  }
+
+  .sidebar--open {
+    transform: translateX(0);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+  }
+
+  .nav-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background: rgba(5, 32, 26, 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar {
+    transition: none;
+  }
 }
 </style>
