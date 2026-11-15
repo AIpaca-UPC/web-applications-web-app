@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { routesApi } from '../infrastructure/routes-api.js'
-import { RouteAssembler } from '../infrastructure/route.assembler.js'
+import { routeAssembler, routesApi } from '../infrastructure/routes-api.js'
 import { Route } from '../domain/model/route.entity.js'
 
 const id = value => value == null ? '' : String(value)
@@ -58,7 +57,7 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
     loading.value = true
     error.value = ''
     try {
-      routes.value = RouteAssembler.toEntitiesFromResources(await routesApi.list())
+      routes.value = routeAssembler.toEntitiesFromResources(await routesApi.list())
       if (!routes.value.some(r => r.id === selectedRouteId.value)) selectedRouteId.value = routes.value[0]?.id || null
       return true
     } catch (e) {
@@ -85,7 +84,7 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
   async function getDetails(routeId) {
     error.value = ''
     try {
-      return RouteAssembler.toEntityFromResource(await routesApi.getById(routeId))
+      return routeAssembler.toEntityFromResource(await routesApi.getById(routeId))
     } catch (e) {
       error.value = apiMessage(e)
       return null
@@ -114,22 +113,26 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
 
       // This one is not the aggregate's: only the application knows who Profiles authorized.
       const allowed = new Set(studentOptions.value.map(s => s.id))
-      for (const { studentId } of RouteAssembler.toStudentAssignments(draft)) {
+      const assignments = routeAssembler.toStudentAssignments(draft)
+      for (const { studentId } of assignments) {
+        // Compared as text: one service answers with integers and the other with strings.
+        const reference = id(studentId)
         // Existing assignments stay visible, even if Profiles has stopped returning them.
-        if (!allowed.has(studentId) && !(existing?.serves(studentId) ?? false)) {
+        if (!allowed.has(reference) && !(existing?.serves(reference) ?? false)) {
           throw new Error('Hay un estudiante no autorizado o que ya no está disponible. Actualiza la lista.')
         }
       }
 
-      const payload = RouteAssembler.toResourceFromEntity(draft)
-      const saved = existing
-          ? await routesApi.update(existing.id, payload)
-          : await routesApi.create(payload)
+      // One call: how many requests the service needs is its own business, not the store's.
+      const saved = await routesApi.saveAggregate(existing ? existing.id : null, {
+        route: routeAssembler.toResourceFromEntity(draft),
+        assignments,
+      })
       lastSavedId.value = id(saved.id)
 
       selectedRouteId.value = id(saved.id)
       if (!(await load())) throw new Error('Se guardó la ruta, pero falló la actualización de la lista.')
-      return routes.value.find(r => r.id === id(saved.id)) || RouteAssembler.toEntityFromResource(saved)
+      return routes.value.find(r => r.id === id(saved.id)) || routeAssembler.toEntityFromResource(saved)
     } catch (e) {
       error.value = apiMessage(e)
       return null
@@ -152,7 +155,7 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
             ? 'Esta ruta ya está publicada.'
             : 'La ruta todavía no está lista: necesita nombre, conductor, vehículo, paradas con dirección, al menos un estudiante asignado y días de servicio con horario.')
       }
-      const result = RouteAssembler.toEntityFromResource(await routesApi.publish(routeId))
+      const result = routeAssembler.toEntityFromResource(await routesApi.publish(routeId))
       await load()
       return result
     } catch (e) { error.value = apiMessage(e); return null }
