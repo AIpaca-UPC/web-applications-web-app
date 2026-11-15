@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouteCrudStore } from '../../application/route-crud.store.js'
 import '../styles/route-configuration.css'
 
-const { locale } = useI18n({ useScope: 'global' })
+const { t: translate } = useI18n()
 const demoMode = import.meta.env.DEV && import.meta.env.VITE_ROUTE_DEMO_MODE === 'true'
 const store = useRouteCrudStore()
 const { routes, studentOptions, studentError, studentsLoading, loading, saving, error } = storeToRefs(store)
@@ -22,51 +22,26 @@ const empty = () => ({ id:null, name:'', driverName:'', vehicleLabel:'',shift:'M
   stops:[{id:null,address:'',studentId:''}],schedule:[] })
 const form = reactive(empty())
 const copy = (o) => JSON.parse(JSON.stringify(o))
-const txt = {
-  en: {
-    title:'School routes',subtitle:'Manage stops, students and recurring service hours.',newRoute:'New route',
-    all:'All',draft:'Configurable',published:'Published',search:'Search routes',none:'No routes yet',
-    edit:'Configure',back:'Back to routes',general:'General',stops:'Stops and students',hours:'Schedule',summary:'Review',
-    routeName:'Route name',driverName:'Driver name',vehicle:'Vehicle',morning:'Morning',afternoon:'Afternoon',shift:'Shift',
-    defaultTime:'Departure',stopAddress:'Stop address',student:'Student for this stop',unassigned:'Not assigned',
-    addStop:'Add stop',remove:'Remove',up:'Move up',down:'Move down',continue:'Continue',previous:'Back',
-    save:'Save route',publish:'Publish route',cancel:'Cancel',scheduled:'Days selected',confirmDays:'Confirm schedule',
-    days:'Service days',weekdays:'Monday to Friday',clearDays:'Clear',review:'Review your route configuration',
-    ready:'Ready to publish',notReady:'Complete stops, days and student assignment before publishing.',
-    firstStop:'First stop',routes:'Routes',students:'Students',delete:'Delete',loading:'Loading...',
-    addressHelp:'Addresses are saved, but geographic validation is not available yet.',
-    studentsHelp:'Only authorized students appear in this selector.',noStudents:'No students available.',
-    code:'Code',codeAuto:'Generated when the route is saved',hoursHelp:'Each day can have a different departure time.',
-    errorName:'Enter a route name of at least 3 characters, driver and vehicle.',
-    errorStop:'Provide at least one stop with a valid address (5 characters).',
-    errorSchedule:'Select at least one service day and set a departure time.',
-    deleteConfirm:'Delete this configurable route?',saved:'Route saved.',publishDone:'Route published.',
-    status:'Status',saveFirst:'Save the route first to publish it.',loadingStudents:'Loading authorized students…',refreshStudents:'Refresh student list',studentAssigned:'Assigned student',readonly:'Published routes are read-only until changes to active trips are supported.',
-  },
-  es: {
-    title:'Mis rutas escolares',subtitle:'Organiza paradas, estudiantes y horarios del servicio.',newRoute:'Nueva ruta',
-    all:'Todas',draft:'Configurables',published:'Publicadas',search:'Buscar rutas',none:'Aún no hay rutas',
-    edit:'Configurar',back:'Volver a rutas',general:'Datos generales',stops:'Paradas y estudiantes',hours:'Horarios',summary:'Resumen',
-    routeName:'Nombre de ruta',driverName:'Conductor',vehicle:'Vehículo',morning:'Mañana',afternoon:'Tarde',shift:'Turno',
-    defaultTime:'Hora de salida',stopAddress:'Dirección de parada',student:'Estudiante de esta parada',unassigned:'Sin asignar',
-    addStop:'Añadir parada',remove:'Eliminar',up:'Subir',down:'Bajar',continue:'Continuar',previous:'Anterior',
-    save:'Guardar ruta',publish:'Publicar ruta',cancel:'Cancelar',scheduled:'Días seleccionados',confirmDays:'Confirmar horario',
-    days:'Días de servicio',weekdays:'Lunes a viernes',clearDays:'Limpiar',review:'Revisa la configuración de la ruta',
-    ready:'Lista para publicar',notReady:'Completa paradas, días y asignaciones para publicar.',
-    firstStop:'Primera parada',routes:'Rutas',students:'Estudiantes',delete:'Eliminar',loading:'Cargando...',
-    addressHelp:'Las direcciones se guardan, pero la validación geográfica aún no está disponible.',
-    studentsHelp:'Solo se muestran estudiantes autorizados.',noStudents:'No hay estudiantes disponibles.',
-    code:'Código',codeAuto:'Se genera al guardar la ruta',hoursHelp:'Cada día puede tener una hora de salida diferente.',
-    errorName:'Ingresa nombre de ruta (mínimo 3 caracteres), conductor y vehículo.',
-    errorStop:'Agrega al menos una parada con dirección válida (5 caracteres).',
-    errorSchedule:'Selecciona al menos un día de servicio e indica su horario.',
-    deleteConfirm:'¿Eliminar esta ruta configurable?',saved:'Ruta guardada.',publishDone:'Ruta publicada.',
-    status:'Estado',saveFirst:'Guarda la ruta antes de publicarla.',loadingStudents:'Consultando estudiantes autorizados…',refreshStudents:'Actualizar estudiantes',studentAssigned:'Estudiante asignado',readonly:'Esta ruta publicada es de solo lectura hasta integrar la protección de viajes en curso.',
-  }
-}
-const es = computed(() => String(locale.value).toLowerCase().startsWith('es'))
-const t = (k) => (es.value ? txt.es : txt.en)[k] || k
-const dayLabel = (day) => es.value ? ({Monday:'Lunes',Tuesday:'Martes',Wednesday:'Miércoles',Thursday:'Jueves',Friday:'Viernes',Saturday:'Sábado',Sunday:'Domingo'}[day]) : day
+
+/**
+ * Reads a label of this bounded context from the shared translation files.
+ *
+ * The context keeps its vocabulary under `routePlanning`, so every call here stays short and
+ * the texts live where the rest of the application keeps them.
+ *
+ * @param {string} key - Key inside routePlanning.
+ * @returns {string} The translated label.
+ */
+const t = (key) => translate(`routePlanning.${key}`)
+
+/**
+ * Names a day of the week in the active language.
+ *
+ * @param {string} day - Day in the English wire format.
+ * @returns {string} The name to show.
+ */
+const dayLabel = (day) => translate(`routePlanning.weekday.${day}`)
+
 const filteredRoutes = computed(() => routes.value.filter(r =>
     (filter.value==='all' || (filter.value==='published' ? r.status==='PUBLISHED' : r.status!=='PUBLISHED')) &&
     `${r.name} ${r.code}`.toLowerCase().includes(search.value.toLowerCase())))
@@ -117,7 +92,7 @@ function validateStep(i) {
   localError.value=''
   if(i===0&&!validName.value){localError.value=t('errorName');return false}
   if(i===1&&!validStops.value){localError.value=t('errorStop');return false}
-  if(i===1&&!uniqueStudents.value){localError.value=es.value?'No asignes el mismo estudiante dos veces.':'A student can only be assigned once.';return false}
+  if(i===1&&!uniqueStudents.value){localError.value=t('errorDuplicateStudent');return false}
   if(i===2&&!validSchedule.value){localError.value=t('errorSchedule');return false}
   return true
 }
@@ -144,10 +119,10 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
 
 <template>
   <section class="rp-v3">
-    <p v-if="demoMode" class="rp-demo-banner" role="status">{{ es ? 'MODO DEMOSTRACIÓN LOCAL · Datos ficticios guardados solo en este navegador' : 'LOCAL DEMO MODE · Fictional data stored in this browser only' }}</p>
+    <p v-if="demoMode" class="rp-demo-banner" role="status">{{ t('demoBanner') }}</p>
     <p v-if="success && !editing" class="rp-ready" role="status">{{success}}</p>
     <div class="rp-top" v-if="!editing">
-      <div><p class="rp-eyebrow">ROUTE &amp; TRIP PLANNING</p><h1>{{ t('title') }}</h1><p class="rp-muted">{{t('subtitle')}}</p></div>
+      <div><p class="rp-eyebrow">{{ t('contextName').toUpperCase() }}</p><h1>{{ t('title') }}</h1><p class="rp-muted">{{t('subtitle')}}</p></div>
       <button class="rp-action" type="button" @click="startNew">+ {{t('newRoute')}}</button>
     </div>
     <template v-if="!editing">
@@ -221,7 +196,7 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
                    :disabled="isPublished" :value="form.schedule.find(x=>x.day===day)?.departureTime" @input="setDayTime(day,$event.target.value)"/>
           </div></div>
           <p class="rp-muted">{{form.schedule.length}} {{t('scheduled')}}</p>
-          <p class="rp-muted">{{es ? 'Los horarios se guardan con la ruta; no necesitan confirmación adicional.' : 'Service times are saved with the route automatically.'}}</p>
+          <p class="rp-muted">{{ t('hoursAutoSaved') }}</p>
         </section>
         <section v-if="step===3" class="rp-panel"><p class="rp-eyebrow">4 / 4</p><h2>{{t('summary')}}</h2>
           <p>{{t('review')}}</p>
