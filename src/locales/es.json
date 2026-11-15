@@ -46,13 +46,7 @@
     }
   },
   "home": {
-    "title": "Operaciones de Rumbo",
-    "content": "Gestiona los principales módulos CRUD del frontend desde este panel.",
     "eyebrow": "AIpaca-UPC · Proyecto grupal",
-    "description": "Esta es la base compartida de Vue 3 para el equipo. Cada contexto delimitado tiene su propia carpeta y se implementará de manera independiente.",
-    "ready": "Vue 3, PrimeVue, Vue Router, Pinia e i18n están configurados.",
-    "sectionsTitle": "Espacios de trabajo de los módulos",
-    "moduleDescription": "Esta funcionalidad del frontend aún no está implementada. Este espacio está reservado para el integrante responsable.",
     "driverTitle": "Tu servicio de hoy",
     "driverSubtitle": "Inicia el viaje del día y mantén la flota en orden.",
     "tutorTitle": "El día de tu hijo",
