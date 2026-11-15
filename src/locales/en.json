@@ -46,7 +46,22 @@
     }
   },
   "home": {
-    "eyebrow": "AIpaca-UPC · Team Project"
+    "eyebrow": "AIpaca-UPC · Team Project",
+    "driverTitle": "Your service today",
+    "driverSubtitle": "Start the day's trip and keep the fleet in order.",
+    "tutorTitle": "Your child's day",
+    "tutorSubtitle": "Follow the service as it is recorded by the driver.",
+    "todayTrip": "Today's trip",
+    "travelling": "{student} is traveling on this service.",
+    "followTrip": "Follow the trip",
+    "noTripDriver": "There is no trip scheduled yet. Publish a route to generate one.",
+    "noTripTutor": "There is no trip registered for your child.",
+    "tiles": {
+      "vehicles": "Registered vehicles",
+      "credentials": "Vehicles with expired documents",
+      "unread": "Unread notifications",
+      "children": "Children in the service"
+    }
   },
   "modules": {
     "profiles": "Profiles & Relationship Management",
@@ -161,6 +176,11 @@
     "confirmDeleteAction": "Delete",
     "routeHasNoStops": "This route has no stops yet.",
     "noRoutes": "No routes yet. Create a new route to get started."
+  },
+  "placeholder": {
+    "title": "Workspace ready for development",
+    "description": "No CRUD or business logic is included. The responsible team member can add domain models, Pinia stores, REST services and Vue components here.",
+    "hint": "Update the router after adding your first Vue view."
   },
   "notFound": {
     "description": "The requested page does not exist."

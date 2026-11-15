@@ -46,7 +46,22 @@
     }
   },
   "home": {
-    "eyebrow": "AIpaca-UPC · Proyecto grupal"
+    "eyebrow": "AIpaca-UPC · Proyecto grupal",
+    "driverTitle": "Tu servicio de hoy",
+    "driverSubtitle": "Inicia el viaje del día y mantén la flota en orden.",
+    "tutorTitle": "El día de tu hijo",
+    "tutorSubtitle": "Sigue el servicio tal como lo registra el conductor.",
+    "todayTrip": "Viaje del día",
+    "travelling": "{student} viaja en este servicio.",
+    "followTrip": "Seguir el viaje",
+    "noTripDriver": "Todavía no hay un viaje programado. Publica una ruta para generar uno.",
+    "noTripTutor": "Todavía no hay un viaje registrado para tu hijo.",
+    "tiles": {
+      "vehicles": "Vehículos registrados",
+      "credentials": "Vehículos con documentos vencidos",
+      "unread": "Notificaciones sin leer",
+      "children": "Hijos en el servicio"
+    }
   },
   "modules": {
     "profiles": "Gestión de perfiles y relaciones",
@@ -161,6 +176,11 @@
     "confirmDeleteAction": "Eliminar",
     "routeHasNoStops": "Esta ruta todavía no tiene paradas.",
     "noRoutes": "Todavía no hay rutas. Crea una nueva ruta para comenzar."
+  },
+  "placeholder": {
+    "title": "Espacio de trabajo listo para el desarrollo",
+    "description": "No se incluye ninguna operación CRUD ni lógica de negocio. El integrante responsable puede agregar modelos de dominio, stores de Pinia, servicios REST y componentes Vue.",
+    "hint": "Actualiza el router después de agregar tu primera vista de Vue."
   },
   "notFound": {
     "description": "La página solicitada no existe."

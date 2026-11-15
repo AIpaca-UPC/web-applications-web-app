@@ -1,128 +1,118 @@
 <script setup>
-import { useI18n } from "vue-i18n";
-import { ref } from "vue";
-import DelayForm from "../views/delay-form.vue";
-import IncidentForm from "../views/incident-form.vue";
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
-const { t } = useI18n();
-const isDelayDialogOpen = ref(false);
-const isIncidentDialogOpen = ref(false);
+import DelayForm from '../views/delay-form.vue'
+import IncidentForm from '../views/incident-form.vue'
 
-const reportDelay = () => {
-  isDelayDialogOpen.value = true;
-};
+const { t } = useI18n()
+const router = useRouter()
 
-const reportIncident = () => {
-  isIncidentDialogOpen.value = true;
-};
+const isDelayDialogOpen = ref(false)
+const isIncidentDialogOpen = ref(false)
 
-const configureRoute = () => {
-  // Lógica de configurar ruta si la tienes
-};
-
-// Función que se ejecuta cuando el DelayForm emite el evento 'close'
-const handleDelayClosed = (success) => {
-  isDelayDialogOpen.value = false;
-  if (success) {
-    console.log("Retraso guardado con éxito");
-  }
-};
-
-const handleIncidentClosed = (success) => {
-  isDelayDialogOpen.value = false;
-  if (success) {
-    console.log("Retraso guardado con éxito");
-  }
-};
+/** Actions a driver can take without leaving the dashboard. */
+const actions = [
+  { key: 'reportDelay', icon: 'pi-clock', run: () => (isDelayDialogOpen.value = true) },
+  { key: 'reportIncident', icon: 'pi-exclamation-triangle', run: () => (isIncidentDialogOpen.value = true) },
+  { key: 'configureRoute', icon: 'pi-map', run: () => router.push('/routes/configure') },
+]
 </script>
 
 <template>
-  <pv-card class="quick-actions-card">
-    <template #content>
-      <div class="card-body">
-        <h3 class="card-title">{{ t('quickActions.title') }}</h3>
+  <section class="quick-actions">
+    <h2 class="quick-actions-title">{{ t('quickActions.title') }}</h2>
 
-        <div class="actions-list">
-          <pv-button class="action-btn" @click="reportDelay">
-            <i class="pi pi-clock mr-2"></i>
-            {{ t('quickActions.reportDelay') }}
-          </pv-button>
+    <ul class="quick-actions-list">
+      <li v-for="action in actions" :key="action.key">
+        <button type="button" class="quick-action" @click="action.run()">
+          <span class="quick-action-icon">
+            <i class="pi" :class="action.icon" aria-hidden="true"></i>
+          </span>
+          <span class="quick-action-label">{{ t(`quickActions.${action.key}`) }}</span>
+        </button>
+      </li>
+    </ul>
 
-          <pv-button class="action-btn" @click="reportIncident">
-            <i class="pi pi-exclamation-triangle mr-2"></i>
-            {{ t('quickActions.reportIncident') }}
-          </pv-button>
+    <pv-dialog
+        v-model:visible="isDelayDialogOpen"
+        modal
+        :header="t('delayForm.title')"
+        :style="{ width: '28rem' }"
+        :breakpoints="{ '640px': '92vw' }"
+    >
+      <DelayForm @close="isDelayDialogOpen = false" />
+    </pv-dialog>
 
-          <pv-button class="action-btn" @click="configureRoute">
-            <i class="pi pi-map mr-2"></i>
-            {{ t('quickActions.configureRoute') }}
-          </pv-button>
-        </div>
-      </div>
-    </template>
-  </pv-card>
-
-  <!-- Diálogo de PrimeVue -->
-  <pv-dialog v-model:visible="isDelayDialogOpen" modal :header="t('delayForm.title')" :style="{ width: '28rem' }">
-    <DelayForm @close="isDelayDialogOpen = false" />
-  </pv-dialog>
-
-  <pv-dialog v-model:visible="isIncidentDialogOpen" modal :header="t('incidentForm.title')" :style="{ width: '28rem' }">
-    <IncidentForm @close="isIncidentDialogOpen = false" />
-  </pv-dialog>
+    <pv-dialog
+        v-model:visible="isIncidentDialogOpen"
+        modal
+        :header="t('incidentForm.title')"
+        :style="{ width: '28rem' }"
+        :breakpoints="{ '640px': '92vw' }"
+    >
+      <IncidentForm @close="isIncidentDialogOpen = false" />
+    </pv-dialog>
+  </section>
 </template>
 
 <style scoped>
-.quick-actions-card {
-  background: #ffffff !important;
-  border-radius: 24px !important;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06) !important;
-  padding: 8px !important;
-  max-width: 360px;
-  width: 100%;
-}
-
-.card-body {
+.quick-actions {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 12px;
+  gap: 0.75rem;
 }
 
-/* Título superior (Acciones rápidas) */
-.card-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #111827;
+.quick-actions-title {
   margin: 0;
-  letter-spacing: -0.3px;
+  font-size: 1.1rem;
+  color: var(--rumbo-green-900);
 }
 
-.actions-list {
+.quick-actions-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.75rem;
+}
+
+.quick-action {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--rumbo-border);
+  border-radius: 0.9rem;
+  background: var(--rumbo-surface);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
 }
 
-/* Estilo exacto de los botones tipo píldora / tarjeta color crema */
-.action-btn {
-  background-color: #f7f6f0 !important;
-  color: #1b3123 !important;
-  font-weight: 700 !important;
-  font-size: 15px !important;
-  border-radius: 16px !important;
-  border: none !important;
-  padding: 18px 16px !important;
-  justify-content: center !important;
-  box-shadow: none !important;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+.quick-action:hover,
+.quick-action:focus-visible {
+  border-color: var(--rumbo-teal);
+  background: var(--rumbo-teal-soft);
+  transform: translateY(-1px);
 }
 
-.action-btn:hover {
-  background-color: #eeece3 !important;
+.quick-action-icon {
+  flex: 0 0 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.65rem;
+  background: var(--rumbo-green-900);
+  color: #ffffff;
 }
 
-.action-btn:active {
-  transform: scale(0.98);
+.quick-action-label {
+  font-weight: 600;
+  color: var(--rumbo-green-900);
 }
 </style>
