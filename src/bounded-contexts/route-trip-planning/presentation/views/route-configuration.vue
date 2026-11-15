@@ -68,8 +68,8 @@ const es = computed(() => String(locale.value).toLowerCase().startsWith('es'))
 const t = (k) => (es.value ? txt.es : txt.en)[k] || k
 const dayLabel = (day) => es.value ? ({Monday:'Lunes',Tuesday:'Martes',Wednesday:'Miércoles',Thursday:'Jueves',Friday:'Viernes',Saturday:'Sábado',Sunday:'Domingo'}[day]) : day
 const filteredRoutes = computed(() => routes.value.filter(r =>
-  (filter.value==='all' || (filter.value==='published' ? r.status==='PUBLISHED' : r.status!=='PUBLISHED')) &&
-  `${r.name} ${r.code}`.toLowerCase().includes(search.value.toLowerCase())))
+    (filter.value==='all' || (filter.value==='published' ? r.status==='PUBLISHED' : r.status!=='PUBLISHED')) &&
+    `${r.name} ${r.code}`.toLowerCase().includes(search.value.toLowerCase())))
 const assignedCount = computed(() => form.stops.filter(s=>s.studentId).length)
 const validName = computed(() => form.name.trim().length>=3 && form.driverName.trim() && form.vehicleLabel.trim())
 const validStops = computed(() => form.stops.length>0 && form.stops.every(s=>s.address.trim().length>=5))
@@ -102,7 +102,7 @@ function moveStop(i,dir) { const j=i+dir;if(j<0||j>=form.stops.length)return;
   [form.stops[i],form.stops[j]]=[form.stops[j],form.stops[i]] }
 function selectedElsewhere(studentId,index) { return form.stops.some((s,i)=>i!==index&&s.studentId===studentId) }
 function choices(index) { return studentOptions.value.filter(s=>
-  s.id===form.stops[index].studentId || !selectedElsewhere(s.id,index)) }
+    s.id===form.stops[index].studentId || !selectedElsewhere(s.id,index)) }
 function setDayTime(day,value) { const row=form.schedule.find(s=>s.day===day); if(row)row.departureTime=value }
 function toggleDay(day) {
   const i=form.schedule.findIndex(d=>d.day===day)
@@ -156,26 +156,26 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
         <div><strong>{{routes.filter(r=>r.status!=='PUBLISHED').length}}</strong><span>{{t('draft')}}</span></div></div>
       <div class="rp-filters"><input v-model="search" :aria-label="t('search')" :placeholder="t('search')"/>
         <div role="group" :aria-label="t('status')"><button type="button" v-for="k in ['all','draft','published']" :key="k"
-          :class="{active:filter===k}" @click="filter=k">{{t(k)}}</button></div></div>
+                                                            :class="{active:filter===k}" @click="filter=k">{{t(k)}}</button></div></div>
       <p v-if="loading" role="status">{{t('loading')}}</p>
-      <div v-if="error" class="rp-error" role="alert">{{error}} <button type="button" @click="store.load()">↻</button></div>
+      <div v-if="error" class="rp-error" role="alert">{{error}} <button type="button" @click="store.load()"><i class="pi pi-refresh" aria-hidden="true"></i></button></div>
       <p v-if="!filteredRoutes.length&&!loading" class="rp-muted">{{t('none')}}</p>
       <div class="rp-cards"><article v-for="r in filteredRoutes" :key="r.id" class="rp-card">
-        <div class="rp-card-header"><span class="rp-route-icon">⌁</span><span class="rp-state">{{r.status==='PUBLISHED'?t('published'):t('draft')}}</span></div>
+        <div class="rp-card-header"><span class="rp-route-icon"><i class="pi pi-map" aria-hidden="true"></i></span><span class="rp-state">{{r.status==='PUBLISHED'?t('published'):t('draft')}}</span></div>
         <h3>{{r.name}}</h3><p class="rp-muted">{{r.code}}</p>
-        <div class="rp-card-facts"><span>◷ {{r.departureTime}}</span><span>⌖ {{r.stops.length}}</span><span>▦ {{r.schedule.length}}</span></div>
+        <div class="rp-card-facts"><span><i class="pi pi-clock" aria-hidden="true"></i> {{r.departureTime}}</span><span><i class="pi pi-map-marker" aria-hidden="true"></i> {{r.stops.length}}</span><span><i class="pi pi-calendar" aria-hidden="true"></i> {{r.schedule.length}}</span></div>
         <p>{{t('firstStop')}}: <strong>{{r.stops[0]?.address||'—'}}</strong></p>
         <div class="rp-card-actions"><button type="button" :disabled="opening" @click="startEdit(r)">{{t('edit')}}</button>
-          <button type="button" :disabled="r.status==='PUBLISHED'||saving" @click="deleteRoute(r)" :aria-label="t('delete')">⌫</button></div>
+          <button type="button" :disabled="r.status==='PUBLISHED'||saving" @click="deleteRoute(r)" :aria-label="t('delete')"><i class="pi pi-trash" aria-hidden="true"></i></button></div>
       </article></div>
     </template>
     <template v-else>
-      <header class="rp-editor-head"><button type="button" class="rp-back" @click="cancel" :aria-label="t('back')">←</button>
+      <header class="rp-editor-head"><button type="button" class="rp-back" @click="cancel" :aria-label="t('back')"><i class="pi pi-arrow-left" aria-hidden="true"></i></button>
         <div><p class="rp-eyebrow">{{t('title').toUpperCase()}}</p><h1>{{form.name||t('newRoute')}}</h1><p class="rp-muted">{{t('subtitle')}}</p></div>
         <span class="rp-state">{{isPublished?t('published'):t('draft')}}</span>
       </header>
       <nav class="rp-steps" :aria-label="t('review')"><button v-for="(s,i) in steps" :key="s" type="button"
-        :class="{active:step===i}" :aria-current="step===i?'step':undefined" @click="goto(i)">{{i+1}}. {{t(s)}}</button></nav>
+                                                              :class="{active:step===i}" :aria-current="step===i?'step':undefined" @click="goto(i)">{{i+1}}. {{t(s)}}</button></nav>
       <div class="rp-editor-layout"><main class="rp-work">
         <section v-if="step===0" class="rp-panel"><p class="rp-eyebrow">1 / 4</p><h2>{{t('general')}}</h2>
           <label>{{t('routeName')}} * <input v-model.trim="form.name" :disabled="isPublished" maxlength="160" required/></label>
@@ -196,9 +196,9 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
           </p>
           <div v-for="(stop,i) in form.stops" :key="stop.id||'new-'+i" class="rp-stop-panel">
             <div class="rp-stop-heading"><strong>{{i+1}}. {{t('stops')}}</strong><div>
-              <button type="button" :disabled="isPublished||i===0" :aria-label="t('up')" @click="moveStop(i,-1)">↑</button>
-              <button type="button" :disabled="isPublished||i===form.stops.length-1" :aria-label="t('down')" @click="moveStop(i,1)">↓</button>
-              <button type="button" :disabled="isPublished||form.stops.length<=1" :aria-label="t('remove')" @click="removeStop(i)">×</button>
+              <button type="button" :disabled="isPublished||i===0" :aria-label="t('up')" @click="moveStop(i,-1)"><i class="pi pi-arrow-up" aria-hidden="true"></i></button>
+              <button type="button" :disabled="isPublished||i===form.stops.length-1" :aria-label="t('down')" @click="moveStop(i,1)"><i class="pi pi-arrow-down" aria-hidden="true"></i></button>
+              <button type="button" :disabled="isPublished||form.stops.length<=1" :aria-label="t('remove')" @click="removeStop(i)"><i class="pi pi-times" aria-hidden="true"></i></button>
             </div></div>
             <label>{{t('stopAddress')}} * <input v-model.trim="stop.address" :disabled="isPublished" maxlength="300" required/></label>
             <label>{{t('student')}} <select v-model="stop.studentId" :disabled="isPublished||!studentOptions.length">
@@ -218,7 +218,7 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
           <div class="rp-days"><div v-for="day in DAYS" :key="day" class="rp-day" :class="{chosen:form.schedule.some(x=>x.day===day)}">
             <label><input type="checkbox" :disabled="isPublished" :checked="form.schedule.some(x=>x.day===day)" @change="toggleDay(day)"/>{{dayLabel(day)}}</label>
             <input v-if="form.schedule.some(x=>x.day===day)" type="time" :aria-label="`${dayLabel(day)} ${t('defaultTime')}`"
-              :disabled="isPublished" :value="form.schedule.find(x=>x.day===day)?.departureTime" @input="setDayTime(day,$event.target.value)"/>
+                   :disabled="isPublished" :value="form.schedule.find(x=>x.day===day)?.departureTime" @input="setDayTime(day,$event.target.value)"/>
           </div></div>
           <p class="rp-muted">{{form.schedule.length}} {{t('scheduled')}}</p>
           <p class="rp-muted">{{es ? 'Los horarios se guardan con la ruta; no necesitan confirmación adicional.' : 'Service times are saved with the route automatically.'}}</p>
@@ -226,10 +226,10 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
         <section v-if="step===3" class="rp-panel"><p class="rp-eyebrow">4 / 4</p><h2>{{t('summary')}}</h2>
           <p>{{t('review')}}</p>
           <dl class="rp-summary"><div><dt>{{t('routeName')}}</dt><dd>{{form.name||'—'}}</dd></div>
-          <div><dt>{{t('defaultTime')}}</dt><dd>{{form.departureTime}}</dd></div>
-          <div><dt>{{t('stops')}}</dt><dd>{{form.stops.length}}</dd></div>
-          <div><dt>{{t('scheduled')}}</dt><dd>{{form.schedule.length}}</dd></div>
-          <div><dt>{{t('students')}}</dt><dd>{{assignedCount}}</dd></div></dl>
+            <div><dt>{{t('defaultTime')}}</dt><dd>{{form.departureTime}}</dd></div>
+            <div><dt>{{t('stops')}}</dt><dd>{{form.stops.length}}</dd></div>
+            <div><dt>{{t('scheduled')}}</dt><dd>{{form.schedule.length}}</dd></div>
+            <div><dt>{{t('students')}}</dt><dd>{{assignedCount}}</dd></div></dl>
           <p :class="canPublish?'rp-ready':'rp-hint'">{{canPublish?t('ready'):t('notReady')}}</p>
           <p v-if="isPublished" class="rp-muted">{{t('readonly')}}</p>
         </section>
@@ -237,33 +237,15 @@ async function deleteRoute(route) {if(window.confirm(t('deleteConfirm')))await s
         <p v-if="error" class="rp-error" role="alert">{{error}}</p>
       </main><aside class="rp-preview"><small>{{t('review')}}</small><h3>{{form.name||t('newRoute')}}</h3>
         <p>{{form.shift==='MORNING'?t('morning'):t('afternoon')}} · {{form.departureTime}}</p>
-        <hr/><p>⌖ {{form.stops.length}} {{t('stops')}}</p><p>▦ {{form.schedule.length}} {{t('scheduled')}}</p>
-        <p>♟ {{assignedCount}} {{t('students')}}</p><hr/><small>{{t('firstStop')}}</small>
+        <hr/><p><i class="pi pi-map-marker" aria-hidden="true"></i> {{form.stops.length}} {{t('stops')}}</p><p><i class="pi pi-calendar" aria-hidden="true"></i> {{form.schedule.length}} {{t('scheduled')}}</p>
+        <p><i class="pi pi-users" aria-hidden="true"></i> {{assignedCount}} {{t('students')}}</p><hr/><small>{{t('firstStop')}}</small>
         <p>{{form.stops[0]?.address||'—'}}</p></aside></div>
       <footer class="rp-editor-footer"><button type="button" class="rp-outline" @click="cancel">{{t('cancel')}}</button>
-        <div class="rp-bottom-actions"><button type="button" class="rp-outline" v-if="step>0" @click="step--">← {{t('previous')}}</button>
-          <button v-if="step<3" class="rp-action" type="button" @click="goto(step+1)">{{t('continue')}} →</button>
+        <div class="rp-bottom-actions"><button type="button" class="rp-outline" v-if="step>0" @click="step--"><i class="pi pi-arrow-left" aria-hidden="true"></i> {{t('previous')}}</button>
+          <button v-if="step<3" class="rp-action" type="button" @click="goto(step+1)">{{t('continue')}} <i class="pi pi-arrow-right" aria-hidden="true"></i></button>
           <template v-else><button type="button" class="rp-outline" :disabled="saving||isPublished" @click="save(false)">{{t('save')}}</button>
             <button type="button" class="rp-action" :disabled="saving||isPublished||!canPublish" @click="save(true)">{{t('publish')}}</button></template>
         </div></footer>
     </template>
   </section>
 </template>
-
-<style scoped>
-/* The page now lives inside the shared AppLayout: no own sidebar column or full-height shell. */
-.route-configuration-page {
-  display: block;
-  min-height: 0;
-  height: auto;
-  background: transparent;
-}
-.rp-workspace {
-  width: 100%;
-  min-height: 0;
-  margin: 0;
-}
-.rp-main {
-  padding: 0;
-}
-</style>
