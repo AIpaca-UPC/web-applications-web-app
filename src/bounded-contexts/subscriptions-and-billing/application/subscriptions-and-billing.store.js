@@ -122,7 +122,13 @@ export const useSubscriptionsAndBillingStore = defineStore(
             });
         }
 
-        // UPDATE: actualizar suscripción
+
+        /**
+         * Updates a subscription and refreshes the list.
+         * A plan change creates a new subscription identifier.
+         * @param {Object} subscription - Updated subscription data.
+         * @returns {Promise<Object|null>} Updated subscription.
+         */
         async function updateSubscription(subscription) {
             return executeMutation(async () => {
                 const resource =
@@ -136,9 +142,13 @@ export const useSubscriptionsAndBillingStore = defineStore(
                 const updated =
                     SubscriptionAssembler.toEntityFromResource(response);
 
-                subscriptions.value = subscriptions.value.map(item =>
-                    String(item.id) === String(updated.id) ? updated : item
-                );
+                // Reload current subscriptions to reflect plan changes.
+                const subscriptionsData = await api.getSubscriptions();
+
+                subscriptions.value =
+                    SubscriptionAssembler.toEntitiesFromResponse(
+                        subscriptionsData
+                    );
 
                 return updated;
             });
