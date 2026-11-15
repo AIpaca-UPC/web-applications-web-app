@@ -14,27 +14,41 @@ const usesPlatformBackend = import.meta.env.VITE_ROUTE_API_CONTRACT === 'dotnet'
 
 // Authorized students come from Profiles & Relationship Management. Declared as its own
 // base URL so this context depends on a published endpoint and not on another context's code.
-// When the platform backend exposes them per route, point this at `${endpoint}/available-students`.
 const studentsBaseURL = (import.meta.env.VITE_ROUTE_STUDENTS_API_BASE_URL || baseURL).replace(/\/$/, '')
 const studentsEndpoint = (import.meta.env.VITE_ROUTE_STUDENTS_ENDPOINT_PATH || `${endpoint}/available-students`).replace(/\/$/, '')
 
+// The vehicle catalogue comes from Vehicle & Credential Management, declared the same way and
+// for the same reason: a published endpoint, never another context's code.
+const vehiclesBaseURL = (import.meta.env.VITE_ROUTE_VEHICLES_API_BASE_URL || baseURL).replace(/\/$/, '')
+const vehiclesEndpoint = (import.meta.env.VITE_ROUTE_VEHICLES_ENDPOINT_PATH || '/api/v1/vehicles').replace(/\/$/, '')
+
+// The free hosting tier suspends the service after fifteen minutes without traffic and takes
+// about a minute to answer the first request afterwards. That wait belongs to the environment
+// and not to the contract, so the clients give it room instead of failing on a service that is
+// only asleep.
+const TIMEOUT_MS = 60000
 
 let accessTokenProvider = () => null
-const client = axios.create({ baseURL, timeout: 15000, headers: { Accept: 'application/json' } })
 
-const studentsClient = axios.create({ baseURL: studentsBaseURL, timeout: 15000, headers: { Accept: 'application/json' } })
+/**
+ * Builds a client for one published endpoint, carrying the access token when there is one.
+ *
+ * @param {string} url - Base URL of the service.
+ * @returns {import('axios').AxiosInstance} The configured client.
+ */
+function clientFor(url) {
+  const instance = axios.create({ baseURL: url, timeout: TIMEOUT_MS, headers: { Accept: 'application/json' } })
+  instance.interceptors.request.use((config) => {
+    const token = accessTokenProvider()
+    if (token) config.headers.Authorization = `Bearer ${token}`
+    return config
+  })
+  return instance
+}
 
-studentsClient.interceptors.request.use((config) => {
-  const token = accessTokenProvider()
-  if (token) config.headers.Authorization = `Bearer ${token}`
-  return config
-})
-client.interceptors.request.use((config) => {
-  const token = accessTokenProvider()
-  if (token) config.headers.Authorization = `Bearer ${token}`
-  return config
-})
-
+const client = clientFor(baseURL)
+const studentsClient = clientFor(studentsBaseURL)
+const vehiclesClient = clientFor(vehiclesBaseURL)
 
 const path = (id) => `${endpoint}/${encodeURIComponent(String(id))}`
 const unwrap = (r) => r.data
@@ -47,6 +61,7 @@ const liveRoutesApi = {
   update: (id, payload) => client.put(path(id), payload).then(unwrap),
   remove: (id) => client.delete(path(id)),
   students: () => studentsClient.get(studentsEndpoint).then(unwrap),
+  vehicles: () => vehiclesClient.get(vehiclesEndpoint).then(unwrap),
   assignStudent: (routeId, stopId, studentId) => client.put(`${path(routeId)}/stops/${stopId}/student`, { studentId }).then(unwrap),
   unassignStudent: (routeId, stopId) => client.delete(`${path(routeId)}/stops/${stopId}/student`).then(unwrap),
   replaceAssignments: (routeId, assignments) => client.put(`${path(routeId)}/assignments`, { assignments }).then(unwrap),
@@ -101,7 +116,11 @@ async function saveAggregate(id, { route, assignments = [] }) {
   return baseApi.getById(saved.id)
 }
 
-export const routesApi = { ...baseApi, saveAggregate }
+// The demo service knows nothing about a vehicle catalogue, so the selector falls back to an
+// empty list rather than to an undefined call.
+const vehiclesFallback = { vehicles: async () => [] }
+
+export const routesApi = { ...vehiclesFallback, ...baseApi, saveAggregate }
 
 // The shape a route travels in belongs to the service that answers, not to the data source.
 export const routeAssembler = usesPlatformBackend ? RouteCsharpAssembler : RouteAssembler
