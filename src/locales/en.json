@@ -52,7 +52,22 @@
     "description": "This is the shared Vue 3 foundation for the team. Every bounded context has its own folder and will be implemented independently.",
     "ready": "Vue 3, PrimeVue, Vue Router, Pinia and i18n are configured.",
     "sectionsTitle": "Module workspaces",
-    "moduleDescription": "Frontend feature is not implemented yet. This workspace is reserved for its team member."
+    "moduleDescription": "Frontend feature is not implemented yet. This workspace is reserved for its team member.",
+    "driverTitle": "Your service today",
+    "driverSubtitle": "Start the trip of the day and keep the fleet in order.",
+    "tutorTitle": "Your child's day",
+    "tutorSubtitle": "Follow the service as the driver records it.",
+    "todayTrip": "Trip of the day",
+    "travelling": "{student} travels on this trip.",
+    "followTrip": "Follow the trip",
+    "noTripDriver": "There is no trip scheduled yet. Publish a route to generate one.",
+    "noTripTutor": "There is no trip registered for your child yet.",
+    "tiles": {
+      "vehicles": "Registered vehicles",
+      "credentials": "Vehicles with expired documents",
+      "unread": "Unread notifications",
+      "children": "Children on the service"
+    }
   },
   "modules": {
     "profiles": "Profiles & Relationship Management",

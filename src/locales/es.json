@@ -52,7 +52,22 @@
     "description": "Esta es la base compartida de Vue 3 para el equipo. Cada contexto delimitado tiene su propia carpeta y se implementará de manera independiente.",
     "ready": "Vue 3, PrimeVue, Vue Router, Pinia e i18n están configurados.",
     "sectionsTitle": "Espacios de trabajo de los módulos",
-    "moduleDescription": "Esta funcionalidad del frontend aún no está implementada. Este espacio está reservado para el integrante responsable."
+    "moduleDescription": "Esta funcionalidad del frontend aún no está implementada. Este espacio está reservado para el integrante responsable.",
+    "driverTitle": "Tu servicio de hoy",
+    "driverSubtitle": "Inicia el viaje del día y mantén la flota en orden.",
+    "tutorTitle": "El día de tu hijo",
+    "tutorSubtitle": "Sigue el servicio tal como lo registra el conductor.",
+    "todayTrip": "Viaje del día",
+    "travelling": "{student} viaja en este servicio.",
+    "followTrip": "Seguir el viaje",
+    "noTripDriver": "Todavía no hay un viaje programado. Publica una ruta para generar uno.",
+    "noTripTutor": "Todavía no hay un viaje registrado para tu hijo.",
+    "tiles": {
+      "vehicles": "Vehículos registrados",
+      "credentials": "Vehículos con documentos vencidos",
+      "unread": "Notificaciones sin leer",
+      "children": "Hijos en el servicio"
+    }
   },
   "modules": {
     "profiles": "Gestión de perfiles y relaciones",
