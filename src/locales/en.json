@@ -2,7 +2,7 @@
   "common": {
     "language": "Language",
     "project": "School transport platform",
-    "workspace": "Team development workspace",
+    "workspace": "School transport platform",
     "pending": "Awaiting implementation",
     "open": "Open workspace",
     "back": "Back to dashboard"
@@ -18,16 +18,50 @@
     "helpText": "Review the guidance and safety information.",
     "navigation": "Main navigation",
     "dashboard": "Dashboard",
-    "workspaces": "Bounded Contexts"
+    "workspaces": "Bounded Contexts",
+    "serviceInformation": "My child's service",
+    "trips": "Trips",
+    "tripStatus": "My child's trip"
+  },
+  "serviceInformation": {
+    "title": "Service information",
+    "subtitle": "Vehicle and credentials declared by the driver of the service.",
+    "refresh": "Refresh",
+    "driver": "Driver",
+    "credentialsTitle": "Declared credentials",
+    "validUntil": "Valid until",
+    "source": "Source",
+    "empty": "There is no service registered yet.",
+    "notice": "Rumbo presents the information declared by the driver and the result recorded for each credential. It does not carry out an official validation of its own.",
+    "credentialType": {
+      "SOAT": "Compulsory traffic accident insurance (SOAT)",
+      "CITV": "Technical inspection certificate (CITV)",
+      "DRIVER_LICENSE": "Driving licence, category A-IIb"
+    },
+    "credentialStatus": {
+      "VERIFIED": "Verified",
+      "PENDING": "Pending verification",
+      "FAILED": "Not confirmed",
+      "EXPIRED": "Expired"
+    }
   },
   "home": {
-    "title": "Rumbo operations",
-    "content": "Manage the main frontend CRUD modules from this dashboard.",
     "eyebrow": "AIpaca-UPC · Team Project",
-    "description": "This is the shared Vue 3 foundation for the team. Every bounded context has its own folder and will be implemented independently.",
-    "ready": "Vue 3, PrimeVue, Vue Router, Pinia and i18n are configured.",
-    "sectionsTitle": "Module workspaces",
-    "moduleDescription": "Frontend feature is not implemented yet. This workspace is reserved for its team member."
+    "driverTitle": "Your service today",
+    "driverSubtitle": "Start the day's trip and keep the fleet in order.",
+    "tutorTitle": "Your child's day",
+    "tutorSubtitle": "Follow the service as it is recorded by the driver.",
+    "todayTrip": "Today's trip",
+    "travelling": "{student} is traveling on this service.",
+    "followTrip": "Follow the trip",
+    "noTripDriver": "There is no trip scheduled yet. Publish a route to generate one.",
+    "noTripTutor": "There is no trip registered for your child.",
+    "tiles": {
+      "vehicles": "Registered vehicles",
+      "credentials": "Vehicles with expired documents",
+      "unread": "Unread notifications",
+      "children": "Children in the service"
+    }
   },
   "modules": {
     "profiles": "Profiles & Relationship Management",
@@ -80,68 +114,83 @@
     }
   },
   "routePlanning": {
-    "header": "Configure route",
-    "routeAssigned": "Assigned route",
-    "students": "Students",
-    "routeSetup": "Configure route",
-    "notifications": "Notifications",
-    "billing": "Plan & billing",
-    "settings": "Settings",
-    "driver": "Driver",
-    "helpTitle": "Need help?",
-    "helpMessage": "Review the help and safety guidelines.",
-    "signOut": "Sign out",
-    "headline": "Configure route",
-    "subheading": "Manage the route, stops, student links and delegated access.",
-    "addStop": "Add stop",
-    "stopOrder": "Stop order",
-    "stopOrderHelp": "New trips use the saved sequence until it is changed.",
-    "destination": "Destination",
-    "absentToday": "absent today",
-    "linkStudent": "Link student",
-    "linkDescription": "The guardian must approve the link before access is granted.",
-    "invitationCode": "Invitation code",
-    "requestLink": "Request link",
-    "mobilityAssistant": "Mobility assistant",
-    "noAssistant": "No assistant has access to this route.",
-    "addAssistant": "Add assistant",
-    "moveUp": "Move stop up",
-    "moveDown": "Move stop down",
-    "deleteStop": "Delete stop",
-    "newStop": "New stop",
-    "address": "Address",
-    "person": "Student",
-    "plannedTime": "Planned time",
-    "cancel": "Cancel",
-    "saveLocal": "Add stop",
-    "deleteConfirm": "Remove this stop from the preview?",
-    "demoNote": "CRUD connected to the configured API through Axios.",
-    "noStops": "No stops have been added yet.",
-    "retryApi": "Retry",
-    "loadingApi": "Loading routes...",
-    "stopsMissing": "This route has no stops array. Stop editing is disabled to protect its data.",
-    "otherModule": "Pending functionality: belongs to another module.",
-    "previewOnly": "Screen under construction",
-    "previewInfo": "We will complete the UI before connecting the CRUD.",
-    "close": "Close",
-    "spanish": "Español (Latinoamérica)",
-    "english": "English",
-    "currentRoute": "Current route",
-    "createRoute": "New route",
-    "editRoute": "Edit route",
-    "deleteRoute": "Delete route",
+    "title": "School routes",
+    "subtitle": "Manage stops, students and recurring service hours.",
+    "newRoute": "New route",
+    "all": "All",
+    "draft": "Configurable",
+    "published": "Published",
+    "search": "Search routes",
+    "none": "No routes yet",
+    "edit": "Configure",
+    "back": "Back to routes",
+    "general": "General",
+    "stops": "Stops and students",
+    "hours": "Schedule",
+    "summary": "Review",
     "routeName": "Route name",
-    "driverName": "Driver",
-    "vehicleLabel": "Vehicle",
-    "saveRoute": "Save changes",
-    "saveStop": "Save changes",
-    "editStop": "Edit stop",
-    "confirmDeleteTitle": "Confirm deletion",
-    "confirmDeleteRoute": "Are you sure you want to delete this route and its stops from the API?",
-    "confirmDeleteStop": "Are you sure you want to delete this stop from the API?",
-    "confirmDeleteAction": "Delete",
-    "routeHasNoStops": "This route has no stops yet.",
-    "noRoutes": "No routes yet. Create a new route to get started."
+    "driverName": "Driver name",
+    "vehicle": "Vehicle",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "shift": "Shift",
+    "defaultTime": "Departure",
+    "stopAddress": "Stop address",
+    "student": "Student for this stop",
+    "unassigned": "Not assigned",
+    "addStop": "Add stop",
+    "remove": "Remove",
+    "up": "Move up",
+    "down": "Move down",
+    "continue": "Continue",
+    "previous": "Back",
+    "save": "Save route",
+    "publish": "Publish route",
+    "cancel": "Cancel",
+    "scheduled": "Days selected",
+    "confirmDays": "Confirm schedule",
+    "days": "Service days",
+    "weekdays": "Monday to Friday",
+    "clearDays": "Clear",
+    "review": "Review your route configuration",
+    "ready": "Ready to publish",
+    "notReady": "Complete stops, days and student assignment before publishing.",
+    "firstStop": "First stop",
+    "routes": "Routes",
+    "students": "Students",
+    "delete": "Delete",
+    "loading": "Loading...",
+    "addressHelp": "Addresses are saved, but geographic validation is not available yet.",
+    "studentsHelp": "Only authorized students appear in this selector.",
+    "noStudents": "No students available.",
+    "code": "Code",
+    "codeAuto": "Generated when the route is saved",
+    "hoursHelp": "Each day can have a different departure time.",
+    "errorName": "Enter a route name of at least 3 characters, driver and vehicle.",
+    "errorStop": "Provide at least one stop with a valid address (5 characters).",
+    "errorSchedule": "Select at least one service day and set a departure time.",
+    "deleteConfirm": "Delete this configurable route?",
+    "saved": "Route saved.",
+    "publishDone": "Route published.",
+    "status": "Status",
+    "saveFirst": "Save the route first to publish it.",
+    "loadingStudents": "Loading authorized students…",
+    "refreshStudents": "Refresh student list",
+    "studentAssigned": "Assigned student",
+    "readonly": "Published routes are read-only until changes to active trips are supported.",
+    "demoBanner": "LOCAL DEMO MODE · Fictional data stored in this browser only",
+    "hoursAutoSaved": "Service times are saved with the route automatically.",
+    "errorDuplicateStudent": "A student can only be assigned once.",
+    "contextName": "Route & Trip Planning",
+    "weekday": {
+      "Monday": "Monday",
+      "Tuesday": "Tuesday",
+      "Wednesday": "Wednesday",
+      "Thursday": "Thursday",
+      "Friday": "Friday",
+      "Saturday": "Saturday",
+      "Sunday": "Sunday"
+    }
   },
   "placeholder": {
     "title": "Workspace ready for development",
@@ -171,7 +220,10 @@
       "capacity": "Capacity",
       "capacitySeats": "Capacity (Seats)",
       "year": "Year",
-      "status": "Status"
+      "status": "Status",
+      "driverName": "Driver",
+      "credentialNumber": "Document number",
+      "credentialExpiresAt": "Valid until"
     },
     "status": {
       "ACTIVE": "Active",
@@ -191,7 +243,9 @@
       "newTitle": "New Vehicle",
       "editTitle": "Edit Vehicle",
       "newSubtitle": "Fill in the vehicle details to add it to the fleet.",
-      "editSubtitle": "Update the vehicle details to keep the fleet record current."
+      "editSubtitle": "Update the vehicle details to keep the fleet record current.",
+      "credentialsTitle": "Service credentials",
+      "credentialsHelp": "Declared by the driver. They stay pending until a verification result is obtained."
     },
     "delete": {
       "header": "Delete vehicle",
@@ -257,5 +311,130 @@
     "deleteDescription": "This action will delete your subscription record. Are you sure you want to continue?",
     "keepSubscription": "Keep subscription",
     "confirmDelete": "Yes, cancel"
+  },
+  "access": {
+    "tagline": "Peace of mind on every trip.",
+    "eyebrow": "ROLE PREVIEW",
+    "title": "Explore Rumbo",
+    "description": "Choose the experience you want to review.",
+    "driver": {
+      "name": "Driver",
+      "description": "Register vehicles and their documents, plan routes and report incidents."
+    },
+    "tutor": {
+      "name": "Tutor",
+      "description": "Check the service assigned to your child and the documents declared for it."
+    },
+    "copyright": "2026 Rumbo",
+    "viewingAs": "Viewing as",
+    "change": "Change role",
+    "exit": "Exit",
+    "back": "Choose another role",
+    "chooseTutor": "Who are you reviewing as?",
+    "chooseTutorHint": "A tutor only sees the children they are authorized over.",
+    "loadingTutors": "Loading tutors…",
+    "noTutors": "There are no tutors registered yet."
+  },
+  "trips": {
+    "events": {
+      "TRIP_STARTED": {
+        "title": "Trip started",
+        "message": "The driver started the trip on {route}."
+      },
+      "STOP_SERVED": {
+        "title": "Picked up",
+        "message": "{student} was picked up at their stop."
+      },
+      "ABSENT": {
+        "title": "Did not board",
+        "message": "The driver served the stop and {student} did not board."
+      },
+      "TRIP_COMPLETED": {
+        "title": "Trip finished",
+        "message": "The trip on {route} is finished."
+      }
+    },
+    "list": {
+      "title": "Trips",
+      "subtitle": "Start the trip of the day and confirm each stop as you serve it.",
+      "empty": "There are no trips registered yet."
+    },
+    "status": {
+      "SCHEDULED": "Scheduled",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "stopStatus": {
+      "PENDING": "Pending",
+      "CONFIRMED": "Picked up",
+      "SKIPPED": "Skipped"
+    },
+    "shift": {
+      "MORNING": "Morning",
+      "AFTERNOON": "Afternoon"
+    },
+    "actions": {
+      "start": "Start trip",
+      "continue": "Continue",
+      "view": "View",
+      "back": "Back to trips",
+      "confirm": "Picked up",
+      "skip": "Nobody boarded",
+      "complete": "Close trip",
+      "refresh": "Refresh"
+    },
+    "stopsResolved": "{progress} stops resolved",
+    "noStudents": "No students expected at this stop",
+    "completeHint": "Resolve every stop before closing the trip.",
+    "untitledRoute": "Route without a name",
+    "notFound": "That trip could not be found."
+  },
+  "tripStatus": {
+    "title": "My child's trip",
+    "subtitle": "Follow the trip published by the driver, stop by stop.",
+    "empty": "There is no trip registered for the service yet.",
+    "myChild": "MY CHILD",
+    "boardsAt": "Boards at",
+    "driver": "Driver",
+    "vehicle": "Vehicle",
+    "progress": "Stops resolved",
+    "timeline": "Route of the day",
+    "scheduled": "Planned",
+    "confirmedAt": "recorded",
+    "refresh": "Refresh",
+    "notice": "This screen shows what the driver recorded. Rumbo does not track the vehicle: each stop appears once the driver confirms it. The page refreshes on its own every few seconds.",
+    "journey": {
+      "SCHEDULED": "Trip not started",
+      "IN_PROGRESS": "On the way",
+      "STOP_SERVED": "Picked up",
+      "NOT_BOARDED": "Did not board",
+      "TRIP_COMPLETED": "Trip finished",
+      "NOT_APPLICABLE": "Not on this trip"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Notices about the service, its trips and the incidents reported by the driver.",
+    "empty": "There are no notifications yet.",
+    "emptyUnread": "Nothing left to read.",
+    "loadError": "The notifications could not be loaded. Check your connection and try again.",
+    "refresh": "Refresh",
+    "markRead": "Mark as read",
+    "unreadSummary": "{count} unread",
+    "filter": {
+      "all": "All",
+      "unread": "Unread only"
+    },
+    "type": {
+      "INFO": "Information",
+      "SUCCESS": "Done",
+      "IMPORTANT": "Important",
+      "WARNING": "Warning"
+    },
+    "priority": {
+      "REGULAR": "Regular",
+      "CRITICAL": "Critical"
+    }
   }
 }

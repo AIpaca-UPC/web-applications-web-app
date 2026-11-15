@@ -11,10 +11,12 @@ import InputIcon from 'primevue/inputicon'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Select from 'primevue/select'
+import DatePicker from 'primevue/datepicker'
 import Skeleton from 'primevue/skeleton'
 import Toast from 'primevue/toast'
 import vehicleStore from "../../application/vehicle.store.js";
-import {Vehicle} from "../../domain/vehicle.entity.js";
+import {Vehicle} from "../../domain/model/vehicle.entity.js";
+import {Credential, CredentialType} from "../../domain/model/credential.js";
 
 const { t } = useI18n()
 const route = useRoute()
@@ -31,6 +33,9 @@ const loadingVehicle = ref(false)
 const saving = ref(false)
 const submitted = ref(false)
 
+/** Vehicle loaded when editing, kept to detect which credentials changed. */
+const loadedVehicle = ref(null)
+
 const form = reactive({
   licensePlate: '',
   brand: '',
@@ -38,7 +43,16 @@ const form = reactive({
   capacity: 15,
   year: new Date().getFullYear(),
   status: 'ACTIVE',
+  driverName: '',
 })
+
+/** Credential data declared by the driver, one entry per required document. */
+const credentialForm = reactive(
+    Object.fromEntries(Object.values(CredentialType).map((type) => [type, { number: '', expiresAt: null }])),
+)
+
+/** @type {string[]} Required credential types, in the order they are presented. */
+const credentialTypes = Object.values(CredentialType)
 
 const statusOptions = computed(() =>
     ['ACTIVE', 'INACTIVE', 'MAINTENANCE'].map((value) => ({ value, label: t(`vehicles.status.${value}`) })),
@@ -61,7 +75,36 @@ const validationErrors = computed(() => {
   return errors
 })
 
-const showError = (field) => submitted.value && validationErrors.value[field]
+/**
+ * Converts the value of the date picker to the YYYY-MM-DD form the API stores.
+ * The local date parts are used instead of toISOString, which would shift the
+ * date by one day for time zones behind UTC.
+ *
+ * @param {?(Date|string)} value - Picked date.
+ * @returns {?string} Date as YYYY-MM-DD, or null when none was picked.
+ */
+function toIsoDate(value) {
+  if (!value) return null
+  if (typeof value === 'string') return value
+  const year = value.getFullYear()
+  const month = String(value.getMonth() + 1).padStart(2, '0')
+  const day = String(value.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+/** Field-level validation messages for the declared credentials. */
+const credentialErrors = computed(() => {
+  const errors = {}
+  credentialTypes.forEach((type) => {
+    const declared = credentialForm[type]
+    if (!declared.number.trim()) errors[`${type}.number`] = t('vehicles.validation.required')
+    if (!declared.expiresAt) errors[`${type}.expiresAt`] = t('vehicles.validation.required')
+  })
+  return errors
+})
+
+const showError = (field) =>
+    submitted.value && (validationErrors.value[field] || credentialErrors.value[field])
 
 onMounted(async () => {
   // Needed for the duplicated plate check when entering the form directly by URL.
@@ -75,6 +118,7 @@ onMounted(async () => {
     toast.add({ severity: 'error', summary: t('vehicles.toast.notFound'), life: 3000 })
     return
   }
+  loadedVehicle.value = vehicle
   Object.assign(form, {
     licensePlate: vehicle.licensePlate,
     brand: vehicle.brand,
@@ -82,13 +126,50 @@ onMounted(async () => {
     capacity: vehicle.capacity,
     year: vehicle.year,
     status: vehicle.status,
+    driverName: vehicle.driverName,
+  })
+  credentialTypes.forEach((type) => {
+    const credential = vehicle.credentialOfType(type)
+    credentialForm[type].number = credential?.number ?? ''
+    credentialForm[type].expiresAt = credential?.expiresAt ?? null
   })
 })
+
+/**
+ * Builds the credentials to persist.
+ *
+ * A credential whose declared data did not change keeps the verification
+ * result already recorded for it; one the driver edited returns to pending,
+ * because a result obtained for a previous document number or validity date no
+ * longer applies.
+ *
+ * @returns {Object[]} Credential resources ready to be sent to the API.
+ */
+function buildCredentials() {
+  return credentialTypes.map((type) => {
+    const number = credentialForm[type].number.trim()
+    const expiresAt = toIsoDate(credentialForm[type].expiresAt)
+    const current = loadedVehicle.value?.credentialOfType(type) ?? null
+    const unchanged = current !== null && current.number === number && current.expiresAt === expiresAt
+    const credential = unchanged
+        ? current
+        : new Credential({ type }).withDeclaredData({ number, expiresAt })
+    return {
+      type: credential.type,
+      number: credential.number,
+      expiresAt: credential.expiresAt,
+      verificationStatus: credential.verificationStatus,
+      verificationSource: credential.verificationSource,
+      verifiedAt: credential.verifiedAt,
+    }
+  })
+}
 
 /** Validates, persists through the store and navigates back only on success. */
 const saveVehicle = async () => {
   submitted.value = true
   if (Object.keys(validationErrors.value).length) return
+  if (Object.keys(credentialErrors.value).length) return
 
   saving.value = true
   const vehicle = new Vehicle({
@@ -99,6 +180,8 @@ const saveVehicle = async () => {
     capacity: form.capacity,
     year: form.year,
     status: form.status,
+    driverName: form.driverName.trim(),
+    credentials: buildCredentials(),
   })
   const ok = isEdit.value ? await store.updateVehicle(vehicle) : await store.addVehicle(vehicle)
   saving.value = false
@@ -199,6 +282,59 @@ const navigateBack = () => router.push({ name: 'vehicles-list' })
             </FloatLabel>
           </div>
 
+          <div class="field">
+            <FloatLabel variant="on">
+              <IconField>
+                <InputText id="driverName" v-model="form.driverName" fluid />
+                <InputIcon class="pi pi-user" />
+              </IconField>
+              <label for="driverName">{{ t('vehicles.fields.driverName') }}</label>
+            </FloatLabel>
+          </div>
+
+          <section class="credentials-section">
+            <h2 class="credentials-title">{{ t('vehicles.form.credentialsTitle') }}</h2>
+            <p class="credentials-help">{{ t('vehicles.form.credentialsHelp') }}</p>
+
+            <div v-for="type in credentialTypes" :key="type" class="credential-row">
+              <p class="credential-label">{{ t(`serviceInformation.credentialType.${type}`) }}</p>
+              <div class="credential-fields">
+                <div class="field">
+                  <FloatLabel variant="on">
+                    <InputText
+                        :id="`${type}-number`"
+                        v-model="credentialForm[type].number"
+                        :invalid="!!showError(`${type}.number`)"
+                        fluid
+                    />
+                    <label :for="`${type}-number`">{{ t('vehicles.fields.credentialNumber') }}*</label>
+                  </FloatLabel>
+                  <small v-if="showError(`${type}.number`)" class="field-error">
+                    {{ credentialErrors[`${type}.number`] }}
+                  </small>
+                </div>
+
+                <div class="field">
+                  <FloatLabel variant="on">
+                    <DatePicker
+                        :input-id="`${type}-expiresAt`"
+                        v-model="credentialForm[type].expiresAt"
+                        date-format="yy-mm-dd"
+                        show-icon
+                        icon-display="input"
+                        :invalid="!!showError(`${type}.expiresAt`)"
+                        fluid
+                    />
+                    <label :for="`${type}-expiresAt`">{{ t('vehicles.fields.credentialExpiresAt') }}*</label>
+                  </FloatLabel>
+                  <small v-if="showError(`${type}.expiresAt`)" class="field-error">
+                    {{ credentialErrors[`${type}.expiresAt`] }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <div class="form-actions">
             <Button
                 type="submit"
@@ -215,6 +351,33 @@ const navigateBack = () => router.push({ name: 'vehicles-list' })
 </template>
 
 <style scoped>
+.credentials-section {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--p-content-border-color);
+}
+.credentials-title {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.credentials-help {
+  margin: 0.25rem 0 1.25rem;
+  font-size: 0.85rem;
+  color: var(--p-text-muted-color);
+}
+.credential-row + .credential-row {
+  margin-top: 1.5rem;
+}
+.credential-label {
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+}
+.credential-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1rem;
+}
 .vehicle-form-page {
   max-width: 44rem;
   margin: 0 auto;

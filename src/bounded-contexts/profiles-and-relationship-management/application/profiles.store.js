@@ -9,6 +9,13 @@ import { Student, StudentStatus } from '../domain/model/student.entity.js';
 import { Tutor } from '../domain/model/tutor.entity.js';
 import { Driver } from '../domain/model/driver.entity.js';
 
+import accessProfileStore from '@/shared/application/access-profile.store.js';
+import useRelationshipsStore from './relationships.store.js';
+import {
+    RelationshipType,
+    TutorStudentRelationship
+} from "@/bounded-contexts/profiles-and-relationship-management/domain/model/tutor-student-relationship.entity.js";
+
 const profilesApi = new ProfilesApi();
 
 /**
@@ -21,10 +28,6 @@ const profilesApi = new ProfilesApi();
  * @module useProfilesStore
  */
 const useProfilesStore = defineStore('profiles', () => {
-
-    // ==========================
-    // State
-    // ==========================
 
     /** @type {import('vue').Ref<Student[]>} */
     const students = ref([]);
@@ -46,10 +49,6 @@ const useProfilesStore = defineStore('profiles', () => {
 
     /** @type {import('vue').Ref<boolean>} */
     const profilesLoaded = ref(false);
-
-    // ==========================
-    // Computed Properties
-    // ==========================
 
     /** @type {import('vue').ComputedRef<number>} */
     const studentsCount = computed(() => students.value.length);
@@ -80,9 +79,25 @@ const useProfilesStore = defineStore('profiles', () => {
     /** @type {import('vue').ComputedRef<number>} */
     const driversCount = computed(() => drivers.value.length);
 
-    // ==========================
-    // Error Management
-    // ==========================
+    /**
+     * The students the active access profile may see.
+     *
+     * A tutor sees the children they are authorized over and nobody else's. Any other role
+     * sees the whole register, because filtering it is not this context's business: the
+     * students a driver serves are decided by the service they are enrolled in.
+     *
+     * @type {import('vue').ComputedRef<Student[]>}
+     */
+    const visibleStudents = computed(() => {
+        const access = accessProfileStore();
+        if (!access.isTutor || !access.profileId) return students.value;
+
+        const authorized = useRelationshipsStore().studentIdsForTutor(access.profileId);
+
+        return students.value.filter(
+            student => authorized.includes(student.id)
+        );
+    });
 
     /**
      * Registers an error encountered during an API operation.
@@ -104,10 +119,6 @@ const useProfilesStore = defineStore('profiles', () => {
     function clearErrors() {
         errors.value = [];
     }
-
-    // ==========================
-    // Students
-    // ==========================
 
     /**
      * Fetches all students from the API.
@@ -164,10 +175,16 @@ const useProfilesStore = defineStore('profiles', () => {
     /**
      * Creates a new student and updates local state.
      *
+     * When a tutor registers a child, the authorization over that child is created in the
+     * same use case. The platform backend takes both in one request; this provider has no
+     * such endpoint, so they travel as two. A student registered without its authorization
+     * would vanish from the list of the very tutor who just added it.
+     *
      * @param {Student} student - Student entity to persist.
+     * @param {string} [relationshipType=OTHER] - Relationship of the registering tutor.
      * @returns {Promise<boolean>} Whether the operation succeeded.
      */
-    async function addStudent(student) {
+    async function addStudent(student, relationshipType = RelationshipType.OTHER) {
         try {
             const payload =
                 StudentAssembler.toResourceFromEntity(student);
@@ -178,6 +195,20 @@ const useProfilesStore = defineStore('profiles', () => {
                 StudentAssembler.toEntityFromResource(response.data);
 
             students.value.push(createdStudent);
+
+            const access = accessProfileStore();
+
+            if (access.isTutor && access.profileId) {
+                await useRelationshipsStore().authorizeTutor(
+                    new TutorStudentRelationship({
+                        tutorProfileId: access.profileId,
+                        studentId: createdStudent.id,
+                        authorizedByProfileId: access.profileId,
+                        relationshipType,
+                        authorizedAt: new Date().toISOString()
+                    })
+                );
+            }
 
             return true;
         } catch (error) {
@@ -240,10 +271,6 @@ const useProfilesStore = defineStore('profiles', () => {
             return false;
         }
     }
-
-    // ==========================
-    // Profiles
-    // ==========================
 
     /**
      * Fetches all tutor and driver profiles from the API.
@@ -378,10 +405,6 @@ const useProfilesStore = defineStore('profiles', () => {
         }
     }
 
-    // ==========================
-    // Public Store Interface
-    // ==========================
-
     return {
         students,
         profiles,
@@ -413,6 +436,7 @@ const useProfilesStore = defineStore('profiles', () => {
         deleteProfile,
 
         clearErrors,
+        visibleStudents,
     };
 });
 

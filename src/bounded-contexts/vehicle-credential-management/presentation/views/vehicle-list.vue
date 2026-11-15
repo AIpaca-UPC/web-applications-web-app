@@ -46,7 +46,7 @@ const retry = () => {
 
 /**
  * Asks for confirmation and deletes the vehicle if accepted.
- * @param {import('../../domain/vehicle.entity.js').Vehicle} vehicle
+ * @param {import('../../domain/model/vehicle.entity.js').Vehicle} vehicle
  */
 const confirmDelete = (vehicle) => {
   confirm.require({

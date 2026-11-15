@@ -1,8 +1,10 @@
-import {Vehicle} from "@/bounded-contexts/vehicle-credential-management/domain/vehicle.entity.js";
+import {Vehicle} from "@/bounded-contexts/vehicle-credential-management/domain/model/vehicle.entity.js";
 
 
 /**
  * Maps vehicle API resources to domain entities and vice versa.
+ * Credentials travel embedded in the vehicle resource, so the vehicle and the
+ * documents declared for it are always read and written together.
  *
  * @class VehicleAssembler
  */
@@ -25,8 +27,8 @@ export class VehicleAssembler {
     }
 
     /**
-     * Builds the payload sent to the API. The id is excluded because
-     * MockAPI assigns it on create and receives it in the URL on update.
+     * Builds the payload sent to the API. The id is excluded because the data
+     * source assigns it on create and receives it in the URL on update.
      *
      * @param {Vehicle} entity - Vehicle entity.
      * @returns {Object} Vehicle resource.
@@ -39,6 +41,15 @@ export class VehicleAssembler {
             capacity: entity.capacity,
             year: entity.year,
             status: entity.status,
+            driverName: entity.driverName,
+            credentials: entity.credentials.map((credential) => ({
+                type: credential.type,
+                number: credential.number,
+                expiresAt: credential.expiresAt,
+                verificationStatus: credential.verificationStatus,
+                verificationSource: credential.verificationSource,
+                verifiedAt: credential.verifiedAt,
+            })),
         }
     }
 }
