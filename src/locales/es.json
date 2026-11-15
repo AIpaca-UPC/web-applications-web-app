@@ -46,13 +46,7 @@
     }
   },
   "home": {
-    "title": "Operaciones de Rumbo",
-    "content": "Gestiona los principales módulos CRUD del frontend desde este panel.",
-    "eyebrow": "AIpaca-UPC · Proyecto grupal",
-    "description": "Esta es la base compartida de Vue 3 para el equipo. Cada contexto delimitado tiene su propia carpeta y se implementará de manera independiente.",
-    "ready": "Vue 3, PrimeVue, Vue Router, Pinia e i18n están configurados.",
-    "sectionsTitle": "Espacios de trabajo de los módulos",
-    "moduleDescription": "Esta funcionalidad del frontend aún no está implementada. Este espacio está reservado para el integrante responsable."
+    "eyebrow": "AIpaca-UPC · Proyecto grupal"
   },
   "modules": {
     "profiles": "Gestión de perfiles y relaciones",
@@ -167,11 +161,6 @@
     "confirmDeleteAction": "Eliminar",
     "routeHasNoStops": "Esta ruta todavía no tiene paradas.",
     "noRoutes": "Todavía no hay rutas. Crea una nueva ruta para comenzar."
-  },
-  "placeholder": {
-    "title": "Espacio de trabajo listo para el desarrollo",
-    "description": "No se incluye ninguna operación CRUD ni lógica de negocio. El integrante responsable puede agregar modelos de dominio, stores de Pinia, servicios REST y componentes Vue.",
-    "hint": "Actualiza el router después de agregar tu primera vista de Vue."
   },
   "notFound": {
     "description": "La página solicitada no existe."
