@@ -19,6 +19,27 @@ export function normalizeStudent(raw) {
 }
 
 /**
+ * Reduces a vehicle returned by Vehicle & Credential Management to what this context shows.
+ *
+ * A route only needs to know which unit it is planned against and how to name it on screen;
+ * the documents and the rest of the vehicle's life belong to the context that owns it.
+ *
+ * @param {Object} raw - Vehicle resource.
+ * @returns {?{id: string, label: string, status: string}} The option, or null without an id.
+ */
+export function normalizeVehicle(raw) {
+  const idValue = id(raw?.id ?? raw?.vehicleId)
+  if (!idValue) return null
+  const plate = String(raw?.licensePlate ?? raw?.plate ?? '').trim()
+  const name = [raw?.brand, raw?.model].filter(Boolean).join(' ').trim()
+  return {
+    id: idValue,
+    label: [name, plate].filter(Boolean).join(' · ') || `Unidad ${idValue}`,
+    status: String(raw?.status ?? '').toUpperCase(),
+  }
+}
+
+/**
  * Turns a failed request into a message a driver can act on.
  *
  * @param {Error} error - Error thrown by the data source.
@@ -51,6 +72,9 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
   const loading = ref(false)
   const saving = ref(false)
   const error = ref('')
+  const vehicleOptions = ref([])
+  const vehicleError = ref('')
+  const vehiclesLoading = ref(false)
   const selectedRoute = computed(() => routes.value.find(r => r.id === selectedRouteId.value) || null)
 
   async function load() {
@@ -79,6 +103,21 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
       studentError.value = apiMessage(e)
       return false
     } finally { studentsLoading.value = false }
+  }
+
+  async function loadVehicles() {
+    vehiclesLoading.value = true
+    vehicleError.value = ''
+    try {
+      const result = await routesApi.vehicles()
+      if (!Array.isArray(result)) throw new Error('La API de vehículos debe devolver una lista.')
+      vehicleOptions.value = result.map(normalizeVehicle).filter(Boolean)
+      return true
+    } catch (e) {
+      vehicleOptions.value = []
+      vehicleError.value = apiMessage(e)
+      return false
+    } finally { vehiclesLoading.value = false }
   }
 
   async function getDetails(routeId) {
@@ -170,6 +209,8 @@ export const useRouteCrudStore = defineStore('rumbo-route-crud', () => {
     finally { saving.value = false }
   }
 
-  return { routes, studentOptions, studentError, studentsLoading, selectedRouteId, selectedRoute,
-    lastSavedId, loading, saving, error, load, loadStudents, getDetails, save, publish, remove }
+  return { routes, studentOptions, studentError, studentsLoading,
+    vehicleOptions, vehicleError, vehiclesLoading,
+    selectedRouteId, selectedRoute, lastSavedId, loading, saving, error,
+    load, loadStudents, loadVehicles, getDetails, save, publish, remove }
 })

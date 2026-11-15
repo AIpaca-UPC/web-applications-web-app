@@ -114,6 +114,9 @@
     }
   },
   "routePlanning": {
+    "vehiclePlaceholder": "Selecciona una unidad",
+    "vehicleUnavailable": "no disponible",
+    "vehicleUnknown": "Unidad",
     "title": "Mis rutas escolares",
     "subtitle": "Organiza paradas, estudiantes y horarios del servicio.",
     "newRoute": "Nueva ruta",
