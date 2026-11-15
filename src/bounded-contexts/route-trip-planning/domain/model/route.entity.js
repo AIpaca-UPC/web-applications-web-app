@@ -102,11 +102,17 @@ export class Route {
         return this.status === RouteStatus.PUBLISHED
     }
 
-    /** @returns {boolean} Whether the route is named and has a driver and a vehicle. */
+    /**
+     * @returns {boolean} Whether the route is named and references a driver and a vehicle.
+     *
+     * Identification is a matter of identity, not of the text shown on screen: the names of
+     * the driver and the vehicle are read from other contexts and may not have arrived yet,
+     * while the references are what the service is actually planned against.
+     */
     get hasValidIdentification() {
         return this.name.trim().length >= MIN_ROUTE_NAME_LENGTH
-            && this.driverName.trim() !== ''
-            && this.vehicleLabel.trim() !== ''
+            && this.driverProfileId !== null
+            && this.vehicleId !== null
     }
 
     /** @returns {boolean} Whether there is at least one stop and every address is usable. */
