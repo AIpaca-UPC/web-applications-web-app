@@ -1,5 +1,10 @@
 import { Route } from '../domain/model/route.entity.js'
 
+// Until Profiles & Relationship Management is deployed there is no catalogue to read the driver
+// from, so the environment names the one this build plans against. It is a stand-in for the
+// session, not a setting: when that context answers, the driver comes from whoever is signed in.
+const defaultDriverProfileId = toId(import.meta.env.VITE_ROUTE_DEFAULT_DRIVER_PROFILE_ID)
+
 /**
  * Writes a time in the HH:mm:ss form the platform backend parses.
  *
@@ -94,7 +99,7 @@ export class RouteCsharpAssembler {
      */
     static toResourceFromEntity(entity) {
         return {
-            driverProfileId: entity.driverProfileId,
+            driverProfileId: entity.driverProfileId ?? defaultDriverProfileId,
             name: entity.name.trim(),
             shift: entity.shift,
             // Optional while the route is configurable; only publishing demands it.
